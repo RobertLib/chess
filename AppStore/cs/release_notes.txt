@@ -1,0 +1,11 @@
+První verze.
+
+Šachy pro jednoho i pro dva hráče, s vlastním enginem a vlastní příručkou.
+
+• Pět úrovní od začátečnické po velmistrovskou, za bílého i za černého — dvě nejvyšší zahajují z knihy 90 pojmenovaných variant
+• Dva hráči na jednom zařízení, s volitelným otáčením šachovnice mezi tahy, remízou dohodou a tlačítkem Vzdát
+• Rozbor partie po každé hře: každý tah ohodnocený od brilantního po hrubku, přesnost pro každého hráče, graf hodnocení, tah, který by engine zahrál radši, vykreslený na šachovnici, a pojmenované zahájení
+• Jak hrát — devět kapitol a 38 stránek, s 27 diagramy, z toho 15 hratelných
+• Nápověda, tahy zpět, pět vzhledů šachovnice, skládané zvuky a vibrace
+• Plné popisky pro VoiceOver, dynamická velikost písma až po velikosti pro zpřístupnění, respektované omezení pohybu
+• Žádné reklamy, žádné nákupy v aplikaci, žádný účet a vůbec žádný síťový kód

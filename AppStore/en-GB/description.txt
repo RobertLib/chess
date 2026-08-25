@@ -1,0 +1,41 @@
+Chess for one or two players, with its own engine, its own guide and no strings: no ads, no in-app purchases, no account and no internet. Play, and when the game is over have every move you played graded.
+
+FIVE LEVELS, AND THE TOP TWO KNOW THEORY
+• Beginner, Easy, Medium, Hard and Grandmaster — as White or as Black
+• The engine is the app's own, and it runs on your device: alpha-beta search with a transposition table, quiescence, null-move pruning and static exchange evaluation
+• Hard and Grandmaster open out of a book of 90 named lines, weighted by how much theory each move carries, so they never replay the same game
+• The three levels below them vary their openings for themselves, picking a little at random among the moves they searched
+
+TWO PLAYERS, ONE DEVICE
+• Pass the phone across the table — no account, no invitation, no connection
+• The board can turn towards whoever is on the move
+• Draw by agreement, and Resign for a game that is already decided
+
+A GAME REVIEW WITH NOTHING BEHIND A PAYWALL
+When a game ends, the engine plays it back and grades every single move — brilliant, great, best, excellent, good, book, inaccuracy, mistake, miss or blunder. Each player gets an accuracy score, the evaluation graph shows who was winning when, the move the engine would rather have played is drawn on the board, and the opening is named. No daily limit, nothing to unlock, and it all works in airplane mode.
+
+HOW TO PLAY, IF YOU ARE NEW TO IT
+Nine chapters and 38 pages: the board, how each piece moves, castling and en passant and promotion, check and checkmate, the five ways a game is drawn, winning material, playing the opening and middlegame well, reading the notation, and finding your way around the app. 27 board diagrams come with it, 15 of them playable — the dots on those are real legal moves asked of the engine, and tapping one plays it.
+
+WHILE YOU PLAY
+• Hint asks the engine for the move it would play
+• Undo takes back your move and the computer's reply with it
+• Tap a piece and dots appear on every square it may legally go to — or just drag it there
+• Coordinates and legal-move dots, both of which can be switched off as you get stronger
+• Five board themes: Wood, Tournament, Ocean, Midnight and Marble
+• Sounds, synthesised at launch rather than shipped as files, and haptics — both switchable
+• Close the app in the middle of a game and it comes back exactly as you left it
+• The last finished game waits in the menu, so it can be reviewed again later
+
+BUILT FOR EVERYONE
+Every square is a button that says its coordinate and what stands on it, tells you whether the piece on it can move and where a move would land, and marks the checked king and the move just played — so a whole game can be played by ear. Text follows your Dynamic Type size all the way up to the accessibility sizes, and no screen clips or overflows at the largest of them. Reduce Motion is honoured: pieces travel a shorter path instead of not travelling at all, and the decoration stops.
+
+FAIR PLAY
+• No ads
+• No in-app purchases
+• No account, no sign-in, no data collected
+• Works completely offline — there is no networking code in the app at all
+• English and Czech, following the system language
+• iPhone and iPad
+
+Just chess. Nothing else.

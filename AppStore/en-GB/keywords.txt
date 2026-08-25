@@ -1,0 +1,1 @@
+board,game,computer,ai,engine,analysis,accuracy,blunder,learn,beginners,hints,undo,wifi,internet

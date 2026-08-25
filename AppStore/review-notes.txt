@@ -1,0 +1,51 @@
+No account or sign-in is required, and there is nothing to unlock — tap Play vs
+Computer or Two Players and the whole app is available on the first launch.
+
+There are no in-app purchases and no advertising. Nothing in the app is for sale
+and no feature is limited by a daily quota. The Game Review — every move graded,
+an accuracy score per player and an evaluation graph — is the app's largest
+feature and it is free and unlimited like the rest of it.
+
+NO GAMBLING OF ANY KIND. Chess is a game of pure skill. Nothing is wagered,
+nothing pays out, and the app has no StoreKit code and no networking code, so it
+cannot transact with anything. The Chance-Based Activities section of the age
+rating questionnaire is answered None, and the Gambling declaration in App
+Information is No.
+
+Fully offline. The chess engine is the app's own and runs on the device; there
+are no packages, no third-party SDKs and no network requests of any kind. The
+pieces are drawn from vector paths in code and the sounds are synthesized at
+launch, so the app ships with no audio assets. Settings and a game in progress
+are stored in UserDefaults on the device (declared in chess/PrivacyInfo.xcprivacy,
+reason CA92.1).
+
+Third-party content: the Staunton piece shapes are derived from the SVG chess
+pieces drawn by Wikimedia Commons user Cburnett, used under the BSD licence. The
+attribution is shown to players in the app under Settings → Credits, and the
+licence is reproduced in full in THIRD-PARTY-NOTICES.md in the repository.
+Everything else — the engine, the review, the guide, the sounds — is original.
+
+How to play: from the menu choose Play vs Computer (five levels, and White,
+Black or Random), Two Players on one device, or How to Play for the guide. On the
+board, tap a piece and the dots show every square it may legally go to, then tap
+one to play the move; dragging works too. The row under the board is Undo, then
+Hint against the computer or Draw between two players, then Resign. The gear at
+the top right holds five board themes, sounds, haptics, the legal-move dots and
+the board coordinates; the arrows beside it flip the board. Leaving a game with
+the chevron at the top left saves it, and it comes back under Continue in the
+menu. When a game ends, Game Review opens from the result card, and the last
+finished game stays in the menu so it can be reviewed again later.
+
+The guide is nine chapters and 38 pages with 27 board diagrams, 15 of which are
+playable: the dots on those are real legal moves asked from the engine, and
+tapping one plays it.
+
+Accessibility: every board square is a VoiceOver button that says its coordinate
+and what stands on it, so a whole game can be played by ear. Dynamic Type is
+supported up to the accessibility sizes and Reduce Motion is honored.
+
+Localisation: English and Czech, switched by the device language. There is no
+in-app language setting. Move notation follows the reader's language — Nf3 reads
+Jf3 in Czech — while the notation stored on the device stays English.
+
+The app supports iPhone (portrait) and iPad (portrait and landscape).

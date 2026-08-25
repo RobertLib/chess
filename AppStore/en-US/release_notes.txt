@@ -1,0 +1,11 @@
+First release.
+
+Chess for one or two players, with its own engine and its own guide.
+
+• Five levels from Beginner to Grandmaster, as White or as Black — the top two open out of a book of 90 named lines
+• Two players on one device, with an optional board flip between turns, a draw by agreement and Resign
+• Game Review after every game: each move graded from brilliant to blunder, an accuracy score per player, the evaluation graph, the engine's preferred move drawn on the board and the opening named
+• How to Play — nine chapters and 38 pages, with 27 board diagrams, 15 of them playable
+• Hints, undo, five board themes, synthesized sounds and haptics
+• Full VoiceOver labeling, Dynamic Type up to the accessibility sizes, Reduce Motion honored
+• No ads, no in-app purchases, no account, and no networking code at all

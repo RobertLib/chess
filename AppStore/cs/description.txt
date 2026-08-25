@@ -1,0 +1,41 @@
+Šachy pro jednoho i pro dva hráče, s vlastním enginem, s vlastní příručkou a bez podmínek: žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet. Zahrajte si — a až partie skončí, nechte si ohodnotit každý svůj tah.
+
+PĚT ÚROVNÍ A DVĚ NEJVYŠŠÍ ZNAJÍ TEORII
+• Začátečnická, lehká, střední, těžká a velmistrovská — za bílého i za černého
+• Engine je vlastní a počítá přímo ve vašem zařízení: prohledávání alfa-beta s transpoziční tabulkou, klidové prohledávání, prořezávání nulovým tahem a statické vyhodnocení výměn
+• Těžká a velmistrovská zahajují z knihy 90 pojmenovaných variant, vážených podle toho, kolik teorie za sebou který tah má, takže nehrají pořád jednu a tutéž partii
+• Tři úrovně pod nimi si zahájení obměňují samy — vybírají mírně náhodně mezi tahy, které prohledaly
+
+DVA HRÁČI, JEDNO ZAŘÍZENÍ
+• Podejte telefon přes stůl — žádný účet, žádná pozvánka, žádné připojení
+• Šachovnice se umí otáčet k tomu, kdo je na tahu
+• Remíza dohodou a tlačítko Vzdát pro partii, která je už rozhodnutá
+
+ROZBOR PARTIE, ZA KTERÝM NIC NENÍ SCHOVANÉ
+Když partie skončí, engine ji přehraje a ohodnotí každý jednotlivý tah — brilantní, skvělý, nejlepší, vynikající, dobrý, teoretický, nepřesnost, chyba, promarněná šance nebo hrubka. Každý hráč dostane svou přesnost, graf hodnocení ukáže, kdo kdy stál lépe, tah, který by engine zahrál radši, se vykreslí na šachovnici a zahájení dostane jméno. Žádný denní limit, nic se neodemyká — a funguje to i v režimu Letadlo.
+
+JAK HRÁT, POKUD JSTE ÚPLNĚ NA ZAČÁTKU
+Devět kapitol a 38 stránek: šachovnice, jak se která figura hýbe, rošáda, braní mimochodem a proměna pěšce, šach a mat, pět způsobů, jak partie skončí remízou, získávání materiálu, jak dobře zahrát zahájení a střední hru, jak se čte zápis tahů a jak se hraje v téhle aplikaci. K tomu 27 diagramů, z toho 15 hratelných — tečky na nich jsou opravdové možné tahy, na které se aplikace zeptala enginu, a klepnutím se tah zahraje.
+
+BĚHEM PARTIE
+• Nápověda se zeptá enginu, jaký tah by zahrál on
+• Zpět vezme váš tah nazpět — a s ním i odpověď počítače
+• Klepněte na figuru a tečky ukážou každé pole, kam smí jít; funguje i tažení
+• Souřadnice a tečky možných tahů se dají vypnout, jak budete silnější
+• Pět vzhledů šachovnice: dřevo, turnajová, oceán, půlnoc a mramor
+• Zvuky, které se skládají až při spuštění, místo aby se přibalovaly jako soubory, a vibrace — obojí se dá vypnout
+• Zavřete aplikaci uprostřed partie a vrátíte se přesně tam, kde jste skončili
+• Poslední dohraná partie čeká v menu, takže si ji můžete prohlédnout znovu
+
+PRO KAŽDÉHO
+Každé pole je tlačítko, které řekne svou souřadnici a co na něm stojí, jestli se figura na něm může hnout a kam by tah dopadl, a označí krále v šachu i poslední zahraný tah — celá partie se tak dá odehrát sluchem. Texty se řídí nastavenou velikostí písma až po ty pro zpřístupnění a při největší z nich se žádná obrazovka neutíná ani nepřetéká. Omezení pohybu je respektováno: figury urazí kratší cestu, místo aby neurazily žádnou, a ozdoby se zastaví.
+
+FÉROVÁ HRA
+• Žádné reklamy
+• Žádné nákupy v aplikaci
+• Žádný účet, žádné přihlašování, žádný sběr dat
+• Funguje kompletně offline — aplikace neobsahuje vůbec žádný síťový kód
+• Čeština i angličtina, podle jazyka systému
+• iPhone i iPad
+
+Jen šachy. Nic víc.
