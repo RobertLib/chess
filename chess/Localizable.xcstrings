@@ -1,0 +1,5721 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    " %@ is the strong answer." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " %@ je silná odpověď."
+          }
+        }
+      }
+    },
+    " %@ now wins the %@." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " %@ teď získává %@."
+          }
+        }
+      }
+    },
+    "%@ to move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na tahu je %@"
+          }
+        }
+      }
+    },
+    "%lld cp lost / move" : {
+      "comment" : "Average centipawn loss per move",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ztráta %lld cp na tah"
+          }
+        }
+      }
+    },
+    "%lld of %lld lessons read" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přečteno %lld z %lld lekcí"
+          }
+        }
+      }
+    },
+    "%lld percent" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld procenta"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld procento"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld procent"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld percent"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld percent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "+ is check, # is checkmate: Qh5#." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ je šach, # je mat: Dh5#."
+          }
+        }
+      }
+    },
+    "=Q is a promotion: e8=Q. A file letter is added when two pieces could reach the square: Nbd2." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "=D je proměna: e8=D. Když by na pole mohly jít dvě stejné figury, přidá se písmeno sloupce: Jbd2."
+          }
+        }
+      }
+    },
+    "1.e4 e5 2.Nf3 — the moves that reached this position." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.e4 e5 2.Jf3 — tahy, které vedly k této pozici."
+          }
+        }
+      }
+    },
+    "50 moves without a capture or pawn move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "50 tahů bez braní a bez tahu pěšcem."
+          }
+        }
+      }
+    },
+    "64 squares, and how they are named" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "64 polí a jak se jmenují"
+          }
+        }
+      }
+    },
+    "A balanced opponent" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyrovnaný soupeř"
+          }
+        }
+      }
+    },
+    "A bishop slides any distance along a diagonal, as long as nothing stands in the way. Because it moves diagonally it can never change square colour: one of your bishops lives on light squares for the whole game, the other on dark ones." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střelec klouže po diagonále jak daleko chce, pokud mu nic nestojí v cestě. Protože táhne šikmo, nikdy nezmění barvu pole: jeden váš střelec zůstane celou partii na světlých polích, druhý na tmavých."
+          }
+        }
+      }
+    },
+    "A blunder. %@ was far better.%@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hrubka. %@ byl mnohem lepší.%@"
+          }
+        }
+      }
+    },
+    "A check can be answered by moving the king away, by blocking the line between the attacker and the king, or by capturing the attacker. If none of them is possible, the game is over." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na šach se dá odpovědět odchodem krále, zaclonením linie mezi útočníkem a králem, nebo sebráním útočníka. Pokud nejde nic z toho, partie končí."
+          }
+        }
+      }
+    },
+    "A check from a knight cannot be blocked — a knight jumps." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šach jezdcem nelze zaclonit — jezdec skáče."
+          }
+        }
+      }
+    },
+    "A few more patterns" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Několik dalších motivů"
+          }
+        }
+      }
+    },
+    "A fork attacks two things at once. Your opponent can only save one of them, so the other is yours. Knights are the great forkers, because their jump attacks squares that no other piece would guard." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidlička napadá dvě věci najednou. Soupeř může zachránit jen jednu, druhá je vaše. Největšími mistry vidliček jsou jezdci, protože jejich skok napadá pole, která by žádná jiná figura nekryla."
+          }
+        }
+      }
+    },
+    "A game that neither side can win is a draw, worth half a point to each player. Four of them the app spots by itself and tells you which one happened; the fifth is yours to settle — the Draw button under the board." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie, kterou nemůže vyhrát ani jedna strana, je remíza za půl bodu pro každého. Čtyři z nich aplikace pozná sama a řekne vám, která nastala; pátou si domluvíte sami — tlačítkem Remíza pod šachovnicí."
+          }
+        }
+      }
+    },
+    "A game with a clock can also be lost on time, but there is no clock in this app." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie s hodinami se dá prohrát i na čas, ale tato aplikace hodiny nemá."
+          }
+        }
+      }
+    },
+    "A green arrow shows the move the engine would have preferred." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelená šipka ukazuje tah, kterému by engine dal přednost."
+          }
+        }
+      }
+    },
+    "A king and one bishop can never force mate — dead drawn." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král a jeden střelec mat nikdy nevynutí — mrtvá remíza."
+          }
+        }
+      }
+    },
+    "A knight in the centre reaches eight squares; in the corner, only two." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdec ve středu dosáhne na osm polí, v rohu jen na dvě."
+          }
+        }
+      }
+    },
+    "A known opening move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Známý tah ze zahájení"
+          }
+        }
+      }
+    },
+    "A lone queen or rook plus king is enough to mate; a lone bishop or knight is not." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samotná dáma nebo věž s králem na mat stačí, samotný střelec nebo jezdec ne."
+          }
+        }
+      }
+    },
+    "A merciless machine" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nemilosrdný stroj"
+          }
+        }
+      }
+    },
+    "A mistake. %@ was clearly better.%@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chyba. %@ byl zřetelně lepší.%@"
+          }
+        }
+      }
+    },
+    "A move is written as the letter of the piece and the square it goes to: Nf3 is a knight to f3, Qd8 a queen to d8. Pawns have no letter, so e4 simply means a pawn moved to e4. The knight is N, because K is taken by the king." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tah se zapisuje jako písmeno figury a pole, na které jde: Jf3 je jezdec na f3, Dd8 dáma na d8. Pěšci písmeno nemají, takže e4 znamená prostě pěšce na e4. Každý jazyk má vlastní písmena — čeština píše J, D, V, S a K."
+          }
+        }
+      }
+    },
+    "A pawn plods one square straight forward. From its starting square it may jump two squares instead. A pawn can never move backwards, and it cannot move forward onto an occupied square — not even to capture." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec se sune o jedno pole rovně vpřed. Z výchozího pole může místo toho skočit o dvě. Zpátky nemůže nikdy a na obsazené pole před sebou nevstoupí — ani braním."
+          }
+        }
+      }
+    },
+    "A pawn takes one square diagonally forward. So it moves in one direction and captures in another — which is why pawns lock each other up head to head and yet guard each other so well side by side." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec bere o jedno pole šikmo vpřed. Táhne tedy jedním směrem a bere jiným — proto se proti sobě zablokují a přitom se vedle sebe tak dobře kryjí."
+          }
+        }
+      }
+    },
+    "A pawn that jumps two squares to slip past an enemy pawn can be taken anyway, as if it had only moved one square. This capture — en passant, \"in passing\" — is available on the very next move and never again." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšce, který skočí o dvě pole, aby proklouzl kolem soupeřova pěšce, lze přesto vzít, jako by táhl jen o jedno. Tohle braní — en passant, „mimochodem“ — je možné jen bezprostředně následujícím tahem a nikdy později."
+          }
+        }
+      }
+    },
+    "A pawn that reaches the far side of the board turns into a queen, rook, bishop or knight of its own colour — your choice, and you can have as many queens as you can promote pawns. Almost everybody takes the queen." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec, který dojde na druhý konec šachovnice, se promění v dámu, věž, střelce nebo jezdce své barvy — podle vaší volby, a dam můžete mít tolik, kolik pěšců doženete. Skoro každý si bere dámu."
+          }
+        }
+      }
+    },
+    "A piece in the middle of the board controls more squares than one at the edge, and pawns in the centre take space away from your opponent. That is why almost every opening starts with 1.e4 or 1.d4." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figura uprostřed šachovnice kontroluje víc polí než na kraji a pěšci ve středu berou soupeři prostor. Proto skoro každé zahájení začíná 1.e4 nebo 1.d4."
+          }
+        }
+      }
+    },
+    "A pinned piece cannot move without exposing the king behind it — so, in the eyes of the rules, it often cannot move at all. Pin a defender and it stops defending; then pile more attackers onto it." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vázaná figura nemůže odejít, aniž by vystavila krále za sebou — takže podle pravidel často nemůže táhnout vůbec. Zavažte obránce a přestane bránit; pak na něj přiveďte další útočníky."
+          }
+        }
+      }
+    },
+    "A rook slides any distance along a rank or a file. It is at its best on an open file, where nothing blocks it, and on the seventh rank, where it attacks the enemy pawns from behind." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Věž klouže jak daleko chce po řadě nebo po sloupci. Nejlépe se jí daří na otevřeném sloupci, kde jí nic nebrání, a na sedmé řadě, odkud napadá soupeřovy pěšce zezadu."
+          }
+        }
+      }
+    },
+    "A sacrifice that works" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oběť, která vychází"
+          }
+        }
+      }
+    },
+    "A sacrifice that works — the %@ is offered and the initiative more than pays for it." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oběť, která vychází — dává v sázku %@ a iniciativa to bohatě vynahradí."
+          }
+        }
+      }
+    },
+    "A skewer is a pin the other way round: the valuable piece is in front and has to move, and what stands behind it falls. Checks are the sharpest skewers, because the king has no choice." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rentgen je vazba naopak: vpředu stojí cennější figura, ta musí odejít a padne to, co stálo za ní. Nejostřejší rentgeny jsou se šachem, protože král nemá na výběr."
+          }
+        }
+      }
+    },
+    "A sound move. %@ was a little stronger." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solidní tah. %@ byl o něco silnější."
+          }
+        }
+      }
+    },
+    "A square is named after its file and its rank. The square where the e-file crosses the fourth rank is e4. That is how chess moves are written, and it is how the move list in this app reads." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pole se jmenuje podle svého sloupce a řady. Pole, kde se sloupec e kříží se čtvrtou řadou, je e4. Přesně tak se zapisují šachové tahy a tak je čte i seznam tahů v této aplikaci."
+          }
+        }
+      }
+    },
+    "A tough nut to crack" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tvrdý oříšek"
+          }
+        }
+      }
+    },
+    "A winning chance went by" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyhraná šance utekla"
+          }
+        }
+      }
+    },
+    "A won position slipped: %@ was the way through.%@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyhraná pozice utekla: %@ byla cesta k výhře.%@"
+          }
+        }
+      }
+    },
+    "ACCURACY" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PŘESNOST"
+          }
+        }
+      }
+    },
+    "accuracy.spoken" : {
+      "comment" : "VoiceOver summary of a player's accuracy card",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "přesnost %1$@ procenta, %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ percent accuracy, %@"
+          }
+        }
+      }
+    },
+    "After 1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 — both sides developing." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po 1.e4 e5 2.Jf3 Jc6 3.Sc4 Sc5 — obě strany vyvíjejí."
+          }
+        }
+      }
+    },
+    "After castling, giving your king one free square in front of the pawns is worth a move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po rošádě stojí za jeden tah udělat králi před pěšci volné pole."
+          }
+        }
+      }
+    },
+    "Agree to a Draw" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dohodnout remízu"
+          }
+        }
+      }
+    },
+    "Agree to a draw?" : {
+      "comment" : "Confirmation before ending a two-player game as a draw",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dohodnout remízu?"
+          }
+        }
+      }
+    },
+    "Agreement: both players simply settle for a draw — the Draw button, in a game of two players." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dohoda: hráči se na remíze prostě domluví — tlačítkem Remíza v partii dvou hráčů."
+          }
+        }
+      }
+    },
+    "ahead by %lld" : {
+      "comment" : "VoiceOver: material advantage in pawns",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vede o %lld"
+          }
+        }
+      }
+    },
+    "Ahead in material: trade pieces, head for the endgame." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máte navíc: vyměňujte figury a miřte do koncovky."
+          }
+        }
+      }
+    },
+    "Albin Counter-Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albinův protigambit"
+          }
+        }
+      }
+    },
+    "Alekhine Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alechinova obrana"
+          }
+        }
+      }
+    },
+    "All %lld lessons read" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přečteno všech %lld lekcí"
+          }
+        }
+      }
+    },
+    "All six pieces, one at a time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všech šest figur, jedna po druhé"
+          }
+        }
+      }
+    },
+    "Almost every material win comes from one of a handful of ideas. Once you know their names you start seeing them." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skoro každý zisk materiálu vychází z hrstky nápadů. Jakmile znáte jejich jména, začnete je vidět."
+          }
+        }
+      }
+    },
+    "Analyzing your game…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyzuji vaši partii…"
+          }
+        }
+      }
+    },
+    "announce.lessonMove" : {
+      "comment" : "Spoken after a move is played on a lesson diagram",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahráno %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played %@"
+          }
+        }
+      }
+    },
+    "announce.move" : {
+      "comment" : "Spoken after a move is made, e.g. 'White played Nf3'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ zahrál %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ played %@"
+          }
+        }
+      }
+    },
+    "As good as the best move, for all practical purposes" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prakticky stejně dobrý jako nejlepší tah"
+          }
+        }
+      }
+    },
+    "B" : {
+      "comment" : "One-letter abbreviation for Black",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Č"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpět"
+          }
+        }
+      }
+    },
+    "Back rank: a castled king with no escape square is a permanent weakness." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední řada: zarošovaný král bez únikového pole je trvalá slabina."
+          }
+        }
+      }
+    },
+    "Back to menu" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpět do menu"
+          }
+        }
+      }
+    },
+    "Back to Menu" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpět do menu"
+          }
+        }
+      }
+    },
+    "Before a capture, count every attacker and every defender of that square." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před braním spočítejte všechny útočníky i obránce daného pole."
+          }
+        }
+      }
+    },
+    "Before every move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před každým tahem"
+          }
+        }
+      }
+    },
+    "Beginner" : {
+      "comment" : "Difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začátečnická"
+          }
+        }
+      }
+    },
+    "Behind in material: keep pieces on and make things complicated." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máte míň: nechte figury na desce a komplikujte."
+          }
+        }
+      }
+    },
+    "Benko Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benkőův gambit"
+          }
+        }
+      }
+    },
+    "Benoni Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benoni"
+          }
+        }
+      }
+    },
+    "Best move" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejlepší tah"
+          }
+        }
+      }
+    },
+    "Bird's Defense to the Ruy López" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra: Birdova obrana"
+          }
+        }
+      }
+    },
+    "Bird's Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birdovo zahájení"
+          }
+        }
+      }
+    },
+    "Bishop" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střelec"
+          }
+        }
+      }
+    },
+    "Bishop's Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahájení střelcem"
+          }
+        }
+      }
+    },
+    "Bishops want long diagonals — do not bury them behind your own pawns." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střelci chtějí dlouhé diagonály — nezazdívejte je za vlastní pěšce."
+          }
+        }
+      }
+    },
+    "Black ahead by %@" : {
+      "comment" : "VoiceOver: Black's advantage, in pawns",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý vede o %@"
+          }
+        }
+      }
+    },
+    "Black just played d7–d5. White may answer exd6." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý právě zahrál d7–d5. Bílý může odpovědět exd6."
+          }
+        }
+      }
+    },
+    "Black mates in %lld" : {
+      "comment" : "VoiceOver: a forced mate for Black",
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Černý dává mat v %lld tazích"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Černý dává mat v %lld tahu"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Černý dává mat v %lld tazích"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Black mates in %lld"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Black mates in %lld"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Black resigned" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý se vzdal"
+          }
+        }
+      }
+    },
+    "Blunder" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hrubka"
+          }
+        }
+      }
+    },
+    "Board coordinates" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Souřadnice šachovnice"
+          }
+        }
+      }
+    },
+    "BOARD THEME" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VZHLED ŠACHOVNICE"
+          }
+        }
+      }
+    },
+    "Bogo-Indian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bogoindická obrana"
+          }
+        }
+      }
+    },
+    "Book move" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teoretický tah"
+          }
+        }
+      }
+    },
+    "Both players agreed to a draw." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oba hráči se dohodli na remíze."
+          }
+        }
+      }
+    },
+    "Brilliant" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brilantní"
+          }
+        }
+      }
+    },
+    "Budapest Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Budapešťský gambit"
+          }
+        }
+      }
+    },
+    "Can I take something for free, or give check with effect?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nemůžu něco vzít zadarmo nebo dát šach s efektem?"
+          }
+        }
+      }
+    },
+    "captured: %@" : {
+      "comment" : "VoiceOver: list of pieces this player has taken",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sebral: %@"
+          }
+        }
+      }
+    },
+    "Captures" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Braní"
+          }
+        }
+      }
+    },
+    "Caro-Kann Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caro-Kannova obrana"
+          }
+        }
+      }
+    },
+    "Caro-Kann Defense: Advance Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caro-Kannova obrana: postupová varianta"
+          }
+        }
+      }
+    },
+    "Caro-Kann Defense: Classical" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caro-Kannova obrana: klasická varianta"
+          }
+        }
+      }
+    },
+    "Caro-Kann Defense: Exchange" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caro-Kannova obrana: výměnná varianta"
+          }
+        }
+      }
+    },
+    "Caro-Kann Defense: Panov Attack" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caro-Kannova obrana: Panovův útok"
+          }
+        }
+      }
+    },
+    "Castle early" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rošujte včas"
+          }
+        }
+      }
+    },
+    "Castling" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rošáda"
+          }
+        }
+      }
+    },
+    "Castling is fussy. All of these have to be true, or the move is not offered at all." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rošáda je vybíravá. Musí platit všechno následující, jinak se tah vůbec nenabídne."
+          }
+        }
+      }
+    },
+    "Castling, en passant, promotion" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rošáda, braní mimochodem, proměna"
+          }
+        }
+      }
+    },
+    "Catalan Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katalánské zahájení"
+          }
+        }
+      }
+    },
+    "Center Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Středová hra"
+          }
+        }
+      }
+    },
+    "Check" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šach"
+          }
+        }
+      }
+    },
+    "Check & Checkmate" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šach a mat"
+          }
+        }
+      }
+    },
+    "Check! %@ to move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šach! Na tahu je %@"
+          }
+        }
+      }
+    },
+    "Checkmate — the strongest possible finish." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat — silnější zakončení neexistuje."
+          }
+        }
+      }
+    },
+    "Checkmate — you lost" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat — prohráli jste"
+          }
+        }
+      }
+    },
+    "Checkmate is a check with no answer — and it ends the game on the spot. Below is the back-rank mate: the rook checks along the eighth rank, the black king cannot leave it, and his own pawns take away every escape square." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat je šach, na který není odpověď — a partie okamžitě končí. Níže je mat na poslední řadě: věž dává šach po osmé řadě, černý král ji nemůže opustit a vlastní pěšci mu berou každé únikové pole."
+          }
+        }
+      }
+    },
+    "Checkmate wins" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat vyhrává"
+          }
+        }
+      }
+    },
+    "Checkmate! Black wins" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat! Vyhrává černý"
+          }
+        }
+      }
+    },
+    "Checkmate! White wins" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat! Vyhrává bílý"
+          }
+        }
+      }
+    },
+    "Checks" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachy"
+          }
+        }
+      }
+    },
+    "Chess" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachy"
+          }
+        }
+      }
+    },
+    "Chess · an offline game for one or two players" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachy · offline hra pro jednoho i dva hráče"
+          }
+        }
+      }
+    },
+    "Chess is a battle between White and Black on a board of eight columns and eight rows. White always makes the first move, and from then on the players take turns — one move each, no passing, no skipping." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachy jsou bitva bílého a černého na desce o osmi sloupcích a osmi řadách. Bílý táhne vždy jako první a od té chvíle se hráči střídají — každý jeden tah, nedá se vynechat ani přeskočit."
+          }
+        }
+      }
+    },
+    "Chessboard" : {
+      "comment" : "VoiceOver name for the board",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachovnice"
+          }
+        }
+      }
+    },
+    "Chigorin Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čigorinova obrana"
+          }
+        }
+      }
+    },
+    "Close the review" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zavřít rozbor"
+          }
+        }
+      }
+    },
+    "color.name.black" : {
+      "comment" : "Piece colour, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black"
+          }
+        }
+      }
+    },
+    "color.name.white" : {
+      "comment" : "Piece colour, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White"
+          }
+        }
+      }
+    },
+    "Computer" : {
+      "comment" : "Player name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítač"
+          }
+        }
+      }
+    },
+    "Computer (%@) · move %lld" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítač (%@) · %lld. tah"
+          }
+        }
+      }
+    },
+    "Computer is thinking…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítač přemýšlí…"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat"
+          }
+        }
+      }
+    },
+    "Counting material is the quickest way to tell who is doing well. These rough values are what you weigh a trade against: a bishop for a rook is a good deal, a rook for a knight usually is not." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítání materiálu je nejrychlejší způsob, jak poznat, kdo si vede lépe. Podle těchto přibližných hodnot se poměřuje každá výměna: střelec za věž je dobrý obchod, věž za jezdce většinou ne."
+          }
+        }
+      }
+    },
+    "CREDITS" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PODĚKOVÁNÍ"
+          }
+        }
+      }
+    },
+    "DIFFICULTY" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OBTÍŽNOST"
+          }
+        }
+      }
+    },
+    "Discovered attack: you move one piece and the piece behind it starts attacking." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odkrytý útok: odtáhnete jednu figuru a začne útočit ta za ní."
+          }
+        }
+      }
+    },
+    "Do not move the same piece again and again in the opening." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Netahejte v zahájení pořád jednou a touž figurou."
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotovo"
+          }
+        }
+      }
+    },
+    "Double attack: one move creates two threats — a fork is the version with one piece." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvojí útok: jeden tah vytvoří dvě hrozby — vidlička je jeho verze s jednou figurou."
+          }
+        }
+      }
+    },
+    "Double tap to capture" : {
+      "comment" : "VoiceOver hint on a square the selected piece can take",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvojitým klepnutím vezmete figuru"
+          }
+        }
+      }
+    },
+    "Double tap to move here" : {
+      "comment" : "VoiceOver hint on a square the selected piece can go to",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvojitým klepnutím sem táhnete"
+          }
+        }
+      }
+    },
+    "Double tap to select" : {
+      "comment" : "VoiceOver hint on a piece the player may move",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvojitým klepnutím vyberete"
+          }
+        }
+      }
+    },
+    "Draw" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remíza"
+          }
+        }
+      }
+    },
+    "Draw — fifty-move rule" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remíza — pravidlo 50 tahů"
+          }
+        }
+      }
+    },
+    "Draw — insufficient material" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remíza — nedostatek materiálu"
+          }
+        }
+      }
+    },
+    "Draw — threefold repetition" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remíza — trojí opakování pozice"
+          }
+        }
+      }
+    },
+    "Draw by agreement" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remíza dohodou"
+          }
+        }
+      }
+    },
+    "Dunst Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunstovo zahájení"
+          }
+        }
+      }
+    },
+    "Dutch Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holandská obrana"
+          }
+        }
+      }
+    },
+    "Easy" : {
+      "comment" : "Difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lehká"
+          }
+        }
+      }
+    },
+    "Eight squares from the middle of the board." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osm polí ze středu šachovnice."
+          }
+        }
+      }
+    },
+    "En passant" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Braní mimochodem"
+          }
+        }
+      }
+    },
+    "End" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konec"
+          }
+        }
+      }
+    },
+    "English Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anglická hra"
+          }
+        }
+      }
+    },
+    "English Opening: Reversed Sicilian" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anglická hra: obrácená sicilská"
+          }
+        }
+      }
+    },
+    "English Opening: Symmetrical" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anglická hra: symetrická varianta"
+          }
+        }
+      }
+    },
+    "Englund Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Englundův gambit"
+          }
+        }
+      }
+    },
+    "Evaluation appears as the engine works" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hodnocení se objeví, jak engine počítá"
+          }
+        }
+      }
+    },
+    "Evaluation graph" : {
+      "comment" : "VoiceOver name for the game's evaluation chart",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graf hodnocení"
+          }
+        }
+      }
+    },
+    "Every capture changes the balance. Count before you take: if the material after the whole exchange is in your favour, take; if not, do not. When you are ahead, trading pieces makes your lead bigger and the position simpler." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každé braní mění rovnováhu. Než vezmete, počítejte: pokud je materiál po celé výměně ve váš prospěch, berte; pokud ne, neberte. Když vedete, výměny váš náskok zvětšují a pozici zjednodušují."
+          }
+        }
+      }
+    },
+    "Every legal move steps off the e-file." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každý možný tah odchází ze sloupce e."
+          }
+        }
+      }
+    },
+    "Every square has a name" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každé pole má jméno"
+          }
+        }
+      }
+    },
+    "Files run away from you, ranks run across." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sloupce vedou od vás dopředu, řady napříč."
+          }
+        }
+      }
+    },
+    "Finish" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokončit"
+          }
+        }
+      }
+    },
+    "First steps at the board" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "První kroky u šachovnice"
+          }
+        }
+      }
+    },
+    "Five difficulty levels" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pět úrovní obtížnosti"
+          }
+        }
+      }
+    },
+    "Five difficulty levels wait under Play vs Computer — the lowest ones play like a beginner on purpose." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pod Hrát proti počítači čeká pět úrovní obtížnosti — ty nejnižší hrají jako začátečník záměrně."
+          }
+        }
+      }
+    },
+    "Flawless" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez chyby"
+          }
+        }
+      }
+    },
+    "Flip board (two players)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otáčet šachovnici (dva hráči)"
+          }
+        }
+      }
+    },
+    "Flip board (two players) turns the board towards whoever is on the move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otáčet šachovnici (dva hráči) natočí šachovnici k tomu, kdo je na tahu."
+          }
+        }
+      }
+    },
+    "Flip the board" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otočit šachovnici"
+          }
+        }
+      }
+    },
+    "Forks, pins, skewers and what to look for" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidličky, vazby, rentgeny a na co si dát pozor"
+          }
+        }
+      }
+    },
+    "Four Knights Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hra čtyř jezdců"
+          }
+        }
+      }
+    },
+    "French Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana"
+          }
+        }
+      }
+    },
+    "French Defense: Advance Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana: postupová varianta"
+          }
+        }
+      }
+    },
+    "French Defense: Classical Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana: klasická varianta"
+          }
+        }
+      }
+    },
+    "French Defense: Exchange Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana: výměnná varianta"
+          }
+        }
+      }
+    },
+    "French Defense: Tarrasch Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana: Tarraschova varianta"
+          }
+        }
+      }
+    },
+    "French Defense: Winawer Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francouzská obrana: Winawerova varianta"
+          }
+        }
+      }
+    },
+    "GAME" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HRA"
+          }
+        }
+      }
+    },
+    "Game Report" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehled partie"
+          }
+        }
+      }
+    },
+    "Game Review" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozbor partie"
+          }
+        }
+      }
+    },
+    "Gave a little something away" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trochu ustoupil"
+          }
+        }
+      }
+    },
+    "Get your pieces out" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyveďte figury"
+          }
+        }
+      }
+    },
+    "Give your pieces work" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dejte figurám práci"
+          }
+        }
+      }
+    },
+    "Good" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dobrý"
+          }
+        }
+      }
+    },
+    "Good moves usually improve a piece: a rook onto an open file, a knight to a square no pawn can chase it from, a bishop onto a long clear diagonal. If you have no plan, find your worst piece and make it better." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dobré tahy obvykle zlepšují nějakou figuru: věž na otevřený sloupec, jezdce na pole, odkud ho žádný pěšec nevyžene, střelce na dlouhou volnou diagonálu. Když nemáte plán, najděte svou nejhorší figuru a zlepšete ji."
+          }
+        }
+      }
+    },
+    "grade.excellent" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vynikající"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excellent"
+          }
+        }
+      }
+    },
+    "Grandmaster" : {
+      "comment" : "Difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velmistrovská"
+          }
+        }
+      }
+    },
+    "Great move" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skvělý tah"
+          }
+        }
+      }
+    },
+    "Grob's Attack" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grobův útok"
+          }
+        }
+      }
+    },
+    "Grünfeld Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grünfeldova obrana"
+          }
+        }
+      }
+    },
+    "h1, the near right corner, is a light square." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "h1, pravý dolní roh, je světlé pole."
+          }
+        }
+      }
+    },
+    "Handed over real ground" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přenechal soupeři skutečnou výhodu"
+          }
+        }
+      }
+    },
+    "Haptics" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrace"
+          }
+        }
+      }
+    },
+    "Hard" : {
+      "comment" : "Difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Těžká"
+          }
+        }
+      }
+    },
+    "Hint" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nápověda"
+          }
+        }
+      }
+    },
+    "Hint asks the engine for the move it would play, in games against the computer; with two players that button offers a draw instead." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nápověda se zeptá enginu, jaký tah by zahrál, v partiích proti počítači; u dvou hráčů totéž tlačítko nabízí remízu."
+          }
+        }
+      }
+    },
+    "How Games End" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak partie končí"
+          }
+        }
+      }
+    },
+    "How the Pieces Move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak táhnou figury"
+          }
+        }
+      }
+    },
+    "How to Play" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak hrát"
+          }
+        }
+      }
+    },
+    "Hungarian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uherská obrana"
+          }
+        }
+      }
+    },
+    "Hungarian Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uherské zahájení"
+          }
+        }
+      }
+    },
+    "If I play this, what is the best reply?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když zahraju tohle, jaká je nejlepší odpověď?"
+          }
+        }
+      }
+    },
+    "If the player to move has no legal move but is not in check, the game is a draw — stalemate. It is the great escape of the losing side, so when you are far ahead, give the enemy king air and mate him properly." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokud hráč na tahu nemá žádný možný tah, ale není v šachu, je partie remíza — pat. Je to velký únik prohrávající strany, takže když vedete o hodně, nechte soupeřovu králi vzduch a dejte mu pořádný mat."
+          }
+        }
+      }
+    },
+    "in check" : {
+      "comment" : "VoiceOver value on the checked king's square",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v šachu"
+          }
+        }
+      }
+    },
+    "In the first ten moves, aim to have every knight and bishop off its starting square and pointing at the centre. A piece at home does nothing, and material means little if your opponent's army is developed and yours is not." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V prvních deseti tazích se snažte dostat každého jezdce a střelce z výchozího pole a namířit je do středu. Figura doma nedělá nic a materiál moc neznamená, když má soupeř vyvinutou armádu a vy ne."
+          }
+        }
+      }
+    },
+    "Inaccuracy" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepřesnost"
+          }
+        }
+      }
+    },
+    "Inaccurate — %@ held on to more.%@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepřesné — %@ udržel víc.%@"
+          }
+        }
+      }
+    },
+    "Indian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indická obrana"
+          }
+        }
+      }
+    },
+    "Is anything of mine attacked and undefended?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Není něco mého napadené a nekryté?"
+          }
+        }
+      }
+    },
+    "It does not matter whether the rook is attacked, or whether the rook crosses an attacked square." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na věži nezáleží — může být napadená i přejít přes napadené pole."
+          }
+        }
+      }
+    },
+    "It is the piece that gets out of a crowded position most easily." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ze zaplněné pozice se dostane ven nejsnáz ze všech figur."
+          }
+        }
+      }
+    },
+    "Italian Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italská hra"
+          }
+        }
+      }
+    },
+    "Italian Game: Evans Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italská hra: Evansův gambit"
+          }
+        }
+      }
+    },
+    "Italian Game: Giuoco Piano" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italská hra: Giuoco Piano"
+          }
+        }
+      }
+    },
+    "Italian Game: Two Knights Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italská hra: obrana dvou jezdců"
+          }
+        }
+      }
+    },
+    "Just about the only move that holds the position together." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prakticky jediný tah, který drží pozici pohromadě."
+          }
+        }
+      }
+    },
+    "K king · Q queen · R rook · B bishop · N knight · pawns: nothing" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "K král · D dáma · V věž · S střelec · J jezdec · pěšci: nic"
+          }
+        }
+      }
+    },
+    "Keep Playing" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hrát dál"
+          }
+        }
+      }
+    },
+    "KEY MOMENTS" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KLÍČOVÉ MOMENTY"
+          }
+        }
+      }
+    },
+    "King" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král"
+          }
+        }
+      }
+    },
+    "King and rook at once: Black saves the king, White takes the rook." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král a věž najednou: černý zachrání krále, bílý bere věž."
+          }
+        }
+      }
+    },
+    "King's Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Královský gambit"
+          }
+        }
+      }
+    },
+    "King's Indian Attack" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Královský indický útok"
+          }
+        }
+      }
+    },
+    "King's Indian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Královská indická obrana"
+          }
+        }
+      }
+    },
+    "King's Knight Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahájení královským jezdcem"
+          }
+        }
+      }
+    },
+    "King's Pawn Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahájení královským pěšcem"
+          }
+        }
+      }
+    },
+    "Knight" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdec"
+          }
+        }
+      }
+    },
+    "Knights before bishops is a useful habit." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdce před střelci je užitečný zvyk."
+          }
+        }
+      }
+    },
+    "Knights need a safe square in or near the centre." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdci potřebují bezpečné pole ve středu nebo blízko něj."
+          }
+        }
+      }
+    },
+    "Known opening theory." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Známá teorie zahájení."
+          }
+        }
+      }
+    },
+    "Larsen's Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Larsenovo zahájení"
+          }
+        }
+      }
+    },
+    "Last game · %lld moves" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Poslední partie · %lld tahy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Poslední partie · %lld tah"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Poslední partie · %lld tahů"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Last game · %lld move"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Last game · %lld moves"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "last move" : {
+      "comment" : "VoiceOver value on the squares of the move just played",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "poslední tah"
+          }
+        }
+      }
+    },
+    "Leave the queen at home for a while: she is easy to chase, and every check she has to run from costs you a move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nechte dámu chvíli doma: snadno se žene a každý útok, před kterým musí utéct, vás stojí tah."
+          }
+        }
+      }
+    },
+    "Lesson diagram" : {
+      "comment" : "VoiceOver name for a board inside a lesson",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagram lekce"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson diagram"
+          }
+        }
+      }
+    },
+    "Level position" : {
+      "comment" : "VoiceOver: neither side is better",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyrovnaná pozice"
+          }
+        }
+      }
+    },
+    "London System" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Londýnský systém"
+          }
+        }
+      }
+    },
+    "Makes a mistake now and then" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Občas udělá chybu"
+          }
+        }
+      }
+    },
+    "Making a move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak zahrát tah"
+          }
+        }
+      }
+    },
+    "Marble" : {
+      "comment" : "Board theme",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mramor"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "comment" : "Difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střední"
+          }
+        }
+      }
+    },
+    "Midnight" : {
+      "comment" : "Board theme",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Půlnoc"
+          }
+        }
+      }
+    },
+    "Missed chance" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Promarněná šance"
+          }
+        }
+      }
+    },
+    "Mistake" : {
+      "comment" : "Move grade",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chyba"
+          }
+        }
+      }
+    },
+    "Modern Benoni" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderní Benoni"
+          }
+        }
+      }
+    },
+    "Modern Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderní obrana"
+          }
+        }
+      }
+    },
+    "Most games between beginners are decided by pieces given away for nothing, not by deep plans. Four quick questions prevent nearly all of it." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie začátečníků rozhodují zadarmo darované figury, ne hluboké plány. Čtyři rychlé otázky tomu skoro vždy zabrání."
+          }
+        }
+      }
+    },
+    "MOVE BREAKDOWN" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ROZDĚLENÍ TAHŮ"
+          }
+        }
+      }
+    },
+    "Move each pawn only as far as your pieces need." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každým pěšcem táhněte jen tak daleko, jak vaše figury potřebují."
+          }
+        }
+      }
+    },
+    "Move numbers" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čísla tahů"
+          }
+        }
+      }
+    },
+    "Move taken back" : {
+      "comment" : "Spoken by VoiceOver after Undo",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tah vrácen"
+          }
+        }
+      }
+    },
+    "Moves" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahy"
+          }
+        }
+      }
+    },
+    "Moving pieces, hints and the game review" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahy figurami, nápověda a rozbor partie"
+          }
+        }
+      }
+    },
+    "Nearly the engine's choice; %@ was a shade better." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skoro volba enginu; %@ byl o chlup lepší."
+          }
+        }
+      }
+    },
+    "Neither player can deliver checkmate." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ani jeden hráč už nemůže dát mat."
+          }
+        }
+      }
+    },
+    "Neither the king nor that particular rook has moved yet." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král ani ta konkrétní věž ještě netáhli."
+          }
+        }
+      }
+    },
+    "Never played before? Start at the top. Nine short lessons cover every rule of the game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nikdy jste nehráli? Začněte nahoře. Devět krátkých lekcí projde všechna pravidla hry."
+          }
+        }
+      }
+    },
+    "New Game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nová partie"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Další"
+          }
+        }
+      }
+    },
+    "Nimzo-Indian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nimcoindická obrana"
+          }
+        }
+      }
+    },
+    "Nimzowitsch Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nimcovičova obrana"
+          }
+        }
+      }
+    },
+    "No dots: Black has no legal move at all. Checkmate." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné tečky: černý nemá jediný možný tah. Mat."
+          }
+        }
+      }
+    },
+    "No moves played" : {
+      "comment" : "Stands in for the accuracy of a player who never got to move",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez tahů"
+          }
+        }
+      }
+    },
+    "No moves to review — this game ended before anyone played." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Není co analyzovat — partie skončila, než padl první tah."
+          }
+        }
+      }
+    },
+    "No verdict for this move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro tento tah není hodnocení."
+          }
+        }
+      }
+    },
+    "Not analyzed yet" : {
+      "comment" : "VoiceOver value before the engine has answered",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím nerozebráno"
+          }
+        }
+      }
+    },
+    "Not enough material: king against king, or king and a single knight or bishop, cannot mate." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostatek materiálu: král proti králi, nebo král s jedním jezdcem či střelcem, nemůže dát mat."
+          }
+        }
+      }
+    },
+    "Not in check, but nothing to play: a draw." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Není v šachu, ale nemá co hrát: remíza."
+          }
+        }
+      }
+    },
+    "notation.pieceLetters" : {
+      "comment" : "The five piece letters used when a move is written down, in the order king, queen, rook, bishop, knight — no separators. Czech chess writes KDVSJ (král, dáma, věž, střelec, jezdec).",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KDVSJ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KQRBN"
+          }
+        }
+      }
+    },
+    "O-O is castling towards the h-file, O-O-O towards the a-file." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O-O je rošáda na stranu sloupce h, O-O-O na stranu sloupce a."
+          }
+        }
+      }
+    },
+    "Ocean" : {
+      "comment" : "Board theme",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oceán"
+          }
+        }
+      }
+    },
+    "On one device" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na jednom zařízení"
+          }
+        }
+      }
+    },
+    "Once per game each player may castle: the king steps two squares towards a rook and that rook hops over him to the other side. It is the only move that shifts two pieces at once, and it does two useful things — the king hides behind his pawns and the rook comes into play." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jednou za partii může každý hráč rošovat: král udělá dva kroky směrem k věži a ta přeskočí na jeho druhou stranu. Je to jediný tah, který hýbe dvěma figurami najednou, a dělá dvě užitečné věci — král se schová za své pěšce a věž se dostane do hry."
+          }
+        }
+      }
+    },
+    "One number covers a move by each player: \"1.e4 e5\" is move one. When only Black's half is quoted it is written with dots, as in \"1...e5\". The strip under the board in this app lists the game exactly this way, newest move last." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedno číslo pokrývá tah obou hráčů: „1.e4 e5“ je první tah. Když se cituje jen půlka černého, píše se s tečkami, třeba „1...e5“. Pruh pod šachovnicí v této aplikaci vypisuje partii přesně takhle, nejnovější tah vpravo."
+          }
+        }
+      }
+    },
+    "One step at a time — but in every direction." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vždy jen krok — zato všemi směry."
+          }
+        }
+      }
+    },
+    "Open Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřená hra"
+          }
+        }
+      }
+    },
+    "Opening principles and simple plans" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zásady zahájení a jednoduché plány"
+          }
+        }
+      }
+    },
+    "Overloading: a defender given two jobs cannot do both." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přetížení: obránce se dvěma úkoly nezvládne oba."
+          }
+        }
+      }
+    },
+    "Owen's Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Owenova obrana"
+          }
+        }
+      }
+    },
+    "Pause" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauza"
+          }
+        }
+      }
+    },
+    "Pawn" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec"
+          }
+        }
+      }
+    },
+    "Pawn Promotion" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proměna pěšce"
+          }
+        }
+      }
+    },
+    "Pawns cannot go back: think twice before you push one." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšci se nevracejí: než některým postoupíte, rozmyslete si to dvakrát."
+          }
+        }
+      }
+    },
+    "Pawns fill the second rank in front of the pieces. Rooks go in the corners, then knights, then bishops, and the king and queen take the last two squares. The queen always starts on a square of her own colour: the white queen on light d1, the black queen on dark d8." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšci vyplní druhou řadu před figurami. Do rohů patří věže, pak jezdci, pak střelci a poslední dvě pole zaberou král s dámou. Dáma vždy začíná na poli své barvy: bílá na světlém d1, černá na tmavém d8."
+          }
+        }
+      }
+    },
+    "Petrov's Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruská hra"
+          }
+        }
+      }
+    },
+    "Philidor Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Philidorova obrana"
+          }
+        }
+      }
+    },
+    "Piece artwork" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grafika figur"
+          }
+        }
+      }
+    },
+    "Piece plus square" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figura a pole"
+          }
+        }
+      }
+    },
+    "piece.black.bishop" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černý střelec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black bishop"
+          }
+        }
+      }
+    },
+    "piece.black.king" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černý král"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black king"
+          }
+        }
+      }
+    },
+    "piece.black.knight" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černý jezdec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black knight"
+          }
+        }
+      }
+    },
+    "piece.black.pawn" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černý pěšec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black pawn"
+          }
+        }
+      }
+    },
+    "piece.black.queen" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černá dáma"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black queen"
+          }
+        }
+      }
+    },
+    "piece.black.rook" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "černá věž"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "black rook"
+          }
+        }
+      }
+    },
+    "piece.name.bishop" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "střelec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bishop"
+          }
+        }
+      }
+    },
+    "piece.name.king" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "král"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "king"
+          }
+        }
+      }
+    },
+    "piece.name.knight" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jezdec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "knight"
+          }
+        }
+      }
+    },
+    "piece.name.pawn" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pěšec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pawn"
+          }
+        }
+      }
+    },
+    "piece.name.queen" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dáma"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "queen"
+          }
+        }
+      }
+    },
+    "piece.name.rook" : {
+      "comment" : "Piece name, spoken on its own",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "věž"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rook"
+          }
+        }
+      }
+    },
+    "piece.object.bishop" : {
+      "comment" : "Piece name in 'now wins the bishop'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "střelce"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bishop"
+          }
+        }
+      }
+    },
+    "piece.object.king" : {
+      "comment" : "Piece name in 'now wins the king'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "krále"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "king"
+          }
+        }
+      }
+    },
+    "piece.object.knight" : {
+      "comment" : "Piece name in 'now wins the knight'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jezdce"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "knight"
+          }
+        }
+      }
+    },
+    "piece.object.pawn" : {
+      "comment" : "Piece name in 'now wins the pawn'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pěšce"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pawn"
+          }
+        }
+      }
+    },
+    "piece.object.queen" : {
+      "comment" : "Piece name in 'now wins the queen'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dámu"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "queen"
+          }
+        }
+      }
+    },
+    "piece.object.rook" : {
+      "comment" : "Piece name in 'now wins the rook'",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "věž"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rook"
+          }
+        }
+      }
+    },
+    "piece.white.bishop" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílý střelec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white bishop"
+          }
+        }
+      }
+    },
+    "piece.white.king" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílý král"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white king"
+          }
+        }
+      }
+    },
+    "piece.white.knight" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílý jezdec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white knight"
+          }
+        }
+      }
+    },
+    "piece.white.pawn" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílý pěšec"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white pawn"
+          }
+        }
+      }
+    },
+    "piece.white.queen" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílá dáma"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white queen"
+          }
+        }
+      }
+    },
+    "piece.white.rook" : {
+      "comment" : "Piece on a square, read out by VoiceOver",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bílá věž"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "white rook"
+          }
+        }
+      }
+    },
+    "Pirc Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pircova obrana"
+          }
+        }
+      }
+    },
+    "Play Again (same side)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hrát znovu (stejná barva)"
+          }
+        }
+      }
+    },
+    "PLAY AS" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HRAJETE ZA"
+          }
+        }
+      }
+    },
+    "Play vs Computer" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hrát proti počítači"
+          }
+        }
+      }
+    },
+    "player.name.black" : {
+      "comment" : "Player name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black"
+          }
+        }
+      }
+    },
+    "player.name.white" : {
+      "comment" : "Player name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White"
+          }
+        }
+      }
+    },
+    "Playing in This App" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hraní v této aplikaci"
+          }
+        }
+      }
+    },
+    "Playing Well" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak hrát dobře"
+          }
+        }
+      }
+    },
+    "Polish Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polská obrana"
+          }
+        }
+      }
+    },
+    "Ponziani Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponzianiho zahájení"
+          }
+        }
+      }
+    },
+    "Position" : {
+      "comment" : "VoiceOver name for the review board",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozice"
+          }
+        }
+      }
+    },
+    "Previous page" : {
+      "comment" : "VoiceOver name of the tutorial's back-one-page button",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Předchozí stránka"
+          }
+        }
+      }
+    },
+    "Promotion" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proměna"
+          }
+        }
+      }
+    },
+    "Push the pawn your king can support, and blockade your opponent's." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Táhněte pěšcem, kterého váš král podpoří, a soupeřova zablokujte."
+          }
+        }
+      }
+    },
+    "Put the pieces back" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vrátit figury zpět"
+          }
+        }
+      }
+    },
+    "Queen" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dáma"
+          }
+        }
+      }
+    },
+    "Queen and king mate at the edge: the queen checks, the king guards her." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat dámou a králem na kraji: dáma dává šach, král ji kryje."
+          }
+        }
+      }
+    },
+    "Queen's Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dámský gambit"
+          }
+        }
+      }
+    },
+    "Queen's Gambit Accepted" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přijatý dámský gambit"
+          }
+        }
+      }
+    },
+    "Queen's Gambit Declined" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odmítnutý dámský gambit"
+          }
+        }
+      }
+    },
+    "Queen's Indian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dámská indická obrana"
+          }
+        }
+      }
+    },
+    "Queen's Pawn Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahájení dámským pěšcem"
+          }
+        }
+      }
+    },
+    "Random" : {
+      "comment" : "Side to play as",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Náhodně"
+          }
+        }
+      }
+    },
+    "Rank 1 is White's home row, rank 8 is Black's." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "První řada patří bílému, osmá černému."
+          }
+        }
+      }
+    },
+    "Reading the Moves" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak číst zápis tahů"
+          }
+        }
+      }
+    },
+    "Rematch" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odveta"
+          }
+        }
+      }
+    },
+    "Removing the defender: capture or chase away the piece that guards your target." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odlákání obránce: seberte nebo odežeňte figuru, která hlídá váš cíl."
+          }
+        }
+      }
+    },
+    "Replace the unfinished game?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahradit nedokončenou partii?"
+          }
+        }
+      }
+    },
+    "Replay" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehrát"
+          }
+        }
+      }
+    },
+    "Report" : {
+      "comment" : "Opens the full game report",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehled"
+          }
+        }
+      }
+    },
+    "report.moveCount" : {
+      "comment" : "How long the game was, on the report header",
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld tahy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld tah"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld tahů"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld move"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld moves"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "comment" : "Puts a lesson diagram back the way it started",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znovu"
+          }
+        }
+      }
+    },
+    "Resign" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdát"
+          }
+        }
+      }
+    },
+    "Resign ends a hopeless game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdát ukončí beznadějnou partii."
+          }
+        }
+      }
+    },
+    "Resign for Black?" : {
+      "comment" : "Confirmation before resigning in a two-player game, with Black on turn",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdát partii za černého?"
+          }
+        }
+      }
+    },
+    "Resign for White?" : {
+      "comment" : "Confirmation before resigning in a two-player game, with White on turn",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdát partii za bílého?"
+          }
+        }
+      }
+    },
+    "Resign this game?" : {
+      "comment" : "Confirmation before resigning",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdát tuto partii?"
+          }
+        }
+      }
+    },
+    "Réti Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétiho zahájení"
+          }
+        }
+      }
+    },
+    "Rings are captures, dots are quiet moves." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kroužky jsou braní, tečky tiché tahy."
+          }
+        }
+      }
+    },
+    "Rook" : {
+      "comment" : "Piece name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Věž"
+          }
+        }
+      }
+    },
+    "Rooks belong on open files and behind your own passed pawns." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Věže patří na otevřené sloupce a za vlastní volné pěšce."
+          }
+        }
+      }
+    },
+    "Rough" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slabé"
+          }
+        }
+      }
+    },
+    "Ruy López Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra"
+          }
+        }
+      }
+    },
+    "Ruy López: Berlin Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra: berlínská obrana"
+          }
+        }
+      }
+    },
+    "Ruy López: Closed" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra: uzavřená varianta"
+          }
+        }
+      }
+    },
+    "Ruy López: Exchange Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra: výměnná varianta"
+          }
+        }
+      }
+    },
+    "Ruy López: Morphy Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Španělská hra: Morphyho obrana"
+          }
+        }
+      }
+    },
+    "Scandinavian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skandinávská obrana"
+          }
+        }
+      }
+    },
+    "Scotch Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skotská hra"
+          }
+        }
+      }
+    },
+    "Selected. Double tap to deselect" : {
+      "comment" : "VoiceOver hint on the square of the selected piece",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybráno. Dvojitým klepnutím zrušíte výběr"
+          }
+        }
+      }
+    },
+    "Semi-Slav Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poloslovanská obrana"
+          }
+        }
+      }
+    },
+    "Setting it up" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postavení figur"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení"
+          }
+        }
+      }
+    },
+    "Shaky" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolísavé"
+          }
+        }
+      }
+    },
+    "Show legal moves" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazovat možné tahy"
+          }
+        }
+      }
+    },
+    "Sicilian Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Accelerated Dragon" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: zrychlený drak"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Alapin Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: Alapinova varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Closed" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: uzavřená varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Dragon Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: dračí varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Najdorf Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: Najdorfova varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Open" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: otevřená varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Smith-Morra Gambit" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: Smith-Morrův gambit"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Sveshnikov Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: Sveshnikovova varianta"
+          }
+        }
+      }
+    },
+    "Sicilian Defense: Taimanov Variation" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicilská obrana: Tajmanovova varianta"
+          }
+        }
+      }
+    },
+    "side.choice.black" : {
+      "comment" : "Side to play as",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black"
+          }
+        }
+      }
+    },
+    "side.choice.white" : {
+      "comment" : "Side to play as",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White"
+          }
+        }
+      }
+    },
+    "side.toMove.black" : {
+      "comment" : "Side to move",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Černý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black"
+          }
+        }
+      }
+    },
+    "side.toMove.white" : {
+      "comment" : "Side to move",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White"
+          }
+        }
+      }
+    },
+    "Slav Defense" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slovanská obrana"
+          }
+        }
+      }
+    },
+    "Sokolsky Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sokolského zahájení"
+          }
+        }
+      }
+    },
+    "Solid" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solidní"
+          }
+        }
+      }
+    },
+    "Sound, if not the sharpest" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solidní, i když ne nejostřejší"
+          }
+        }
+      }
+    },
+    "Sounds" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuky"
+          }
+        }
+      }
+    },
+    "square.empty" : {
+      "comment" : "VoiceOver label for an empty board square",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, prázdné"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, empty"
+          }
+        }
+      }
+    },
+    "square.occupied" : {
+      "comment" : "VoiceOver label for a square with a piece on it",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %@"
+          }
+        }
+      }
+    },
+    "Stalemate — draw" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pat — remíza"
+          }
+        }
+      }
+    },
+    "Stalemate is a draw" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pat je remíza"
+          }
+        }
+      }
+    },
+    "Stalemate: no legal move, but no check either." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pat: žádný možný tah, ale ani šach."
+          }
+        }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začátek"
+          }
+        }
+      }
+    },
+    "Start Game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začít partii"
+          }
+        }
+      }
+    },
+    "Start New Game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začít novou partii"
+          }
+        }
+      }
+    },
+    "Starting position" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výchozí pozice"
+          }
+        }
+      }
+    },
+    "Step through the game to see how each move was judged." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projděte partii tah po tahu a uvidíte hodnocení každého z nich."
+          }
+        }
+      }
+    },
+    "Still being analyzed…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ještě se analyzuje…"
+          }
+        }
+      }
+    },
+    "Straight lines, any distance." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rovné linie, libovolná vzdálenost."
+          }
+        }
+      }
+    },
+    "Swipe the board, or tap a move in the strip, to walk through the game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partii projdete přejetím po šachovnici nebo klepnutím na tah v pruhu."
+          }
+        }
+      }
+    },
+    "Take the centre" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obsaďte střed"
+          }
+        }
+      }
+    },
+    "Taking a knight instead of a queen is rare, but it can come with a check that a queen would not give." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzít si jezdce místo dámy je vzácné, ale může s sebou nést šach, který by dáma nedala."
+          }
+        }
+      }
+    },
+    "Tap a dot to move the pawn." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepnutím na tečku pěšcem táhnete."
+          }
+        }
+      }
+    },
+    "Tap a piece and the dots show every square it may legally go to; tap one of them to play the move. Dragging the piece works too, and tapping it a second time puts it back down. Illegal moves are simply not offered, so you cannot go wrong." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepněte na figuru a tečky ukážou každé pole, kam smí podle pravidel jít; klepnutím na tečku tah zahrajete. Funguje i tažení figury a druhé klepnutí ji zase položí. Nedovolené tahy se prostě nenabízejí, takže nemůžete udělat chybu."
+          }
+        }
+      }
+    },
+    "Tap e4 to open the game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepnutím na e4 zahájíte partii."
+          }
+        }
+      }
+    },
+    "Tap e8: the pawn arrives and becomes a queen." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepněte na e8: pěšec dojde a promění se v dámu."
+          }
+        }
+      }
+    },
+    "Tap g1 or c1: the king goes two squares, the rook lands on his other side." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepněte na g1 nebo c1: král jde o dvě pole a věž přistane na jeho druhé straně."
+          }
+        }
+      }
+    },
+    "Tap the knight: it is pinned and has no legal move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepněte na jezdce: je vázaný a nemá žádný možný tah."
+          }
+        }
+      }
+    },
+    "The app shows the captured pieces and the material lead next to each player." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikace ukazuje u každého hráče sebrané figury a materiální náskok."
+          }
+        }
+      }
+    },
+    "The bishop" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střelec"
+          }
+        }
+      }
+    },
+    "The bishop keeps to its own colour." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Střelec zůstává na své barvě."
+          }
+        }
+      }
+    },
+    "The Board" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachovnice"
+          }
+        }
+      }
+    },
+    "The boards in the lessons are live: tap a piece's dots and the move really happens." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachovnice v lekcích jsou živé: klepněte na tečku u figury a tah se opravdu zahraje."
+          }
+        }
+      }
+    },
+    "The buttons" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tlačítka"
+          }
+        }
+      }
+    },
+    "The classic game of kings" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klasická hra králů"
+          }
+        }
+      }
+    },
+    "The columns are called files and are lettered a to h." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sloupce se značí písmeny a až h."
+          }
+        }
+      }
+    },
+    "The endgame" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koncovka"
+          }
+        }
+      }
+    },
+    "The engine is still working through the game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engine partii ještě prochází."
+          }
+        }
+      }
+    },
+    "The engine's own first choice" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "První volba enginu"
+          }
+        }
+      }
+    },
+    "The fifty-move rule: fifty moves by each side with no capture and no pawn move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pravidlo 50 tahů: padesát tahů každé strany bez braní a bez tahu pěšcem."
+          }
+        }
+      }
+    },
+    "The five draws" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pět druhů remízy"
+          }
+        }
+      }
+    },
+    "The fork" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidlička"
+          }
+        }
+      }
+    },
+    "The four squares both sides are fighting over." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čtyři pole, o která obě strany bojují."
+          }
+        }
+      }
+    },
+    "The game ended by resignation." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie skončila vzdáním."
+          }
+        }
+      }
+    },
+    "The game review" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozbor partie"
+          }
+        }
+      }
+    },
+    "The game waiting under Continue will be lost." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie čekající pod tlačítkem Pokračovat bude ztracena."
+          }
+        }
+      }
+    },
+    "The gear — in the menu, and in the top row of a game — holds five board themes, sounds and haptics, and the two helpers you may want to switch off as you improve: the legal-move dots and the coordinates around the board." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ozubené kolo — v menu i v horní řadě partie — skrývá pět vzhledů šachovnice, zvuky a vibrace a dva pomocníky, které možná budete chtít s rostoucí silou vypnout: tečky možných tahů a souřadnice kolem šachovnice."
+          }
+        }
+      }
+    },
+    "The highlighted square is e4." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvýrazněné pole je e4."
+          }
+        }
+      }
+    },
+    "The king" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král"
+          }
+        }
+      }
+    },
+    "The king does not pass over, or land on, a square an enemy piece attacks." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král nepřechází přes napadené pole ani na něm nekončí."
+          }
+        }
+      }
+    },
+    "The king has nowhere to run." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král nemá kam utéct."
+          }
+        }
+      }
+    },
+    "The king is not in check right now." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král právě není v šachu."
+          }
+        }
+      }
+    },
+    "The king is safest behind an untouched wall of pawns, and castling puts him there while bringing a rook towards the centre. As a rule: develop two or three pieces, castle, then start looking for a plan." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král je nejbezpečnější za nedotčenou hradbou pěšců a rošáda ho tam dostane a zároveň přivede věž ke středu. Jako pravidlo: vyviňte dvě tři figury, zarošujte a teprve pak hledejte plán."
+          }
+        }
+      }
+    },
+    "The king moves one square in any direction. He is never actually captured: instead the rules forbid leaving him under attack, so a move that would expose your own king is simply not allowed. The two kings can also never stand next to each other." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král táhne o jedno pole libovolným směrem. Nikdy se vlastně nebere: pravidla místo toho zakazují nechat ho pod útokem, takže tah, který by vlastního krále vystavil, prostě není dovolen. Oba králové také nikdy nesmějí stát vedle sebe."
+          }
+        }
+      }
+    },
+    "The king must step aside, and the rook collects the queen." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Král musí uhnout a věž si vezme dámu."
+          }
+        }
+      }
+    },
+    "The knight" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdec"
+          }
+        }
+      }
+    },
+    "The knight moves in an L: two squares along one line, then one square across. It is the only piece that jumps — nothing in between can block it, and it always lands on a square of the opposite colour to the one it left." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jezdec táhne do L: dvě pole po jedné linii a pak jedno stranou. Je to jediná figura, která skáče — nic mezi tím ji nezastaví — a vždy dopadne na pole opačné barvy, než ze kterého vyšla."
+          }
+        }
+      }
+    },
+    "The last finished game stays on the menu, so you can review it again later." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední dohraná partie zůstává v menu, takže si ji můžete prohlédnout znovu."
+          }
+        }
+      }
+    },
+    "The move that cost the game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tah, který stál partii"
+          }
+        }
+      }
+    },
+    "The one move that held everything together" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jediný tah, který vše udržel pohromadě"
+          }
+        }
+      }
+    },
+    "The pawn" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec"
+          }
+        }
+      }
+    },
+    "The pawn captures sideways" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pěšec bere šikmo"
+          }
+        }
+      }
+    },
+    "The pin" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vazba"
+          }
+        }
+      }
+    },
+    "The player to move has no legal move." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hráč na tahu nemá žádný možný tah."
+          }
+        }
+      }
+    },
+    "The point of the whole game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O co v celé hře jde"
+          }
+        }
+      }
+    },
+    "The queen" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dáma"
+          }
+        }
+      }
+    },
+    "The queen is a rook and a bishop in one: any distance along a rank, a file or a diagonal. She is far and away the strongest piece, which is also why she should not go hunting alone in the opening — smaller pieces chase her around and gain time." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dáma je věž a střelec v jednom: libovolná vzdálenost po řadě, po sloupci i po diagonále. Je zdaleka nejsilnější figurou, a právě proto by se v zahájení neměla vydávat na lov sama — menší figury ji ženou před sebou a získávají tempo."
+          }
+        }
+      }
+    },
+    "The rook" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Věž"
+          }
+        }
+      }
+    },
+    "The rook has exactly one legal move: e4, blocking the check." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Věž má přesně jeden možný tah: e4, který šach zacloní."
+          }
+        }
+      }
+    },
+    "The rows are called ranks and are numbered 1 to 8." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Řady se značí čísly 1 až 8."
+          }
+        }
+      }
+    },
+    "The rules, from the first move" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pravidla od prvního tahu"
+          }
+        }
+      }
+    },
+    "The same position occurred three times." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stejná pozice nastala potřetí."
+          }
+        }
+      }
+    },
+    "The skewer" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rentgen"
+          }
+        }
+      }
+    },
+    "The squares between them are empty." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pole mezi nimi jsou volná."
+          }
+        }
+      }
+    },
+    "The standard Staunton chess pieces drawn by Cburnett for Wikimedia Commons, used under the BSD licence." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardní Stauntonovy šachové figury nakreslil Cburnett pro Wikimedia Commons, použito pod licencí BSD."
+          }
+        }
+      }
+    },
+    "The strongest move — it forces mate in %lld." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejsilnější tah — vynucuje mat %lld. tahem."
+          }
+        }
+      }
+    },
+    "The strongest move in the position." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejsilnější tah v pozici."
+          }
+        }
+      }
+    },
+    "The two kings face each other on the e-file, the two queens on the d-file." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oba králové stojí proti sobě na sloupci e, obě dámy na sloupci d."
+          }
+        }
+      }
+    },
+    "There are two ways to win: checkmate the enemy king, or have your opponent resign. Resigning is normal courtesy among players once a game is hopeless — the Resign button is in the row under the board." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyhrát jde dvěma způsoby: dát soupeřovu králi mat, nebo se dočkat, až se soupeř vzdá. Vzdát se je mezi hráči běžná slušnost, jakmile je partie beznadějná — tlačítko Vzdát najdete v řadě pod šachovnicí."
+          }
+        }
+      }
+    },
+    "There is no rule that you must take a piece, and no rule that pieces must be defended." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neexistuje pravidlo, že se musí brát, ani že figury musí být kryté."
+          }
+        }
+      }
+    },
+    "There was mate in %lld with %@." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Byl tu mat %lld. tahem po %@."
+          }
+        }
+      }
+    },
+    "thinking" : {
+      "comment" : "VoiceOver: the computer is searching",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "přemýšlí"
+          }
+        }
+      }
+    },
+    "This app asks which piece you want as soon as the pawn lands." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikace se zeptá, jakou figuru chcete, hned jak pěšec dojde."
+          }
+        }
+      }
+    },
+    "This is the most common way a beginner's game is lost." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takhle začátečníci prohrávají nejčastěji."
+          }
+        }
+      }
+    },
+    "Three Special Moves" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tři zvláštní tahy"
+          }
+        }
+      }
+    },
+    "Three ways out" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tři způsoby, jak ze šachu ven"
+          }
+        }
+      }
+    },
+    "Threefold repetition: the same position, with the same player to move, for the third time." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trojí opakování: stejná pozice se stejným hráčem na tahu potřetí."
+          }
+        }
+      }
+    },
+    "To mate, drive the enemy king to the edge and bring your own king up to help." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "K matu zatlačte soupeřova krále na kraj a přiveďte na pomoc vlastního krále."
+          }
+        }
+      }
+    },
+    "to move" : {
+      "comment" : "VoiceOver: this player is on turn",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "na tahu"
+          }
+        }
+      }
+    },
+    "Top right, the gear opens the settings and the arrows flip the board; the chevron at the top left returns to the menu, keeping the game so you can continue it later." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vpravo nahoře otevře ozubené kolo nastavení a šipky otočí šachovnici; šipka vlevo nahoře se vrátí do menu a partii uloží, abyste v ní mohli později pokračovat."
+          }
+        }
+      }
+    },
+    "Tournament" : {
+      "comment" : "Board theme",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnajová"
+          }
+        }
+      }
+    },
+    "Trade with a purpose" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyměňujte s rozmyslem"
+          }
+        }
+      }
+    },
+    "Trompowsky Attack" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trompowského útok"
+          }
+        }
+      }
+    },
+    "Turn the board so that each player has a light square in the near right corner." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otočte šachovnici tak, aby měl každý hráč v pravém dolním rohu světlé pole."
+          }
+        }
+      }
+    },
+    "tutorial.focusHint" : {
+      "comment" : "VoiceOver hint on the piece a lesson is about",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahy této figury jsou na šachovnici označené."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The moves of this piece are marked on the board."
+          }
+        }
+      }
+    },
+    "tutorial.focusValue" : {
+      "comment" : "VoiceOver summary of a lesson diagram that offers a piece's moves",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ na %2$@, nabízené tahy jsou označené"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ on %2$@, the moves on offer are marked"
+          }
+        }
+      }
+    },
+    "Twenty-seven squares from d5." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvacet sedm polí z d5."
+          }
+        }
+      }
+    },
+    "Two armies, 64 squares" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvě armády, 64 polí"
+          }
+        }
+      }
+    },
+    "Two pieces checking at once (a double check) can only be answered by moving the king." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na dvojšach (šach dvěma figurami najednou) se dá odpovědět jedině tahem krále."
+          }
+        }
+      }
+    },
+    "Two Players" : {
+      "comment" : "Game mode",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dva hráči"
+          }
+        }
+      }
+    },
+    "Two players · move %lld" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dva hráči · %lld. tah"
+          }
+        }
+      }
+    },
+    "Two rooks or three minor pieces are worth roughly a queen." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dvě věže nebo tři lehké figury mají zhruba cenu dámy."
+          }
+        }
+      }
+    },
+    "Under the board are the three controls you need during a game, and the top row takes you back to the menu or spins the board around." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pod šachovnicí jsou tři ovládací prvky, které během partie potřebujete, a horní řada vás vrátí do menu nebo otočí šachovnici."
+          }
+        }
+      }
+    },
+    "Undo" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpět"
+          }
+        }
+      }
+    },
+    "Undo takes back your move — and the computer's reply with it." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zpět vezme váš tah nazpět — a s ním i odpověď počítače."
+          }
+        }
+      }
+    },
+    "Unfinished game" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedohraná partie"
+          }
+        }
+      }
+    },
+    "Values are a guide, not a law: an active knight can be worth more than a passive rook." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hodnoty jsou vodítko, ne zákon: aktivní jezdec může mít větší cenu než pasivní věž."
+          }
+        }
+      }
+    },
+    "Van 't Kruijs Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Van 't Kruijsovo zahájení"
+          }
+        }
+      }
+    },
+    "verdict.excellent" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vynikající"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excellent"
+          }
+        }
+      }
+    },
+    "Very good" : {
+      "comment" : "Verdict on a player's accuracy",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velmi dobré"
+          }
+        }
+      }
+    },
+    "Vienna Game" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vídeňská hra"
+          }
+        }
+      }
+    },
+    "Vs Computer · %@" : {
+      "comment" : "Game mode, with the difficulty level",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proti počítači · %@"
+          }
+        }
+      }
+    },
+    "W" : {
+      "comment" : "One-letter abbreviation for White",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        }
+      }
+    },
+    "What did that last move threaten?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Co hrozí po soupeřově posledním tahu?"
+          }
+        }
+      }
+    },
+    "What Nf3 and O-O mean" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Co znamená Jf3 a O-O"
+          }
+        }
+      }
+    },
+    "What the pieces are worth" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakou mají figury hodnotu"
+          }
+        }
+      }
+    },
+    "When a game is over, Game Review plays it back and has the engine grade every single move, with an accuracy score for each player and a graph of who was winning when. It is the fastest way to find out what actually went wrong." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když partie skončí, Rozbor partie ji přehraje a nechá engine ohodnotit každý jednotlivý tah, s přesností pro každého hráče a grafem, kdo kdy stál lépe. Je to nejrychlejší způsob, jak zjistit, co se doopravdy pokazilo."
+          }
+        }
+      }
+    },
+    "When a piece attacks the enemy king, that is check. Nothing else may be done first: the player in check has to answer it with this move. Here the rook on e1 checks along the open e-file, so the black king must leave that file." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když figura napadne soupeřova krále, je to šach. Nic jiného se předtím dělat nesmí: hráč v šachu na něj musí odpovědět právě tímto tahem. Tady dává věž na e1 šach po otevřeném sloupci e, takže černý král musí ze sloupce pryč."
+          }
+        }
+      }
+    },
+    "When castling is allowed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kdy je rošáda dovolena"
+          }
+        }
+      }
+    },
+    "White ahead by %@" : {
+      "comment" : "VoiceOver: White's advantage, in pawns",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý vede o %@"
+          }
+        }
+      }
+    },
+    "White has castled: king tucked in, rook joining the game." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý zarošoval: král v bezpečí, věž se zapojuje do hry."
+          }
+        }
+      }
+    },
+    "White mates in %lld" : {
+      "comment" : "VoiceOver: a forced mate for White",
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Bílý dává mat v %lld tazích"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Bílý dává mat v %lld tahu"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Bílý dává mat v %lld tazích"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "White mates in %lld"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "White mates in %lld"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "White resigned" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bílý se vzdal"
+          }
+        }
+      }
+    },
+    "Winning" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výhra"
+          }
+        }
+      }
+    },
+    "Winning Material" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Získávání materiálu"
+          }
+        }
+      }
+    },
+    "Wins, draws and the fifty-move rule" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výhry, remízy a pravidlo 50 tahů"
+          }
+        }
+      }
+    },
+    "With few pieces left the rules of thumb change. Pawns become precious, because one that gets through becomes a queen, and the king turns into a strong piece that should march towards the action instead of hiding." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S málo figurami na desce se pravidla palce mění. Pěšci jsou najednou vzácní, protože ten, který projde, se promění v dámu, a z krále se stává silná figura, která má vyrazit do dění, ne se schovávat."
+          }
+        }
+      }
+    },
+    "Wood" : {
+      "comment" : "Board theme",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dřevo"
+          }
+        }
+      }
+    },
+    "x is a capture: Bxc6, or exd5 for a pawn taking on d5." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x je braní: Sxc6, nebo exd5, když bere pěšec na d5."
+          }
+        }
+      }
+    },
+    "You" : {
+      "comment" : "Player name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vy"
+          }
+        }
+      }
+    },
+    "You resigned" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdali jste se"
+          }
+        }
+      }
+    },
+    "You win by checkmate!" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyhráváte matem!"
+          }
+        }
+      }
+    },
+    "Zukertort Opening" : {
+      "comment" : "Chess opening",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zukertortovo zahájení"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
