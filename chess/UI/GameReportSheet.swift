@@ -50,7 +50,7 @@ struct GameReportSheet: View {
                         } else {
                             Text("The engine is still working through the game.")
                                 .font(.system(.footnote, design: .rounded))
-                                .foregroundStyle(.white.opacity(0.5))
+                                .foregroundStyle(.secondaryText)
                         }
                     }
                     .padding(20)
@@ -89,10 +89,10 @@ struct GameReportSheet: View {
                         .foregroundStyle(.white.opacity(0.6))
                 }
                 Text(String(localized: "report.moveCount",
-                            defaultValue: "\((model.moveCount + 1) / 2) moves",
+                            defaultValue: "\(model.game.movesPlayed) moves",
                             comment: "How long the game was, on the report header"))
                     .scaledFont(11, relativeTo: .caption2, weight: .medium, design: .rounded)
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.tertiaryText)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -151,7 +151,7 @@ struct GameReportSheet: View {
                     if report.accuracy != nil {
                         Text(verbatim: "%")
                             .scaledFont(9, relativeTo: .caption2, weight: .bold, design: .rounded)
-                            .foregroundStyle(.white.opacity(0.45))
+                            .foregroundStyle(.tertiaryText)
                     }
                 }
                 .lineLimit(1)
@@ -170,12 +170,12 @@ struct GameReportSheet: View {
                     comment: "Stands in for the accuracy of a player who never got to move"
                 ))
                     .scaledFont(11, relativeTo: .caption2, weight: .semibold, design: .rounded)
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(.secondaryText)
                 if let loss = report.averageCentipawnLoss {
                     Text(String(localized: "\(loss) cp lost / move",
                                 comment: "Average centipawn loss per move"))
                         .scaledFont(9, relativeTo: .caption2, weight: .medium, design: .rounded)
-                        .foregroundStyle(.white.opacity(0.35))
+                        .foregroundStyle(.tertiaryText)
                 }
             }
         }
@@ -204,12 +204,15 @@ struct GameReportSheet: View {
                         .frame(width: countColumn, alignment: .trailing)
                 }
                 .scaledFont(10, relativeTo: .caption2, weight: .bold, design: .rounded)
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(.tertiaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .padding(.horizontal, 14)
                 .padding(.top, 12)
                 .padding(.bottom, 4)
+                // Every row below says whose each count is, which is all
+                // the column heads are for.
+                .accessibilityHidden(true)
 
                 ForEach(rows, id: \.self) { quality in
                     HStack(spacing: 10) {
@@ -238,12 +241,29 @@ struct GameReportSheet: View {
                     }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
+                    // One line that pins each number to its player. Read
+                    // piece by piece the row came out as "3, Inaccuracy,
+                    // Inaccuracy, 1": the badge named the grade a second
+                    // time, and nothing said whose the 3 was.
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(breakdownRowLabel(
+                        quality, left: leftReport.count(quality), right: rightReport.count(quality)
+                    ))
                 }
                 .padding(.bottom, 6)
             }
             .frame(maxWidth: .infinity)
             .hudCard(cornerRadius: 16)
         }
+    }
+
+    /// "Inaccuracy — You: 3, Computer: 1".
+    private func breakdownRowLabel(_ quality: MoveQuality, left leftCount: Int, right rightCount: Int) -> String {
+        String(
+            localized: "report.breakdownRow",
+            defaultValue: "\(quality.label) — \(model.name(for: left)): \(leftCount), \(model.name(for: right)): \(rightCount)",
+            comment: "VoiceOver: one row of the report's move breakdown, e.g. 'Inaccuracy — You: 3, Computer: 1'"
+        )
     }
 
     // MARK: Key moments
@@ -282,6 +302,17 @@ struct GameReportSheet: View {
                                 .hudCard(cornerRadius: 14)
                             }
                             .buttonStyle(.plain)
+                            // The grade, the move said by whoever played it,
+                            // and the comment with its moves in words. Said
+                            // from the texts, the comment read the engine's
+                            // move a letter at a time. On the button rather
+                            // than on the texts: a label longer than its text
+                            // is taken for a clipped one at the largest sizes.
+                            .accessibilityLabel([
+                                moment.quality.label,
+                                BoardSpeech.numberedMove(moment.played, mover: model.name(for: moment.color)),
+                                moment.spokenComment,
+                            ].joined(separator: ". "))
                         }
                     }
                 }
@@ -322,7 +353,7 @@ struct GameReportSheet: View {
     private func sectionTitle(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.system(.caption2, design: .rounded, weight: .bold))
-            .foregroundStyle(.white.opacity(0.45))
+            .foregroundStyle(.tertiaryText)
             .kerning(1.2)
     }
 }

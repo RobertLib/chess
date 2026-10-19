@@ -92,8 +92,9 @@ nonisolated extension Board {
     // MARK: Pseudo-legal generation
 
     /// Generates pseudo-legal moves for the side to move. Castling is emitted
-    /// only when fully legal (king not in check, path safe). Other moves may
-    /// still leave the own king in check and must be filtered.
+    /// only when fully legal (king not in check, path safe) — bar one Chess960
+    /// case the filter has to catch, see `appendCastle`. Other moves may still
+    /// leave the own king in check and must be filtered.
     func generatePseudoLegalMoves(capturesOnly: Bool = false) -> [Move] {
         var moves: [Move] = []
         moves.reserveCapacity(48)
@@ -256,38 +257,109 @@ nonisolated extension Board {
         }
     }
 
+    /// Castling, for both variants: one rule covers standard chess and
+    /// Chess960, standard chess being the arrangement where the king starts
+    /// on e1 and the rooks in the corners.
     private func generateCastling(piece: Piece, into moves: inout [Move]) {
         let color = piece.color
-        let opponent = color.opponent
+        let canKingside = castlingRights.contains(.right(of: color, kingside: true))
+        let canQueenside = castlingRights.contains(.right(of: color, kingside: false))
+        // Most nodes of a search hold no right at all, and asked first this
+        // spares them the attack scan of the king's square below.
+        guard canKingside || canQueenside else { return }
+
+        // The king stands on its back rank: on e1 (e8) in standard chess,
+        // where a right outlives a king that FEN put elsewhere; in Chess960
+        // wherever the start position put it, which the right vouches for —
+        // any king move spends both.
         let base = color == .white ? 0 : 56
-        let kingIndex = base + 4
-
-        // King must be on its home square and not in check.
-        guard kingSquare(of: color) == kingIndex,
-              !isSquareAttacked(kingIndex, by: opponent) else { return }
-
-        let kingside: CastlingRights = color == .white ? .whiteKingside : .blackKingside
-        let queenside: CastlingRights = color == .white ? .whiteQueenside : .blackQueenside
-
-        if castlingRights.contains(kingside),
-           squares[base + 5] == 0, squares[base + 6] == 0,
-           squares[base + 7] == Piece(color, .rook).packed,
-           !isSquareAttacked(base + 5, by: opponent),
-           !isSquareAttacked(base + 6, by: opponent) {
-            moves.append(Move(
-                from: Square(kingIndex), to: Square(base + 6), piece: piece, isCastleKingside: true
-            ))
+        let kingFrom = kingSquare(of: color)
+        if isChess960 {
+            guard kingFrom >> 3 == base >> 3 else { return }
+        } else {
+            guard kingFrom == base + 4 else { return }
         }
 
-        if castlingRights.contains(queenside),
-           squares[base + 3] == 0, squares[base + 2] == 0, squares[base + 1] == 0,
-           squares[base + 0] == Piece(color, .rook).packed,
-           !isSquareAttacked(base + 3, by: opponent),
-           !isSquareAttacked(base + 2, by: opponent) {
-            moves.append(Move(
-                from: Square(kingIndex), to: Square(base + 2), piece: piece, isCastleQueenside: true
-            ))
+        // The board's own questions — is the rook there, is the way clear —
+        // before any attack scan. Through the opening the rights are held but
+        // the pieces still stand in between, and asking in this order spares
+        // those nodes the scan of the king's square entirely.
+        let kingside = canKingside && isClearToCastle(color: color, kingFrom: kingFrom, kingside: true)
+        let queenside = canQueenside && isClearToCastle(color: color, kingFrom: kingFrom, kingside: false)
+        guard kingside || queenside else { return }
+
+        // Not out of check.
+        guard !isSquareAttacked(kingFrom, by: color.opponent) else { return }
+
+        if kingside {
+            appendCastleIfSafe(piece: piece, kingFrom: kingFrom, kingside: true, into: &moves)
         }
+        if queenside {
+            appendCastleIfSafe(piece: piece, kingFrom: kingFrom, kingside: false, into: &moves)
+        }
+    }
+
+    /// Whether the rook of this castle stands on its wing of the king, with
+    /// nothing in the way but the two of them.
+    private func isClearToCastle(color: PieceColor, kingFrom: Int, kingside: Bool) -> Bool {
+        let castle = castlingGeometry(color: color, kingside: kingside)
+        guard squares[castle.rookFrom] == Piece(color, .rook).packed,
+              kingside ? castle.rookFrom > kingFrom : castle.rookFrom < kingFrom
+        else { return false }
+
+        // Every square the king or the rook crosses, destinations included, is
+        // empty but for the two of them. The king's path and the rook's path
+        // together always make one unbroken stretch of the rank — from the
+        // leftmost of the four squares to the rightmost — so one scan does.
+        // Standard kingside that is f1 and g1, queenside b1, c1 and d1.
+        let low = min(min(kingFrom, castle.kingTo), min(castle.rookFrom, castle.rookTo))
+        let high = max(max(kingFrom, castle.kingTo), max(castle.rookFrom, castle.rookTo))
+        for index in low...high where index != kingFrom && index != castle.rookFrom {
+            if squares[index] != 0 { return false }
+        }
+        return true
+    }
+
+    /// Appends a castle that `isClearToCastle` has passed, from a king known
+    /// not to be in check, unless the king would cross an attacked square.
+    private func appendCastleIfSafe(piece: Piece, kingFrom: Int, kingside: Bool, into moves: inout [Move]) {
+        let color = piece.color
+        let castle = castlingGeometry(color: color, kingside: kingside)
+
+        // No square the king passes through or lands on is attacked. (Its own
+        // square was cleared before this; a king already on g1 or c1 passes
+        // through nothing.) Asked of the board as it stands, with the rook
+        // still at home.
+        //
+        // In standard chess that settles it. In Chess960 it can miss one
+        // thing: the castling rook may be what shields the king's destination.
+        // King d1 and rook b1 castling long, a black queen on a1 — c1 is safe
+        // while the rook stands on b1, but the rook leaves for d1 and the
+        // queen sees c1. The king-safety filter every pseudo-legal move passes
+        // after `make` asks the board as it will be, and refuses that castle;
+        // python-chess asks the same question in the same place. The opposite
+        // mistake cannot happen: the only piece the castle puts down beside
+        // the king's destination is its rook, and an attack along the rank
+        // that the rook would block has to cross the king's own square on the
+        // way — where the king either blocks it already or is in check from
+        // it.
+        let opponent = color.opponent
+        if kingFrom != castle.kingTo {
+            let step = castle.kingTo > kingFrom ? 1 : -1
+            var index = kingFrom
+            repeat {
+                index += step
+                guard !isSquareAttacked(index, by: opponent) else { return }
+            } while index != castle.kingTo
+        }
+
+        moves.append(Move(
+            from: Square(kingFrom),
+            to: Square(isChess960 ? castle.rookFrom : castle.kingTo),
+            piece: piece,
+            isCastleKingside: kingside,
+            isCastleQueenside: !kingside
+        ))
     }
 
     // MARK: Legal generation

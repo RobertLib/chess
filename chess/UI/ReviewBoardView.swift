@@ -204,7 +204,7 @@ struct ReviewBoardView: View {
     private func highlights(_ geometry: BoardGeometry) -> some View {
         if let played = playedMove {
             let tint = analysis?.quality.tint ?? theme.accent
-            ForEach([played.from, played.to], id: \.index) { square in
+            ForEach(model.board.highlightSquares(of: played), id: \.index) { square in
                 RoundedRectangle(cornerRadius: geometry.squareSize * 0.12, style: .continuous)
                     .fill(tint.opacity(0.38))
                     .frame(width: geometry.squareSize, height: geometry.squareSize)
@@ -239,8 +239,9 @@ struct ReviewBoardView: View {
     @ViewBuilder
     private func arrows(_ geometry: BoardGeometry) -> some View {
         if let suggestion {
-            MoveArrow(from: geometry.center(of: suggestion.from),
-                      to: geometry.center(of: suggestion.to),
+            let squares = model.board.displaySquares(of: suggestion)
+            MoveArrow(from: geometry.center(of: squares.from),
+                      to: geometry.center(of: squares.to),
                       squareSize: geometry.squareSize)
                 .fill(MoveQuality.best.tint.opacity(0.85))
                 .shadow(color: .black.opacity(0.35), radius: 3, y: 2)
@@ -256,7 +257,7 @@ struct ReviewBoardView: View {
     private func badge(_ geometry: BoardGeometry) -> some View {
         if let analysis, let played = playedMove {
             let size = geometry.squareSize * 0.42
-            let center = geometry.center(of: played.to)
+            let center = geometry.center(of: model.board.displaySquares(of: played).to)
             let inner = geometry.origin.x + geometry.squareSize * 8
             QualityBadge(quality: analysis.quality, size: size)
                 // Kept inside the board, so a badge on the far rank or file
@@ -282,7 +283,11 @@ struct ReviewBoardView: View {
 // MARK: - Arrow
 
 /// A chess-style move arrow: a shaft from square to square with a wide head.
-struct MoveArrow: Shape {
+///
+/// `nonisolated` because the target isolates everything to the main actor by
+/// default, and `Shape` is not: SwiftUI may ask a shape for its path off the
+/// main thread, and Swift 6.4 refuses the conformance otherwise.
+nonisolated struct MoveArrow: Shape {
     let from: CGPoint
     let to: CGPoint
     let squareSize: CGFloat

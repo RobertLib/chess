@@ -13,14 +13,39 @@ engine — no packages, no network, no accounts.
 ## Features
 
 * **Play against the computer** at five levels, from Beginner to Grandmaster,
-  as White or Black. The two strongest open out of a book of 90 named lines,
-  so they do not replay one game; the three below them vary their own openings
-  by picking softly among the moves they searched.
-* **Two players on one device**, with an optional board flip between turns and
-  a draw by agreement.
+  or against an **adaptive opponent** that slides between them — a little
+  stronger after every win, a little weaker after every loss. The two strongest
+  levels open out of a book of more than 80 named lines, so they do not replay
+  one game; the three below them vary their own openings by picking softly
+  among the moves they searched. Premoves can be queued while the computer
+  thinks.
+* **Two players on one device**, with an optional board flip between turns, a
+  face-to-face layout for a device lying flat between them, and a draw by
+  agreement.
+* **Time controls** — bullet, blitz, rapid and classical presets, or one made
+  to measure — for both kinds of game. The clock starts after the first move,
+  pauses by itself when the app goes to the background, warns when time runs
+  short, and a flag that falls against a side with nothing left to mate with is
+  a draw, as FIDE has it. On the clock the computer budgets its own time.
+* **Chess960, variants and odds**: Fischer Random from any of its 960
+  positions, King of the Hill and Three-check — which the engine plays for
+  their own wins — and the classical pawn, knight, rook and queen odds.
+* **Chess clock** for a game on a real board: Fischer increment, simple delay
+  or Bronstein, and different times per side for time odds.
+* **Puzzles** — about 4,000 tactics from the Lichess database (CC0), bundled:
+  rated puzzles with a rating of your own, 32 themes, a daily puzzle with a
+  streak, Race the Clock (3 minutes, 5 minutes or survival) and **your own
+  mistakes** from reviewed games, served back as puzzles to fix. A home-screen
+  widget shows the daily puzzle.
+* **Training**: an opening trainer over the book's lines, an analysis board
+  with a live engine evaluation, a position editor, and pasting in a PGN or
+  FEN.
 * **Game review** in the style of chess.com: every move graded from brilliant
-  to blunder, an accuracy score per player, an evaluation graph and the
-  engine's preferred move drawn on the board.
+  to blunder, an accuracy score per player, an evaluation graph, time spent per
+  move and the engine's preferred move drawn on the board.
+* **My Games**: the last 300 finished games kept on the device, statistics by
+  level, colour and time control, a rough strength estimate, 31 achievements,
+  and PGN export through the share sheet and import from the Files app.
 * **How to Play** — a 9-chapter guide: 38 pages carrying 27 board diagrams,
   15 of which are playable; the dots are real legal moves asked from the
   engine, and tapping one plays it.
@@ -34,24 +59,32 @@ chess/
 │   ├── ChessTypes   Board squares, pieces, moves, outcomes
 │   ├── Board        64-byte position, make/unmake, FEN, Zobrist hashing
 │   ├── MoveGenerator Legal move generation and attack detection
+│   ├── Chess960     Fischer Random start positions (Scharnagl numbering)
 │   ├── Game         Move history, SAN, draw and mate detection
+│   ├── ChessClock   Time controls, the clock, flag-fall rules, time budget
 │   ├── ChessAI      Negamax + alpha-beta, TT, quiescence, null-move
 │   ├── GameAnalyzer Post-game grading and accuracy
 │   ├── StaticExchange SEE — tells a sacrifice from a blunder
-│   └── OpeningBook  Opening theory: what the top levels play, and the
-│                     names the review gives a game
+│   ├── OpeningBook  Opening theory: what the top levels play, and the
+│   │                 names the review gives a game
+│   ├── Puzzle       Puzzles, judging an attempt, the bundled library
+│   └── PGN          Writing and reading Portable Game Notation
+├── Puzzles/         puzzles.csv — the bundled Lichess selection
 ├── UI/              SwiftUI views
-├── Support/         Settings, sounds, haptics, notation localization
+├── Support/         Settings, options, archive, statistics, achievements,
+│                     puzzle progress, sounds, haptics, notation
 └── *.xcstrings      String catalogs (English source, Czech translation)
 
+ChessWidget/         The daily-puzzle widget (shares the engine and the
+                     puzzle file with the app)
 chessTests/          Swift Testing suites for the engine and view models
 chessUITests/        XCUITests: VoiceOver, Dynamic Type, board input
 AppStore/            Listing texts, ASO reasoning, reviewer notes, privacy policy
-Tools/               App Store screenshots and App Preview, see AppStore/screenshots.md
+Tools/               App Store media, and build_puzzles.py for the puzzle set
 ```
 
 The engine is deliberately free of SwiftUI imports, which is what lets the
-test target and the tutorial exercise it directly.
+test target, the tutorial and the widget exercise it directly.
 
 ## Building
 
@@ -63,17 +96,24 @@ automatically — no project file editing.
 
 ```sh
 xcodebuild test -project chess.xcodeproj -scheme chess \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro'
 ```
 
 Two targets run under that one command.
 
 `chessTests` (Swift Testing) covers perft against the Chess Programming Wiki
-reference counts, Zobrist incrementality, make/unmake symmetry, FEN parsing,
+reference counts — and, for Chess960, against python-chess — Zobrist
+incrementality, make/unmake symmetry, FEN parsing (Shredder and X-FEN too),
 every draw and mate rule, SAN including disambiguation, static exchange
 evaluation, search cancellation, the analyzer's grading thresholds, the
 opening book, the render models behind the game and review boards, and the
-undo and save/restore logic of `Game`.
+undo and save/restore logic of `Game`. Around the games themselves it covers
+the clock (increment, delay, Bronstein, pauses, storage), the FIDE flag-fall
+rule, King of the Hill and Three-check (their wins, the check count in the
+hash, the engine going for them), the computer's time budget, timed games and premoves in the view model,
+PGN in and out, every bundled puzzle setting up, puzzle judging and rating,
+the archive, the statistics, the achievements, the opening trainer and the
+analysis board.
 
 `chessUITests` (XCUITest) covers what only the running app can show: the
 board's per-square VoiceOver labels, `performAccessibilityAudit` on the menu,
@@ -124,6 +164,17 @@ finds that analysis already stored and lands the marker at once
 The iPhone slot is **6.5"**, 1242 × 2688, and the preview 886 × 1920 — see
 [`AppStore/screenshots.md`](AppStore/screenshots.md).
 
+## The puzzles
+
+`chess/Puzzles/puzzles.csv` is a selection of about four thousand puzzles from
+the [Lichess puzzle database](https://database.lichess.org/#puzzles), which
+Lichess releases under CC0. [`Tools/build_puzzles.py`](Tools/build_puzzles.py)
+rebuilds it: it streams the head of the database, filters for popular,
+well-rated puzzles, fills quotas per theme and per rating band, and checks
+every puzzle with python-chess and with this app's own engine. The app never
+downloads anything; the file is part of the bundle, and the widget reads the
+same file to show the same daily puzzle.
+
 ## Notation is localized, storage is not
 
 Moves are shown in the reader's language — `Nf3` reads `Jf3` in Czech — but
@@ -134,6 +185,7 @@ The mapping happens at display time only, in `Support/Localization.swift`.
 
 This project's own source is under the MIT licence; see [LICENSE](LICENSE).
 
-The chess piece artwork is third-party and carries its own terms — see
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for its attribution and
-licence.
+Three things in it are third-party and keep their own terms: the chess piece
+artwork (BSD), the evaluation's piece-square tables (CC BY-SA 3.0) and the
+puzzles (CC0). See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for their
+attribution and licences.

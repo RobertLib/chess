@@ -1,0 +1,94 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "A new chess puzzle every day, on your home screen." : {
+      "comment" : "Widget description in the gallery",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každý den nová šachová úloha přímo na ploše."
+          }
+        }
+      }
+    },
+    "Black to move" : {
+      "comment" : "Widget: the side the daily puzzle is for",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na tahu černý"
+          }
+        }
+      }
+    },
+    "Daily Puzzle" : {
+      "comment" : "Widget name in the gallery\nWidget title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denní úloha"
+          }
+        }
+      }
+    },
+    "Daily puzzle, rating %@, Black to move. Find the best move." : {
+      "comment" : "Widget: what VoiceOver reads for the daily puzzle; the number is its rating",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denní úloha, hodnocení %@, na tahu černý. Najděte nejlepší tah."
+          }
+        }
+      }
+    },
+    "Daily puzzle, rating %@, White to move. Find the best move." : {
+      "comment" : "Widget: what VoiceOver reads for the daily puzzle; the number is its rating",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denní úloha, hodnocení %@, na tahu bílý. Najděte nejlepší tah."
+          }
+        }
+      }
+    },
+    "Find the best move." : {
+      "comment" : "Widget: what the daily puzzle asks",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najděte nejlepší tah."
+          }
+        }
+      }
+    },
+    "Rating %@" : {
+      "comment" : "Widget: the daily puzzle's rating",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hodnocení %@"
+          }
+        }
+      }
+    },
+    "White to move" : {
+      "comment" : "Widget: the side the daily puzzle is for",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na tahu bílý"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

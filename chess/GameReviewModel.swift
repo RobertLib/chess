@@ -25,6 +25,14 @@ final class GameReviewModel: Identifiable {
 
     let game: Game
     let mode: GameMode
+    let options: GameOptions
+    /// Seconds spent on each move, when the game recorded them.
+    let moveTimes: [TimeInterval]
+    /// The archive entry this review belongs to, so its accuracy can be noted
+    /// there once the report is complete.
+    let recordID: GameRecord.ID?
+    /// Player names from an imported game's PGN, `[white, black]`.
+    private let importedNames: [String]?
 
     /// Positions of the game: index 0 is the start, index i the position after
     /// move i.
@@ -57,22 +65,62 @@ final class GameReviewModel: Identifiable {
     /// How many results were already in the cache when the run started, so a
     /// save is skipped when the run added nothing.
     private var savedCount = 0
+    /// When the cache was last written, so a running review writes it every
+    /// so often rather than after every position.
+    private var lastCacheSave: TimeInterval = 0
+    /// Long, because a save encodes every review the cache keeps — half a
+    /// megabyte of JSON, on the main actor — and the moment that matters most
+    /// is caught separately: the app going to the background, see
+    /// `observeBackground()`. What this still covers is the app dying in the
+    /// foreground, which loses at most this much searching.
+    private static let cacheSaveInterval: TimeInterval = 15
+    /// Writes the cache when the app goes to the background, for as long as a
+    /// run is going.
+    private var backgroundObserver: (any NSObjectProtocol)?
+    /// Where "now" comes from: monotonic seconds. Swappable so that a test
+    /// can hold time still instead of racing it.
+    private let timeSource: () -> TimeInterval
     /// `startAnalysis` is called from `onAppear`, which fires again when the
     /// review comes back from a sheet. Guarding on the task alone was enough
     /// while every run started one; a fully cached game starts none.
     private var didStartAnalysis = false
+    /// Which run is current. A run stopped by `teardown` may still be winding
+    /// down when the next one starts, and must leave the new one's state be.
+    private var analysisRun = 0
 
     // MARK: Init
 
-    init(game: Game, mode: GameMode) {
+    init(
+        game: Game, mode: GameMode, options: GameOptions = .standard,
+        moveTimes: [TimeInterval] = [], recordID: GameRecord.ID? = nil,
+        importedNames: [String]? = nil,
+        timeSource: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }
+    ) {
         self.game = game
         self.mode = mode
+        self.options = options
+        self.moveTimes = moveTimes.count == game.history.count ? moveTimes : []
+        self.recordID = recordID
+        self.importedNames = importedNames
+        self.timeSource = timeSource
         self.jobs = GameAnalyzer.positions(of: game)
         self.boards = jobs.map(\.board)
         self.results = [PositionAnalysis?](repeating: nil, count: jobs.count)
         // Open on the final position, the way the game just ended.
         self.plyIndex = game.history.count
         rebuildPieces()
+    }
+
+    /// The review of a game from the archive.
+    convenience init(record: GameRecord, game: Game) {
+        var names: [String]?
+        if record.source == .imported, let tags = record.tags {
+            names = [tags["White"] ?? "?", tags["Black"] ?? "?"]
+        }
+        self.init(
+            game: game, mode: record.mode, options: record.options,
+            moveTimes: record.moveTimes, recordID: record.id, importedNames: names
+        )
     }
 
     // MARK: Derived state
@@ -108,6 +156,7 @@ final class GameReviewModel: Identifiable {
     }
 
     func name(for color: PieceColor) -> String {
+        if let importedNames { return importedNames[Int(color.rawValue)] }
         switch mode {
         case .twoPlayer:
             return color == .white
@@ -140,7 +189,7 @@ final class GameReviewModel: Identifiable {
         let fingerprint = AnalysisCache.fingerprint(game: game, settings: settings)
         cacheFingerprint = fingerprint
         restoreFromCache(fingerprint: fingerprint)
-        savedCount = results.reduce(0) { $0 + ($1 == nil ? 0 : 1) }
+        savedCount = cacheableCount
 
         // The last position of a game that ended in mate or stalemate has no
         // legal move, so there is nothing to search there and the analyzer
@@ -150,11 +199,20 @@ final class GameReviewModel: Identifiable {
         // can only ever come back empty, and flash the spinner doing it.
         // Nothing wants the entry: the final position is searched for the last
         // move's refutation, and a mated side has none.
+        //
+        // A variant game won on the hill or by the third check ends the same
+        // way: the loser still has moves, but none that matter, and the
+        // search would only misread a position whose game is already over.
         let settled = jobs.indices.filter {
             results[$0] == nil && jobs[$0].playedMove == nil
-                && jobs[$0].board.generateLegalMoves().isEmpty
+                && (jobs[$0].board.generateLegalMoves().isEmpty || jobs[$0].board.variantWinner != nil)
         }
-        let pending = jobs.indices.filter { results[$0] == nil && !settled.contains($0) }
+        // A search that was cut short is shown, but it is not what a re-run
+        // would produce, so a run that starts over searches it again — see
+        // `PositionAnalysis.isCutShort`.
+        let pending = jobs.indices.filter {
+            (results[$0] == nil || results[$0]?.isCutShort == true) && !settled.contains($0)
+        }
         var completed = total - pending.count
         progress = total > 0 ? Double(completed) / Double(total) : 0
 
@@ -166,23 +224,34 @@ final class GameReviewModel: Identifiable {
         guard !pending.isEmpty else {
             isAnalyzing = false
             progress = 1
+            reportFinished()
             return
         }
 
         isAnalyzing = true
+        // Nothing new is worth writing yet: the first save of the run falls
+        // due a full interval in.
+        lastCacheSave = timeSource()
+        observeBackground()
 
         let cancellation = SearchCancellation()
         analysisCancellation = cancellation
+        analysisRun += 1
+        let run = analysisRun
 
         analysisTask = Task { [weak self] in
             // A core is left to the UI so the screen stays responsive.
             let workers = max(2, min(6, ProcessInfo.processInfo.activeProcessorCount - 1))
+            // Searched in order. A position that comes back cut short goes to
+            // the back for one more try, which is why this is not `pending`.
+            var queue = pending
+            var retried: Set<Int> = []
             var next = 0
 
             await withTaskGroup(of: (Int, PositionAnalysis?).self) { group in
                 func schedule() {
-                    guard next < pending.count else { return }
-                    let job = jobs[pending[next]]
+                    guard next < queue.count else { return }
+                    let job = jobs[queue[next]]
                     next += 1
                     group.addTask {
                         // Detached so the search never lands on the main actor;
@@ -203,47 +272,110 @@ final class GameReviewModel: Identifiable {
                         group.cancelAll()
                         break
                     }
-                    guard let self else {
-                        // The review is gone and nothing will read the rest.
-                        // Stop the searches themselves, not just the waiting —
-                        // they are the expensive half.
+                    guard let self, self.analysisRun == run else {
+                        // The review is gone, or a newer run has taken over,
+                        // and nothing will read the rest. Stop the searches
+                        // themselves, not just the waiting — they are the
+                        // expensive half.
                         cancellation.cancel()
                         group.cancelAll()
                         break
                     }
                     self.results[index] = result
-                    completed += 1
-                    self.progress = Double(completed) / Double(total)
+                    // Cut short and not cancelled means the clock ran out,
+                    // and the likeliest reason by far is that the app was
+                    // suspended with the search in flight: the time limit
+                    // counts that time too, so every search running when the
+                    // player switched away comes back out of time when they
+                    // return. Searched again, it gets the budget it is owed.
+                    // The answer in hand stands in on the board meanwhile. A
+                    // second cut is believed — on a device that slow, a third
+                    // try would only cost another half minute.
+                    let retry = result?.isCutShort == true && retried.insert(index).inserted
+                    if retry {
+                        queue.append(index)
+                    } else {
+                        completed += 1
+                        self.progress = Double(completed) / Double(total)
+                    }
                     schedule()
 
-                    // Stored on every result, not every fifth. Being killed —
-                    // the app swiped away, the phone deciding it has had
-                    // enough — gives no chance to save on the way out, and
-                    // every position not written here is one the next review
-                    // searches again. It costs a small encode against a search
-                    // that took the best part of a second.
-                    self.saveToCache()
+                    // Stored as the run goes, not only at its end and on the
+                    // way to the background. The app can still die in the
+                    // foreground, and every position not written is one the
+                    // next review searches again. But not on every result —
+                    // see `cacheSaveInterval`.
+                    if self.timeSource() - self.lastCacheSave >= Self.cacheSaveInterval {
+                        self.saveToCache()
+                    }
 
                     // The report itself is rebuilt less often: it is the
                     // expensive half, and it only has to keep the eval graph
                     // and the move badges filling in as the engine works.
-                    if completed % 5 == 0 || completed == total {
+                    if !retry, completed % 5 == 0 || completed == total {
                         let snapshot = self.results
                         let assembled = await Task.detached(priority: .utility) {
                             GameAnalyzer.assemble(game: game, jobs: jobs, results: snapshot)
                         }.value
+                        // Asked again after the wait: a run that was replaced
+                        // while its report was being put together drew that
+                        // older, thinner report over the newer run's own.
+                        guard self.analysisRun == run, !Task.isCancelled else {
+                            cancellation.cancel()
+                            group.cancelAll()
+                            break
+                        }
                         self.apply(assembled)
                     }
                 }
             }
 
-            guard let self else { return }
+            guard let self, self.analysisRun == run else { return }
             // Whatever ended the run — finished, cancelled, or the view going
             // away — the spinner must not be left turning.
             self.isAnalyzing = false
-            if !Task.isCancelled { self.progress = 1 }
+            self.stopObservingBackground()
+            if !Task.isCancelled {
+                self.progress = 1
+                self.reportFinished()
+            }
             self.saveToCache()
         }
+    }
+
+    /// What a complete report changes outside the review: the archive notes
+    /// the accuracy, a brilliancy earns its achievement, and the player's own
+    /// mistakes become puzzles to fix.
+    ///
+    /// This runs every time a review of the game completes, which for one the
+    /// cache holds is every time it is opened — so each of these has to be
+    /// safe to repeat. The accuracy is written over with the same figures, an
+    /// achievement unlocks once, and `MistakeStore` reads a game only once.
+    private func reportFinished() {
+        guard let analysis, analysis.moves.count == game.history.count else { return }
+        if let recordID {
+            GameArchive.shared.setAccuracy([analysis.white.accuracy, analysis.black.accuracy], for: recordID)
+        }
+        // Only a game played here is the player's own to learn from, and only
+        // under the ordinary rules: a puzzle is solved in standard chess.
+        guard importedNames == nil, game.variant == .standard else { return }
+        // Neither of these is ever taken back, and a search cut short twice
+        // is believed for the review (see `analyze`) but is not what the
+        // next review will find: it is left out of the cache and searched
+        // again. Graded on it, a slow device unlocked a brilliancy, or filed
+        // a mistake as a puzzle, that a full search would not have. They wait
+        // for a review with every search whole; the accuracy above is written
+        // over by that one anyway.
+        guard !results.contains(where: { $0?.isCutShort == true }) else { return }
+        let ownColors: [PieceColor] = mode.humanColor.map { [$0] } ?? [.white, .black]
+        // A brilliancy found in a position set up by hand is one the player
+        // may well have set up to be found — a famous combination, a puzzle
+        // they knew the answer to. It is reviewed like any other, but it is
+        // not the achievement.
+        if !options.start.isSetUp, analysis.moves.contains(where: { $0.quality == .brilliant && ownColors.contains($0.color) }) {
+            Achievements.shared.playedBrilliantMove()
+        }
+        MistakeStore.shared.collect(from: analysis, game: game, colors: ownColors)
     }
 
     // MARK: Cache
@@ -252,24 +384,67 @@ final class GameReviewModel: Identifiable {
     /// whose stored best move is not legal in the position it is filed under
     /// is dropped: the fingerprint should make that impossible, so it means
     /// the stored data no longer matches the code that wrote it.
+    ///
+    /// The entry moves to the front of the cache as it is used. Left to the
+    /// saves, a review the cache holds in full — which never saves again,
+    /// see `saveToCache` — kept its place from when it was written, and was
+    /// dropped after twenty newer ones however often it was opened.
     private func restoreFromCache(fingerprint: String) {
         guard let entry = AnalysisCache.load(fingerprint: fingerprint) else { return }
+        AnalysisCache.touch(fingerprint: fingerprint)
         for (index, cached) in entry.positions.enumerated() {
             guard index < jobs.count, let cached else { continue }
             results[index] = cached.restore(in: jobs[index].board)
         }
     }
 
+    /// Writes what the node budget reached. A search cut short is left out, as
+    /// a gap the next review searches again: the cache is only allowed to hold
+    /// what a re-run would reproduce, and a review takes it on trust.
     private func saveToCache() {
         guard let cacheFingerprint else { return }
-        let completed = results.reduce(0) { $0 + ($1 == nil ? 0 : 1) }
+        let completed = cacheableCount
         guard completed > savedCount else { return }
         savedCount = completed
+        lastCacheSave = timeSource()
         AnalysisCache.save(CachedGameAnalysis(
             fingerprint: cacheFingerprint,
-            positions: results.map { $0.map(CachedPosition.init) },
+            positions: results.map { result in
+                result.flatMap { $0.isCutShort ? nil : CachedPosition($0) }
+            },
             updatedAt: Date()
         ))
+    }
+
+    /// How many results the cache may keep — see `saveToCache`.
+    private var cacheableCount: Int {
+        results.count { $0.map { !$0.isCutShort } ?? false }
+    }
+
+    /// The last moment a write is sure to happen is the app going to the
+    /// background. Swiped away from the app switcher, or ended by the system
+    /// to make room, it is already there and gets no warning of its own — so
+    /// what the run has found is written now, not at the next interval.
+    private func observeBackground() {
+        stopObservingBackground()
+        backgroundObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            // The notification is delivered on the main queue, which is where
+            // this model lives.
+            MainActor.assumeIsolated {
+                self?.saveToCache()
+            }
+        }
+    }
+
+    private func stopObservingBackground() {
+        if let backgroundObserver {
+            NotificationCenter.default.removeObserver(backgroundObserver)
+        }
+        backgroundObserver = nil
     }
 
     private func apply(_ assembled: GameAnalysis) {
@@ -283,9 +458,8 @@ final class GameReviewModel: Identifiable {
         analysisCancellation = nil
         analysisTask?.cancel()
         analysisTask = nil
-        autoplayTask?.cancel()
-        autoplayTask = nil
         isAnalyzing = false
+        stopObservingBackground()
         // Written here rather than left to the task: cancelling it only asks
         // it to stop, and the model may be gone before it gets round to its
         // own save. Everything searched so far is already in `results`.
@@ -311,7 +485,7 @@ final class GameReviewModel: Identifiable {
         let move = game.history[plyIndex].move
         let givesCheck = boards[plyIndex + 1].isInCheck
         withAnimation(Motion.meaningful(.spring(duration: 0.32, bounce: 0.16))) {
-            applyForward(move)
+            applyForward(move, in: boards[plyIndex])
             plyIndex += 1
         }
         SoundManager.shared.play(for: move, isCheck: givesCheck)
@@ -322,7 +496,7 @@ final class GameReviewModel: Identifiable {
         stopAutoplay()
         let move = game.history[plyIndex - 1].move
         withAnimation(Motion.meaningful(.spring(duration: 0.32, bounce: 0.16))) {
-            applyBackward(move)
+            applyBackward(move, in: boards[plyIndex - 1])
             plyIndex -= 1
         }
         SoundManager.shared.play(.move)
@@ -390,7 +564,19 @@ final class GameReviewModel: Identifiable {
         autoplayTask = nil
     }
 
+    /// Stops the engine when the review leaves the screen. That is also what
+    /// happens when the analysis board is opened over it — a full-screen
+    /// cover ends the appearance of the view beneath — so a run cut short
+    /// is marked as not started, and `onAppear` on the way back picks it up
+    /// where the cache left it instead of finding it already done.
+    ///
+    /// A replay stops with it, flag and all. Only its task used to be
+    /// cancelled, from `cancelAnalysis`, which left `isAutoplaying` set: a
+    /// review shown again read as still playing, with Pause on the button and
+    /// a first tap that stopped nothing.
     func teardown() {
+        if isAnalyzing { didStartAnalysis = false }
+        stopAutoplay()
         cancelAnalysis()
     }
 
@@ -404,8 +590,10 @@ final class GameReviewModel: Identifiable {
     }
 
     /// Mirrors a move into the render model so stepping forward slides pieces.
-    private func applyForward(_ move: Move) {
+    /// `board` is the position the move is played in.
+    private func applyForward(_ move: Move, in board: Board) {
         let mover = move.piece.color
+        if moveCastlingPieces(for: move, in: board, forward: true) { return }
 
         if move.captured != nil {
             let captureSquare = move.isEnPassant
@@ -419,12 +607,12 @@ final class GameReviewModel: Identifiable {
                 pieces[index].piece = Piece(mover, promotion)
             }
         }
-        moveCastlingRook(for: move, forward: true)
     }
 
     /// The same in reverse, for stepping back.
-    private func applyBackward(_ move: Move) {
+    private func applyBackward(_ move: Move, in board: Board) {
         let mover = move.piece.color
+        if moveCastlingPieces(for: move, in: board, forward: false) { return }
 
         if let index = pieces.firstIndex(where: { $0.square == move.to }) {
             pieces[index].square = move.from
@@ -438,18 +626,21 @@ final class GameReviewModel: Identifiable {
                 : move.to
             pieces.append(RenderPiece(id: UUID(), piece: captured, square: captureSquare))
         }
-        moveCastlingRook(for: move, forward: false)
     }
 
-    private func moveCastlingRook(for move: Move, forward: Bool) {
-        guard move.isCastle else { return }
-        let rank = move.piece.color == .white ? 0 : 7
-        let home = Square(file: move.isCastleKingside ? 7 : 0, rank: rank)
-        let castled = Square(file: move.isCastleKingside ? 5 : 3, rank: rank)
-        let from = forward ? home : castled
-        let to = forward ? castled : home
-        if let index = pieces.firstIndex(where: { $0.square == from }) {
-            pieces[index].square = to
-        }
+    /// Castling moves both pieces in one go: in Chess960 the king can land
+    /// where the rook stood or the other way round, so both are looked up
+    /// before either is moved. `board` is the position the move was played in.
+    private func moveCastlingPieces(for move: Move, in board: Board, forward: Bool) -> Bool {
+        guard move.isCastle, let squares = board.castlingSquares(for: move) else { return false }
+        let kingFrom = forward ? squares.kingFrom : squares.kingTo
+        let kingTo = forward ? squares.kingTo : squares.kingFrom
+        let rookFrom = forward ? squares.rookFrom : squares.rookTo
+        let rookTo = forward ? squares.rookTo : squares.rookFrom
+        let king = pieces.firstIndex { $0.square == kingFrom && $0.piece.kind == .king }
+        let rook = pieces.firstIndex { $0.square == rookFrom && $0.piece.kind == .rook }
+        if let king { pieces[king].square = kingTo }
+        if let rook { pieces[rook].square = rookTo }
+        return true
     }
 }

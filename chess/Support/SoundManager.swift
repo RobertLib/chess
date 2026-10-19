@@ -25,6 +25,16 @@ final class SoundManager {
         case win
         case lose
         case draw
+        /// Time is running short on a clock.
+        case lowTime
+        /// One side of the stand-alone chess clock pressed.
+        case clockTap
+        /// A puzzle move that was right.
+        case success
+        /// A puzzle move that was wrong.
+        case failure
+        /// An achievement earned.
+        case achievement
     }
 
     var isEnabled = true
@@ -41,6 +51,11 @@ final class SoundManager {
     /// Enough to cover a warm-up, few enough that a silent stretch cannot turn
     /// into a burst of stale sounds when the players finally arrive.
     private static let maxPendingEffects = 4
+    /// Which preparation is current. One still running when the media
+    /// services are reset built its players against the server that has just
+    /// gone, and must not install them.
+    private var preparation = 0
+    private var resetObserver: (any NSObjectProtocol)?
 
     /// `AVAudioPlayer` is not `Sendable`, but one that has just been built and
     /// never touched can be handed over safely — from here on only the main
@@ -52,15 +67,24 @@ final class SoundManager {
     private init() {}
 
     /// Renders every effect and builds its player pool, off the main thread.
-    /// Eleven synthesized WAVs and twenty-two players are enough work to be
+    /// Sixteen synthesized WAVs and thirty-two players are enough work to be
     /// felt as a stutter, so none of it happens while the board is waiting.
     /// Safe to call more than once; only the first call does anything.
     func prepare() {
         guard players.isEmpty, !isPreparing else { return }
         isPreparing = true
+        observeMediaServicesReset()
+        preparation += 1
+        let current = preparation
 
         Task { [weak self] in
             let prepared = await Task.detached(priority: .utility) {
+                // The category comes first. An audio player prepared while the
+                // session still has the default `.soloAmbient` category can
+                // take the audio over and stop whatever music is playing
+                // before a single click has been heard. Set here rather than
+                // in `init` so that touching the singleton costs nothing.
+                Self.configureSession()
                 // A small pool per effect allows two of the same sound to overlap.
                 var pools: [Effect: [AVAudioPlayer]] = [:]
                 for effect in Effect.allCases {
@@ -72,15 +96,54 @@ final class SoundManager {
                 return PreparedPlayers(pools: pools)
             }.value
 
-            guard let self else { return }
-            // The category is set here rather than in `init` so that touching
-            // the singleton costs nothing at all.
-            try? AVAudioSession.sharedInstance().setCategory(.ambient, options: [.mixWithOthers])
+            guard let self, self.preparation == current else { return }
             self.players = prepared.pools
             self.isPreparing = false
             let pending = self.pendingEffects
             self.pendingEffects = []
             for effect in pending { self.play(effect) }
+        }
+    }
+
+    /// When the media server restarts — rare, but a crash of it or a reset
+    /// from the developer settings does it — every player built before is
+    /// dead, and the session is back on its default category. Nothing else
+    /// would notice: the pools are not empty, so `prepare` never ran again
+    /// and the app stayed silent until it was relaunched. So the category is
+    /// set again and the players are built afresh, the way they were at
+    /// launch.
+    private func observeMediaServicesReset() {
+        guard resetObserver == nil else { return }
+        resetObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.mediaServicesWereResetNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            // Delivered on the main queue, which is where this object lives.
+            MainActor.assumeIsolated {
+                self?.rebuildAfterReset()
+            }
+        }
+    }
+
+    private func rebuildAfterReset() {
+        players = [:]
+        isPreparing = false
+        // `prepare` sets the category before it builds a single player.
+        prepare()
+    }
+
+    /// Clicks and chimes are ambient: they mix with whatever else is playing
+    /// and fall silent with the ring switch, as a game's sounds should.
+    nonisolated private static func configureSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, options: [.mixWithOthers])
+        } catch {
+            // Nothing the player could do about it, so nothing is shown; a
+            // development build says so in the console rather than nowhere.
+#if DEBUG
+            print("SoundManager: could not set the audio session category: \(error)")
+#endif
         }
     }
 
@@ -172,6 +235,38 @@ final class SoundManager {
             samples = sequence(
                 tone(frequency: 440, duration: 0.14, volume: 0.3),
                 tone(frequency: 440, duration: 0.20, volume: 0.25)
+            )
+        case .lowTime:
+            // Two short high blips — urgent without being a siren.
+            samples = sequence(
+                tone(frequency: 1_320, duration: 0.06, volume: 0.32),
+                silence(0.05),
+                tone(frequency: 1_320, duration: 0.06, volume: 0.32)
+            )
+        case .clockTap:
+            // A clock button is plastic, not wood: shorter and brighter.
+            samples = mix(
+                woodClick(startFrequency: 1_900, endFrequency: 1_100, duration: 0.045, volume: 0.45),
+                noiseBurst(duration: 0.012, volume: 0.18)
+            )
+        case .success:
+            samples = sequence(
+                tone(frequency: 784, duration: 0.08, volume: 0.32),
+                tone(frequency: 1_175, duration: 0.16, volume: 0.36)
+            )
+        case .failure:
+            samples = sequence(
+                tone(frequency: 311, duration: 0.10, volume: 0.3, harmonic: 0.5),
+                tone(frequency: 233, duration: 0.16, volume: 0.3, harmonic: 0.5)
+            )
+        case .achievement:
+            samples = sequence(
+                tone(frequency: 659, duration: 0.08, volume: 0.3),
+                tone(frequency: 880, duration: 0.08, volume: 0.32),
+                mix(
+                    tone(frequency: 1_319, duration: 0.3, volume: 0.3),
+                    tone(frequency: 988, duration: 0.3, volume: 0.18)
+                )
             )
         }
         return wavData(from: samples)

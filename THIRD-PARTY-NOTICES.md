@@ -44,8 +44,9 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-The same attribution is shown to players in the app under **Settings →
-Credits**.
+The same attribution, with the licence above in full, is shown to players in
+the app under **Settings → Credits**, which is where clause 2 asks a binary to
+carry it.
 
 ## Evaluation piece-square tables
 
@@ -56,11 +57,35 @@ this project added around them is the middlegame/endgame taper, the endgame
 pawn table, the bishop-pair and mop-up terms and the phase weighting.
 
 * Source: <https://www.chessprogramming.org/Simplified_Evaluation_Function>
-* Chess Programming Wiki text is offered under **CC BY-SA 3.0**; the
-  attribution that licence asks for is this notice.
+* Chess Programming Wiki text is offered under **CC BY-SA 3.0**
+  (<https://creativecommons.org/licenses/by-sa/3.0/>); the attribution that
+  licence asks for is this notice, and the app names the author, the source,
+  the licence and its address under **Settings → Credits**.
+* The tables stay under CC BY-SA 3.0 here: the MIT licence in
+  [LICENSE](LICENSE) covers this project's own code, not these values. Anyone
+  reusing `EvalTables` takes them on the share-alike terms.
+
+## Puzzles
+
+The tactics puzzles in `chess/Puzzles/puzzles.csv` — about four thousand of
+them — are a selection from the **Lichess puzzle database**. Lichess releases
+its database exports into the public domain:
+
+> Database exports are released under the Creative Commons CC0 license. Use
+> them for research, commercial purpose, publication, anything you like. You
+> can download, modify and redistribute them, without asking for permission.
+
+* Source: <https://database.lichess.org/#puzzles>
+* How the selection was made and checked, and how to rebuild it:
+  [`Tools/build_puzzles.py`](Tools/build_puzzles.py).
+
+CC0 asks for no attribution; the app credits Lichess anyway, under **Settings →
+Credits** and at the foot of the puzzle screen, because it is the right thing
+to do. The file ships inside the app and is never downloaded at run time.
 
 ## Everything else
 
 All other code and assets in this repository — the search, the game review, the
-tutorial and the synthesized sounds — are original to this project. No
-third-party packages are used; the app links only Apple's own frameworks.
+tutorial, the clock, the training tools and the synthesized sounds — are
+original to this project and under the MIT licence in [LICENSE](LICENSE). No third-party packages are used; the app links only
+Apple's own frameworks.

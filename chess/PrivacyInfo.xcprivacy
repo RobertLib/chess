@@ -11,7 +11,11 @@
 	<key>NSPrivacyCollectedDataTypes</key>
 	<array/>
 	<!-- UserDefaults is a required-reason API. It holds only this app's own
-	     settings and the game in progress, never read by anything else. -->
+	     settings and the game in progress, never read by anything else.
+	     System boot time is one too: the game clock, the chess clock and
+	     Race the Clock measure time with ProcessInfo.systemUptime, which the
+	     wall clock cannot jump under. Only differences between two readings
+	     are used, on the device, and nothing leaves it. -->
 	<key>NSPrivacyAccessedAPITypes</key>
 	<array>
 		<dict>
@@ -20,6 +24,14 @@
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
 				<string>CA92.1</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
 			</array>
 		</dict>
 	</array>

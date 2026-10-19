@@ -1,11 +1,11 @@
-First release.
+A big update: timed games, variants, puzzles, training and an archive of your games.
 
-Chess for one or two players, with its own engine and its own guide.
-
-• Five levels from Beginner to Grandmaster, as White or as Black — the top two open out of a book of 90 named lines
-• Two players on one device, with an optional board flip between turns, a draw by agreement and Resign
-• Game Review after every game: each move graded from brilliant to blunder, an accuracy score per player, the evaluation graph, the engine's preferred move drawn on the board and the opening named
-• How to Play — nine chapters and 38 pages, with 27 board diagrams, 15 of them playable
-• Hints, undo, five board themes, synthesised sounds and haptics
-• Full VoiceOver labelling, Dynamic Type up to the accessibility sizes, Reduce Motion honoured
-• No ads, no in-app purchases, no account, and no networking code at all
+• An adaptive opponent that grows stronger as you do, and premoves while the computer thinks
+• Timed games from bullet to classical, or minutes and increment of your own; on the clock the computer budgets its own time
+• A chess clock for a game on a real board — increment, simple delay or Bronstein, and time odds
+• Chess960, King of the Hill, Three-check, and the classical pawn, knight, rook and queen odds
+• Face to face: lay the device between two players and each side's pieces face their player
+• About 4,000 puzzles built in: rated puzzles, 32 themes, a daily puzzle with a streak and a home-screen widget, races against the clock, and your own mistakes to fix
+• Training: an opening trainer, an analysis board, a position editor, and pasting in any PGN or FEN
+• My Games: an archive of your finished games, statistics, a rough strength estimate, 31 achievements, and PGN import and export
+• Game Review now shows the time spent on every move, and judges repeated positions and moves that walk into mate more accurately

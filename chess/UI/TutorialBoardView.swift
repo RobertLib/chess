@@ -197,19 +197,17 @@ struct TutorialBoardView: View {
             placed.removeAll { $0.square == move.to }
         }
 
-        if let index = placed.firstIndex(where: { $0.square == move.from }) {
+        if let castle = board.castlingSquares(for: move) {
+            // Both pieces are found before either moves, the same way the
+            // game's board does it — see `PieceLayout.apply`.
+            let king = placed.firstIndex { $0.square == castle.kingFrom }
+            let rook = placed.firstIndex { $0.square == castle.rookFrom }
+            if let king { placed[king].square = castle.kingTo }
+            if let rook { placed[rook].square = castle.rookTo }
+        } else if let index = placed.firstIndex(where: { $0.square == move.from }) {
             placed[index].square = move.to
             if let promotion = move.promotion {
                 placed[index].piece = Piece(move.piece.color, promotion)
-            }
-        }
-
-        if move.isCastle {
-            let base = move.piece.color == .white ? 0 : 56
-            let rookFrom = base + (move.isCastleKingside ? 7 : 0)
-            let rookTo = base + (move.isCastleKingside ? 5 : 3)
-            if let index = placed.firstIndex(where: { $0.square.index == rookFrom }) {
-                placed[index].square = Square(rookTo)
             }
         }
 
@@ -224,7 +222,7 @@ struct TutorialBoardView: View {
         }
 
         // The diagram just changed under a reader who cannot see it.
-        AccessibilityNotification.Announcement(BoardSpeech.lessonAnnouncement(san: san)).post()
+        AccessibilityNotification.Announcement(BoardSpeech.lessonAnnouncement(move, san: san)).post()
 
         SoundManager.shared.play(for: move, isCheck: isCheck)
         if isCheck {
@@ -243,7 +241,7 @@ struct TutorialBoardView: View {
                 if let caption = diagram.caption {
                     Text(caption)
                         .font(.system(.caption, design: .rounded, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.55))
+                        .foregroundStyle(.secondaryText)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, position.hasMoved ? 76 : 0)

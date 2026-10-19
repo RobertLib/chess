@@ -16,6 +16,7 @@ struct GameOverOverlay: View {
     let onExit: () -> Void
 
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(AppSettings.self) private var settings
 
     private var outcome: GameOutcome { model.game.outcome }
 
@@ -56,6 +57,14 @@ struct GameOverOverlay: View {
             return String(localized: "Both players agreed to a draw.")
         case .resigned:
             return String(localized: "The game ended by resignation.")
+        case .timeForfeit:
+            return String(localized: "The flag fell before the move was made.")
+        case .drawTimeoutInsufficientMaterial:
+            return String(localized: "Time ran out, but the opponent had nothing left to mate with.")
+        case .kingOfTheHill:
+            return String(localized: "The king reached the centre of the board.")
+        case .threeChecks:
+            return String(localized: "The third check ends the game.")
         case .ongoing:
             return ""
         }
@@ -113,6 +122,18 @@ struct GameOverOverlay: View {
 
             movesSummary
 
+            if model.isTimed {
+                clockSummary
+            }
+
+            if case .vsAI(.adaptive, _) = model.mode {
+                Text("The adaptive opponent is now: \(AIStrength.describe(level: settings.adaptiveLevel))",
+                     comment: "Result card: where the adaptive opponent stands after the game")
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+                    .foregroundStyle(Design.gold)
+                    .multilineTextAlignment(.center)
+            }
+
             VStack(spacing: 10) {
                 // Resigning before playing a move ends the game with an
                 // empty move list, and there is nothing to grade; the
@@ -162,7 +183,7 @@ struct GameOverOverlay: View {
     }
 
     private var movesSummary: some View {
-        let moveCount = (model.game.history.count + 1) / 2
+        let moveCount = model.game.movesPlayed
         let captureCount = model.game.history.count(where: { $0.move.isCapture })
         let checkCount = model.game.history.count(where: { $0.san.contains("+") || $0.san.contains("#") })
 
@@ -195,6 +216,31 @@ struct GameOverOverlay: View {
         .hudCard(cornerRadius: 14)
     }
 
+    /// What was left on each clock when the game ended.
+    private var clockSummary: some View {
+        HStack(spacing: 22) {
+            ForEach([PieceColor.white, .black], id: \.self) { color in
+                let remaining = model.clockRemaining(for: color) ?? 0
+                VStack(spacing: 2) {
+                    Text(verbatim: ClockFormat.text(remaining, tenths: remaining < 10))
+                        .font(.system(.headline, design: .monospaced, weight: .bold))
+                        .foregroundStyle(remaining <= 0 ? MoveQuality.blunder.tint : .white)
+                    Text(color.spokenName)
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundStyle(.secondaryText)
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(color.spokenName)
+                .accessibilityValue(String(localized: "clock.spoken.left",
+                                           defaultValue: "\(ClockFormat.spoken(remaining)) left",
+                                           comment: "VoiceOver: time left on a player's clock"))
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 8)
+        .hudCard(cornerRadius: 14)
+    }
+
     @ViewBuilder
     private func summaryItem(_ count: Int, _ label: LocalizedStringKey, asRow: Bool = false) -> some View {
         let figure = Text(verbatim: "\(count)")
@@ -202,7 +248,7 @@ struct GameOverOverlay: View {
             .foregroundStyle(.white)
         let caption = Text(label)
             .font(.system(.caption2, design: .rounded))
-            .foregroundStyle(.white.opacity(0.5))
+            .foregroundStyle(.secondaryText)
         Group {
             if asRow {
                 HStack(spacing: 8) {
@@ -219,6 +265,16 @@ struct GameOverOverlay: View {
         .accessibilityElement(children: .combine)
     }
 
+}
+
+extension Game {
+    /// Moves played, White's and Black's together, as a scoresheet numbers
+    /// them. Halving the plies assumed White moved first; a game set up with
+    /// Black to move begins halfway through a move, and 1...e5 2.Nf3 is two
+    /// moves, not one.
+    var movesPlayed: Int {
+        (history.count + (history.first?.color == .black ? 2 : 1)) / 2
+    }
 }
 
 struct OverlayButton: View {

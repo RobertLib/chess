@@ -1,7 +1,8 @@
 # ASO: the reasoning, the competition, and the alternatives
 
 Numbers in brackets are character counts. The limits are 30 for the name, 30 for
-the subtitle and 100 for keywords.
+the subtitle and 100 for keywords — and the keyword limit alone is counted in
+UTF-8 bytes, so a Czech set carries its byte count as well.
 
 ## What we are up against
 
@@ -191,41 +192,53 @@ stated by the price on the product page.
 In use:
 
 ```
-en-US  board,game,ai,engine,analysis,accuracy,blunder,learn,beginners,hints,undo,wifi,internet,2,friend  (96)
-en-GB  board,game,computer,ai,engine,analysis,accuracy,blunder,learn,beginners,hints,undo,wifi,internet  (96)
-cs     šachová,desková,rozbor,partie,analýza,přesnost,hráči,naučit,začátečníky,nápověda,internetu,pravidla  (99)
+en-US  board,game,ai,engine,analysis,accuracy,blunder,learn,beginners,puzzle,openings,elo,internet,2,friend  (100)
+en-GB  board,game,computer,ai,engine,analysis,accuracy,blunder,learn,beginners,puzzle,openings,elo,internet  (100)
+cs     šachová,desková,rozbor,partie,analýza,přesnost,hráči,naučit,začátečníky,internetu,úlohy  (87 / 100 bytes)
 ```
 
 `en-GB` takes *computer* into the keyword field, because its subtitle spent the
 characters on *One or* instead; the `en-US` list has the numeral *2* and *friend*
 in that space.
 
-The four characters left over in the English sets are deliberately unspent.
-*elo*, *puzzles*, *openings* and *master* all fit and all were rejected: the app
-has no rating system, no puzzle trainer and no openings course, and an
-off-relevance term buys a visitor who bounces. *openings* is the tempting one —
-the engine really does carry a 90-line book and the review really does name the
-opening — but someone searching it wants a repertoire trainer, and the listing
-would be a disappointment at the top of the funnel and a bad review at the
-bottom.
+The four characters left over in the English sets were left unspent for 1.0,
+when *elo*, *puzzles*, *openings* and *master* were all rejected because the app
+had no rating system, no puzzle trainer and no openings course, and an
+off-relevance term buys a visitor who bounces.
+
+**That reasoning no longer held from 1.0.1 on**, and the sets above are re-cut
+for it. The app now has about 4,000 rated puzzles with a rating of the player's
+own, a daily puzzle and races against the clock, and an opening trainer over the
+book's 90 lines. *puzzle* (*úlohy* in Czech) names the largest feature of the
+release, and *elo* and *openings* are relevant now too. To make room, English
+dropped *undo* and *wifi* (the name's *Offline* and *internet* still carry that
+intent) and then *hints*, the weakest word left once all three new terms were
+in — the singular *puzzle* saves the one character that would otherwise also
+have cost *2* or *friend*. Czech dropped *pravidla*; *zahájení* did not fit.
+
+Czech then lost *nápověda* and *elo* as well, because the keyword field is
+limited to 100 **bytes**, not characters, and every *č*, *á* or *ř* costs two —
+the set as first cut was 100 characters and 115 bytes. *elo* is spelt the same
+in English, and the Czech storefront indexes the `en-GB` keywords too, where it
+stays; *nápověda* went for the reason *hints* went in English.
 
 Alternative sets, if you end up tuning by performance:
 
 ```
 # EN, no-freemium angle (leans hardest on the differentiator)
-free,noads,nowifi,nointernet,purchases,premium,paid,board,game,engine,ai,solo,single,friend  (94)
+free,noads,nowifi,nointernet,purchases,premium,paid,board,game,engine,ai,solo,single,friend  (91)
 
 # EN, learn-to-play angle (pairs with a "Learn chess, no ads" subtitle)
-rules,lessons,guide,beginners,kids,tutorial,notation,checkmate,tactics,openings,board,game   (93)
+rules,lessons,guide,beginners,kids,tutorial,notation,checkmate,tactics,openings,board,game   (90)
 
 # EN, analysis angle (pairs with a "Two players, review, no ads" subtitle)
-analysis,accuracy,blunder,engine,evaluation,graph,report,coach,improve,board,game,ai,undo    (92)
+analysis,accuracy,blunder,engine,evaluation,graph,report,coach,improve,board,game,ai,undo    (89)
 
 # CZ, naučit se hrát angle
-pravidla,naučit,začátečníky,výuka,kapitoly,notace,mat,taktika,šachová,desková,nápověda,tahy  (95)
+pravidla,naučit,začátečníky,výuka,kapitoly,notace,mat,taktika,šachová,desková,nápověda  (86 / 97 bytes)
 
 # CZ, rozbor a přesnost angle
-rozbor,analýza,přesnost,hrubka,hodnocení,graf,engine,zlepšit,šachová,desková,partie,tahy     (93)
+rozbor,analýza,přesnost,hrubka,hodnocení,graf,engine,zlepšit,šachová,desková,partie,tahy     (88 / 95 bytes)
 ```
 
 Rules, so that editing does not break it:
@@ -258,7 +271,7 @@ the device while every other paragraph reflows — paste these as they are.
 **EN**
 
 ```
-Chess for one or two players, with its own engine. Five levels from Beginner to Grandmaster, as White or as Black, and the top two open out of a book of 90 named lines so they do not replay one game.
+Chess for one or two players, with its own engine. Five levels from Beginner to Grandmaster, as White or as Black, and the top two open out of a book of more than 80 named lines so they do not replay one game.
 
 Pass the phone across the table for two players, with the board turning towards whoever is on the move. Hint asks the engine what it would play; Undo takes back your move and the computer's reply with it.
 
@@ -272,7 +285,7 @@ No ads. No purchases. No account. No internet.
 **CZ**
 
 ```
-Šachy pro jednoho i pro dva hráče, s vlastním enginem. Pět úrovní od začátečnické po velmistrovskou, za bílého i za černého, a dvě nejvyšší zahajují z knihy 90 pojmenovaných variant, takže nehrají pořád jednu partii.
+Šachy pro jednoho i pro dva hráče, s vlastním enginem. Pět úrovní od začátečnické po velmistrovskou, za bílého i za černého, a dvě nejvyšší zahajují z knihy více než 80 pojmenovaných variant, takže nehrají pořád jednu partii.
 
 Pro dva hráče podejte telefon přes stůl — šachovnice se otočí k tomu, kdo je na tahu. Nápověda se zeptá enginu, jaký tah by zahrál on; Zpět vezme váš tah nazpět a s ním i odpověď počítače.
 

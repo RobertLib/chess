@@ -3,7 +3,8 @@
 //  chess
 //
 //  A small book of mainline openings. The analyzer uses it to name the opening
-//  and to leave known theory moves unjudged instead of scoring them.
+//  and to leave known theory moves unjudged instead of scoring them; the two
+//  strongest levels play out of it.
 //
 
 import Foundation
@@ -21,10 +22,21 @@ nonisolated enum OpeningBook {
     struct Line: Sendable {
         let name: LocalizedStringResource
         let moves: [String]
+        /// Whether the computer may play this line, rather than only know it.
+        ///
+        /// False for a line whose defining move theory marks as dubious — the
+        /// Englund Gambit, Grob's Attack and the like. The book holds them so
+        /// that a player who tries one has it named, and its moves left
+        /// unjudged like any other theory; but the book is also what the top
+        /// two levels open from, and weighted by line count those lines came
+        /// up as often as any other single line: 1.d4 e5 in one game in
+        /// twenty-three against 1.d4, 1.g4 in one in ninety.
+        let isSound: Bool
 
-        init(_ name: LocalizedStringResource, _ moves: String) {
+        init(_ name: LocalizedStringResource, _ moves: String, isSound: Bool = true) {
             self.name = name
             self.moves = moves.split(separator: " ").map(String.init)
+            self.isSound = isSound
         }
     }
 
@@ -36,36 +48,42 @@ nonisolated enum OpeningBook {
         var bookPlies: Int
     }
 
-    /// Longest line the game followed. `bookPlies` counts every leading move
-    /// that still agrees with some line in the book, so a game that follows
-    /// theory further than any complete line still gets credit for it.
+    /// What the book recognises in the game `sans` spells out from the
+    /// standard starting position — see `match(positions:)`. The moves are
+    /// read only as far as they are legal.
     static func match(sans: [String]) -> Match {
-        guard !sans.isEmpty else { return Match(name: nil, bookPlies: 0) }
-        let played = sans.map(normalized)
+        match(positions: replay(sans).map(\.zobrist))
+    }
 
+    /// What the book recognises in a game, given the Zobrist hash of the
+    /// position after each of its moves.
+    ///
+    /// Matched by position rather than by move sequence, so that an opening
+    /// reached in another order is still that opening. Matching the sequence
+    /// named 1.Nf3 d5 2.d4 Nf6 3.Bf4 the Réti, two moves into a London
+    /// System, and graded three of its theory moves as though the player had
+    /// found them over the board.
+    ///
+    /// `bookPlies` counts every leading move that lands on a position some
+    /// line passes through, so a game that follows theory further than any
+    /// complete line still gets credit for it — and a game that steps out of
+    /// the book and back in is judged from where it stepped out. The name is
+    /// that of the longest line whose final position the game reached at any
+    /// point: four moves into a Najdorf it is still just a Sicilian, but a
+    /// game that came to a Queen's Indian by way of a position the book does
+    /// not hold is a Queen's Indian all the same.
+    static func match(positions keys: [UInt64]) -> Match {
         var bookPlies = 0
+        while bookPlies < keys.count, (index[keys[bookPlies]]?.plies ?? 0) > 0 {
+            bookPlies += 1
+        }
+
         var name: LocalizedStringResource?
         var nameLength = 0
-
-        for line in lines {
-            // The leading plies the game shares with this line. A line the
-            // game left on its very last move still vouches for everything
-            // before that: those moves were theory whatever came after them,
-            // and a review that graded them would be judging the wrong thing.
-            var matched = 0
-            for (expected, actual) in zip(line.moves, played) {
-                guard expected == actual else { break }
-                matched += 1
-            }
-            guard matched > 0 else { continue }
-
-            bookPlies = max(bookPlies, matched)
-            // Only a line the game actually played to the end may name the
-            // opening — four moves into a Najdorf it is still just a Sicilian.
-            if matched == line.moves.count, matched > nameLength {
-                name = line.name
-                nameLength = matched
-            }
+        for key in keys {
+            guard let known = index[key], let lineName = known.name, known.nameLength > nameLength else { continue }
+            name = lineName
+            nameLength = known.nameLength
         }
 
         return Match(name: name.map { String(localized: $0) }, bookPlies: bookPlies)
@@ -76,25 +94,17 @@ nonisolated enum OpeningBook {
     /// One move theory continues with, and how many lines carry on down it.
     struct Continuation: Sendable {
         let san: String
-        /// Book lines that go this way. Used as the weight when a move is
-        /// picked — see `move(after:in:randomSeed:)`.
+        /// Sound book lines that go this way. Used as the weight when a move
+        /// is picked — see `move(after:in:randomSeed:)`.
         let lines: Int
     }
 
     /// Every move theory continues with from the position `sans` has reached,
     /// in the SAN the book is written in. Empty once the game has left the
-    /// book.
+    /// book, and never offers a line that is not `isSound`.
     static func continuations(after sans: [String]) -> [Continuation] {
-        let played = sans.map(normalized)
-        var counts: [String: Int] = [:]
-        var order: [String] = []
-        for line in lines where line.moves.count > played.count {
-            guard zip(line.moves, played).allSatisfy(==) else { continue }
-            let candidate = line.moves[played.count]
-            if counts[candidate] == nil { order.append(candidate) }
-            counts[candidate, default: 0] += 1
-        }
-        return order.map { Continuation(san: $0, lines: counts[$0] ?? 0) }
+        guard let board = position(after: sans) else { return [] }
+        return index[board.zobrist]?.continuations ?? []
     }
 
     /// Theory's own move here, or nil once the game has left the book.
@@ -102,24 +112,39 @@ nonisolated enum OpeningBook {
     /// The answer is one of `board`'s own legal moves, matched by SAN, so a
     /// book line that does not apply to the position in front of it is passed
     /// over rather than trusted — the book's text and the position are two
-    /// separate things and only the board decides what is playable.
+    /// separate things and only the board decides what is playable. Which
+    /// lines apply is decided by the position, not by the order of the moves
+    /// that reached it, so the book carries on after a transposition.
     ///
-    /// The pick is weighted by how many lines carry on down each move, which a
-    /// uniform pick made the case for. The book names eleven first moves, and
-    /// seven of them — 1.f4, 1.b3, 1.b4, 1.g4, 1.e3, 1.g3, 1.Nc3 — are a
-    /// single one-move line each: a name in a dictionary, not an opening the
-    /// book has anything further to say about. Sharing the chance out equally
-    /// gave each of those the same 9 % as 1.e4, and the top level opened 1.b3
-    /// in two games out of three. Counting lines is not a chess evaluation,
-    /// but in a book somebody sat down and wrote it tracks how much theory an
-    /// opening has: 1.e4 carries 52 of the 90 lines and runs 10 plies deep,
-    /// 1.d4 carries 24, and the seven dictionary entries carry one apiece.
-    /// Measured over the same eleven moves that weight gives 1.e4 58 %, 1.d4
-    /// 27 %, 1.Nf3 4 %, 1.c4 3 % and 8 % to all seven oddities together —
-    /// which is roughly how often a strong player does reach for one.
+    /// The pick is weighted by how many sound lines carry on down each move,
+    /// which a uniform pick made the case for. The book offers nine first
+    /// moves, and five of them — 1.f4, 1.b3, 1.e3, 1.g3, 1.Nc3 — are a single
+    /// one-move line each: a name in a dictionary, not an opening the book has
+    /// anything further to say about. Sharing the chance out equally gave each
+    /// of those the same share as 1.e4, and the top level opened 1.b3 in two
+    /// games out of three. Counting lines is not a chess evaluation, but in a
+    /// book somebody sat down and wrote it tracks how much theory an opening
+    /// has: 1.e4 carries 49 of the 83 sound lines and runs 10 plies deep,
+    /// 1.d4 carries 22, and the five dictionary entries carry one apiece. That
+    /// weight gives 1.e4 59 %, 1.d4 27 %, 1.Nf3 5 %, 1.c4 4 % and 6 % to all
+    /// five oddities together — which is roughly how often a strong player
+    /// does reach for one.
     static func move(after sans: [String], in board: Board, randomSeed: UInt64) -> Move? {
-        let theory = continuations(after: sans)
-        guard !theory.isEmpty else { return nil }
+        // Opening theory is about the standard array, and a Chess960 game is
+        // never in it — not even position 518, whose castling is played
+        // differently. Refused here and not only by the caller, because the
+        // caller's way of keeping a game out is to pass an empty history.
+        guard !board.isChess960, board.variant == .standard else { return nil }
+        // Asked first because it is one lookup, and for every move after the
+        // opening it is the answer.
+        guard let theory = index[board.zobrist]?.continuations, !theory.isEmpty else { return nil }
+        // The moves still have to be this board's own history. The position
+        // decides which theory applies; the history is the caller saying this
+        // is a game from the standard start, and a history that does not lead
+        // here means the question is about some other game. An empty one is
+        // how a game set up from a FEN is kept out, even when the FEN is a
+        // position the book knows.
+        guard position(after: sans)?.zobrist == board.zobrist else { return nil }
         let weights = Dictionary(theory.map { ($0.san, $0.lines) }, uniquingKeysWith: +)
 
         // `generateLegalMoves` is deterministic and so is the walk below, so
@@ -147,8 +172,92 @@ nonisolated enum OpeningBook {
         return candidates[0].move
     }
 
+    /// Where `sans` leads from the standard starting position, or nil if one
+    /// of them is not a legal move on the way.
+    private static func position(after sans: [String]) -> Board? {
+        let path = replay(sans)
+        guard path.count == sans.count else { return nil }
+        return path.last ?? .initial
+    }
+
+    /// The positions `sans` passes through from the standard starting
+    /// position, one after each move, for as long as the moves are legal.
+    private static func replay(_ sans: [String]) -> [Board] {
+        var board = Board.initial
+        var path: [Board] = []
+        path.reserveCapacity(sans.count)
+        for san in sans {
+            guard let next = board.playing(san: normalized(san)) else { break }
+            board = next
+            path.append(board)
+        }
+        return path
+    }
+
+    // MARK: Positions
+
+    /// What the book knows about one position.
+    private struct Position: Sendable {
+        /// How many moves into its line the book first reaches it; 0 only for
+        /// the starting position, which is where every line begins rather
+        /// than a move of theory.
+        var plies: Int
+        /// The longest line that ends here, and how long it is.
+        var name: LocalizedStringResource?
+        var nameLength = 0
+        /// The moves sound lines carry on with from here, in the order the
+        /// lines first name them.
+        var continuations: [Continuation] = []
+    }
+
+    /// Every position a line of the book passes through, by Zobrist hash.
+    ///
+    /// Built once, the first time the book is asked anything. The lines share
+    /// most of their moves, so each distinct run of moves is played out only
+    /// once. The hash is the one the search keys its tables and repetitions
+    /// by: it includes castling rights and an en-passant square only when a
+    /// capture there is really possible, so two move orders that reach the
+    /// same position give the same key, as they should.
+    private static let index: [UInt64: Position] = {
+        var index: [UInt64: Position] = [:]
+        let start = Board.initial
+        index[start.zobrist] = Position(plies: 0)
+        // Positions already played out, by the moves that lead to them.
+        var reached: [String: Board] = [:]
+
+        for line in lines {
+            var board = start
+            var played = 0
+            for (ply, san) in line.moves.enumerated() {
+                let path = line.moves[...ply].joined(separator: " ")
+                // A line the board cannot play is left out from there on
+                // rather than trusted; `everyLineIsPlayableAndNamed` keeps the
+                // book free of them.
+                guard let next = reached[path] ?? board.playing(san: san) else { break }
+                reached[path] = next
+                if line.isSound {
+                    var continuations = index[board.zobrist]?.continuations ?? []
+                    if let known = continuations.firstIndex(where: { $0.san == san }) {
+                        continuations[known] = Continuation(san: san, lines: continuations[known].lines + 1)
+                    } else {
+                        continuations.append(Continuation(san: san, lines: 1))
+                    }
+                    index[board.zobrist]?.continuations = continuations
+                }
+                board = next
+                played = ply + 1
+                if index[board.zobrist] == nil { index[board.zobrist] = Position(plies: played) }
+            }
+            if played == line.moves.count, played > index[board.zobrist]?.nameLength ?? 0 {
+                index[board.zobrist]?.name = line.name
+                index[board.zobrist]?.nameLength = played
+            }
+        }
+        return index
+    }()
+
     /// Strips check and mate marks so book lines need not carry them.
-    private static func normalized(_ san: String) -> String {
+    fileprivate static func normalized(_ san: String) -> String {
         san.replacingOccurrences(of: "+", with: "")
             .replacingOccurrences(of: "#", with: "")
             .replacingOccurrences(of: "!", with: "")
@@ -173,7 +282,7 @@ nonisolated enum OpeningBook {
         Line(LocalizedStringResource("Ruy López: Morphy Defense", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 a6"),
         Line(LocalizedStringResource("Ruy López: Berlin Defense", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 Nf6"),
         Line(LocalizedStringResource("Ruy López: Exchange Variation", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 a6 Bxc6"),
-        Line(LocalizedStringResource("Ruy López: Closed", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O"),
+        Line(LocalizedStringResource("Ruy López: Closed", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7"),
         Line(LocalizedStringResource("Scotch Game", comment: "Chess opening"), "e4 e5 Nf3 Nc6 d4"),
         Line(LocalizedStringResource("Scotch Game", comment: "Chess opening"), "e4 e5 Nf3 Nc6 d4 exd4 Nxd4"),
         Line(LocalizedStringResource("Four Knights Game", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Nc3 Nf6"),
@@ -208,9 +317,9 @@ nonisolated enum OpeningBook {
         Line(LocalizedStringResource("Modern Defense", comment: "Chess opening"), "e4 g6"),
         Line(LocalizedStringResource("Scandinavian Defense", comment: "Chess opening"), "e4 d5"),
         Line(LocalizedStringResource("Alekhine Defense", comment: "Chess opening"), "e4 Nf6"),
-        Line(LocalizedStringResource("Nimzowitsch Defense", comment: "Chess opening"), "e4 Nc6"),
-        Line(LocalizedStringResource("Owen's Defense", comment: "Chess opening"), "e4 b6"),
-        Line(LocalizedStringResource("Bird's Defense to the Ruy López", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 Nd4"),
+        Line(LocalizedStringResource("Nimzowitsch Defense", comment: "Chess opening"), "e4 Nc6", isSound: false),
+        Line(LocalizedStringResource("Owen's Defense", comment: "Chess opening"), "e4 b6", isSound: false),
+        Line(LocalizedStringResource("Bird's Defense to the Ruy López", comment: "Chess opening"), "e4 e5 Nf3 Nc6 Bb5 Nd4", isSound: false),
 
         // 1. d4
         Line(LocalizedStringResource("Queen's Pawn Opening", comment: "Chess opening"), "d4"),
@@ -235,8 +344,8 @@ nonisolated enum OpeningBook {
         Line(LocalizedStringResource("Benko Gambit", comment: "Chess opening"), "d4 Nf6 c4 c5 d5 b5"),
         Line(LocalizedStringResource("Budapest Gambit", comment: "Chess opening"), "d4 Nf6 c4 e5"),
         Line(LocalizedStringResource("Dutch Defense", comment: "Chess opening"), "d4 f5"),
-        Line(LocalizedStringResource("Polish Defense", comment: "Chess opening"), "d4 b5"),
-        Line(LocalizedStringResource("Englund Gambit", comment: "Chess opening"), "d4 e5"),
+        Line(LocalizedStringResource("Polish Defense", comment: "Chess opening"), "d4 b5", isSound: false),
+        Line(LocalizedStringResource("Englund Gambit", comment: "Chess opening"), "d4 e5", isSound: false),
 
         // Flank openings
         Line(LocalizedStringResource("English Opening", comment: "Chess opening"), "c4"),
@@ -248,10 +357,24 @@ nonisolated enum OpeningBook {
         Line(LocalizedStringResource("Zukertort Opening", comment: "Chess opening"), "Nf3 Nf6"),
         Line(LocalizedStringResource("Bird's Opening", comment: "Chess opening"), "f4"),
         Line(LocalizedStringResource("Larsen's Opening", comment: "Chess opening"), "b3"),
-        Line(LocalizedStringResource("Sokolsky Opening", comment: "Chess opening"), "b4"),
-        Line(LocalizedStringResource("Grob's Attack", comment: "Chess opening"), "g4"),
+        Line(LocalizedStringResource("Sokolsky Opening", comment: "Chess opening"), "b4", isSound: false),
+        Line(LocalizedStringResource("Grob's Attack", comment: "Chess opening"), "g4", isSound: false),
         Line(LocalizedStringResource("Van 't Kruijs Opening", comment: "Chess opening"), "e3"),
         Line(LocalizedStringResource("Hungarian Opening", comment: "Chess opening"), "g3"),
         Line(LocalizedStringResource("Dunst Opening", comment: "Chess opening"), "Nc3"),
     ]
+}
+
+nonisolated private extension Board {
+    /// This position after the legal move `san` names, written without check
+    /// or mate marks, or nil when no legal move is written that way.
+    func playing(san: String) -> Board? {
+        let legal = generateLegalMoves()
+        guard let move = legal.first(where: {
+            OpeningBook.normalized(self.san(for: $0, legalMoves: legal)) == san
+        }) else { return nil }
+        var next = self
+        next.make(move)
+        return next
+    }
 }

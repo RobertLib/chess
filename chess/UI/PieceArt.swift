@@ -74,6 +74,33 @@ enum PieceArt {
         return path
     }
 
+    /// The piece as one shape, for drawing in a single colour: whatever the
+    /// artwork paints dark belongs to it, whatever it paints light is cut out
+    /// of what lies underneath, layer by layer. A white piece comes out as its
+    /// outline and a black one solid with its markings cut in — the way a
+    /// printed diagram tells the two apart, where colour cannot.
+    static func monochrome(_ piece: Piece) -> Path {
+        var shape = Path()
+        func paint(_ ink: Ink, _ area: Path) {
+            switch ink {
+            case .none: break
+            case .dark: shape = shape.union(area)
+            // Asked of an empty path, `subtracting` hands back the very area
+            // it was to take away.
+            case .light where !shape.isEmpty: shape = shape.subtracting(area)
+            case .light: break
+            }
+        }
+        for layer in layers(for: piece) {
+            paint(layer.fill, layer.path.normalized(eoFill: layer.evenOdd))
+            let stroke = layer.path.strokedPath(StrokeStyle(
+                lineWidth: layer.width, lineCap: layer.cap, lineJoin: layer.join
+            ))
+            paint(layer.stroke, stroke.normalized(eoFill: false))
+        }
+        return shape
+    }
+
     // MARK: - Artwork
 
     private static let whitePawn: [Layer] = [

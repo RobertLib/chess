@@ -19,8 +19,17 @@ nonisolated enum AIDifficulty: String, CaseIterable, Codable, Sendable, Identifi
     case medium
     case hard
     case expert
+    /// Moves between the five levels on its own, a little stronger after the
+    /// player wins and a little weaker after they lose. Its actual strength is
+    /// not a property of the case — it lives with the player's settings and
+    /// travels with each game in `GameOptions.adaptiveLevel` — so `parameters`
+    /// here is only the Medium fallback for a caller that never resolved it.
+    case adaptive
 
     var id: String { rawValue }
+
+    /// The five levels that have a strength of their own, weakest first.
+    static let fixedLevels: [AIDifficulty] = [.beginner, .easy, .medium, .hard, .expert]
 
     /// Search parameters per level. `temperature` (centipawns) controls the
     /// softmax randomness at the root; `window` caps how much worse than the
@@ -32,7 +41,14 @@ nonisolated enum AIDifficulty: String, CaseIterable, Codable, Sendable, Identifi
         case .medium: return (4, 1.0, 30, 180)
         case .hard: return (10, 1.4, 0, 0)
         case .expert: return (24, 2.6, 0, 0)
+        case .adaptive: return AIDifficulty.medium.parameters
         }
+    }
+
+    /// The same parameters as a value the search can be handed directly.
+    var strength: AIStrength {
+        let p = parameters
+        return AIStrength(maxDepth: p.maxDepth, time: p.time, temperature: p.temperature, window: p.window)
     }
 
     /// Whether this level opens out of `OpeningBook` instead of searching the
@@ -48,6 +64,46 @@ nonisolated enum AIDifficulty: String, CaseIterable, Codable, Sendable, Identifi
     /// 1.e4 on eight seeds out of eight and two different seeds gave a
     /// byte-identical six-ply opening.
     var playsFromBook: Bool { parameters.temperature == 0 }
+}
+
+// MARK: - Strength
+
+/// What a search is allowed to do, as numbers rather than as a named level:
+/// how deep, how long, and how much randomness goes into the pick at the root.
+///
+/// The five levels are five points on this scale. The adaptive opponent lives
+/// *between* them, so it needs the scale itself — `interpolated(_:)` slides
+/// from Beginner (0) to Grandmaster (4), and lands exactly on a named level at
+/// every whole number.
+nonisolated struct AIStrength: Hashable, Codable, Sendable {
+    var maxDepth: Int
+    var time: TimeInterval
+    /// Softmax temperature at the root, in centipawns. 0 picks the best move.
+    var temperature: Double
+    /// How far below the best move a randomly picked move may score.
+    var window: Int
+
+    /// Same reasoning as `AIDifficulty.playsFromBook`: only a strength with no
+    /// randomness of its own needs the book to vary its openings.
+    var playsFromBook: Bool { temperature == 0 }
+
+    /// A strength anywhere on the Beginner…Grandmaster scale. `level` is
+    /// clamped to 0...4; whole numbers reproduce the named levels exactly.
+    static func interpolated(_ level: Double) -> AIStrength {
+        let levels = AIDifficulty.fixedLevels.map(\.strength)
+        let clamped = min(Double(levels.count - 1), max(0, level))
+        let lower = Int(clamped.rounded(.down))
+        let upper = min(levels.count - 1, lower + 1)
+        let t = clamped - Double(lower)
+        let a = levels[lower], b = levels[upper]
+        func mix(_ x: Double, _ y: Double) -> Double { x + (y - x) * t }
+        return AIStrength(
+            maxDepth: Int(mix(Double(a.maxDepth), Double(b.maxDepth)).rounded()),
+            time: mix(a.time, b.time),
+            temperature: mix(a.temperature, b.temperature),
+            window: Int(mix(Double(a.window), Double(b.window)).rounded())
+        )
+    }
 }
 
 // MARK: - Cancellation
@@ -111,13 +167,39 @@ nonisolated struct PositionAnalysis: Sendable {
     var bestScore: Int
     /// Exact score of the move the caller asked about, when it was not the
     /// engine's choice.
+    ///
+    /// Usually from the same depth as `bestScore`. When `bestScore` is a forced
+    /// mate it can come from deeper than `depth`: the mate ends the search, and
+    /// the move asked about is searched on alone until it is decided too.
     var focusScore: Int?
     /// True when some other move comes close to matching `bestMove` — used to
-    /// tell an only-move from one of several good options.
+    /// tell an only-move from one of several good options. Beside a forced
+    /// mate it is asked only when the mate is the move asked about, and true
+    /// otherwise, as it always was there.
     var hasCloseAlternative: Bool
+    /// Whether some move other than `bestMove` wins outright as well, by the
+    /// line `GameAnalyzer.wonOutright` draws — what tells a sacrifice that won
+    /// the game from one played in a game that was won anyway.
+    ///
+    /// Asked only where a grade can turn on it: `bestMove` gives material up
+    /// (`GameAnalyzer.sacrifice(of:in:)`) and wins outright itself. Nil
+    /// everywhere else, and wherever the budget ran out before the answer
+    /// came in, which the grading reads as yes — no brilliancy on a guess.
+    var alternativeWinsOutright: Bool? = nil
     var legalMoveCount: Int
     var depth: Int
     var nodes: Int
+    /// True when the search was stopped by the clock or by the caller rather
+    /// than by its node budget, its depth cap or a mate.
+    ///
+    /// The numbers are then whatever depth this run happened to finish, which
+    /// says how fast the device was and nothing about the position. The time
+    /// limit is meant only as a net, but it measures time the app spends
+    /// suspended as well: a review left running in the background used to
+    /// come back to every search it had in flight out of time, and stored
+    /// their shallower answers as the reproducible ones. Such a result can be
+    /// shown, but it is never what the cache keeps.
+    var isCutShort = false
 }
 
 // MARK: - Evaluation tables
@@ -228,6 +310,9 @@ nonisolated final class ChessAISearcher {
     /// Hashes of positions from the real game (for repetition detection),
     /// plus the current search path.
     private var pathHashes: [UInt64]
+    /// Where the position being searched sits in `pathHashes`: everything
+    /// before it is the game, everything after it the line being searched.
+    private var rootIndex = 0
 
     private var nodes = 0
     private var deadline: DispatchTime = .distantFuture
@@ -237,6 +322,9 @@ nonisolated final class ChessAISearcher {
     private var nodeLimit = Int.max
     private var cancellation: SearchCancellation?
     private var aborted = false
+    /// Set alongside `aborted` when what stopped the search was the clock or
+    /// the caller, not the node budget — see `PositionAnalysis.isCutShort`.
+    private var cutShort = false
 
     private static let mateScore = SearchScore.mate
     private static let infinity = SearchScore.infinity
@@ -320,7 +408,9 @@ nonisolated final class ChessAISearcher {
     /// in parallel and uses a smaller one to keep memory in check.
     init(board: Board, gameHashes: [UInt64], ttSizeLog2: Int = 18) {
         self.board = board
-        self.pathHashes = gameHashes
+        let path = Self.repetitionPath(gameHashes, endingAt: board)
+        self.pathHashes = path
+        self.rootIndex = path.count - 1
         let ttSize = 1 << ttSizeLog2
         self.transpositionTable = Array(repeating: nil, count: ttSize)
         self.ttMask = ttSize - 1
@@ -332,7 +422,8 @@ nonisolated final class ChessAISearcher {
     /// heuristic) is worth roughly a ply of depth at the same time budget.
     func reset(board: Board, gameHashes: [UInt64]) {
         self.board = board
-        self.pathHashes = gameHashes
+        self.pathHashes = Self.repetitionPath(gameHashes, endingAt: board)
+        self.rootIndex = pathHashes.count - 1
         // Killers are ply-indexed, and the tree shifts by a ply between moves,
         // so they are the one table that goes stale.
         killers = Array(repeating: [nil, nil], count: killers.count)
@@ -340,6 +431,14 @@ nonisolated final class ChessAISearcher {
         // — but halved, so what this position learns outweighs what a position
         // twenty moves ago did.
         ageHistory()
+    }
+
+    /// The game's repetition history with the position about to be searched
+    /// as its last entry. Every caller hands over `Game.repetitionHashes`,
+    /// which already ends there; the root is added only if it is missing, so
+    /// that `rootIndex` can always point at it.
+    private static func repetitionPath(_ gameHashes: [UInt64], endingAt board: Board) -> [UInt64] {
+        gameHashes.last == board.zobrist ? gameHashes : gameHashes + [board.zobrist]
     }
 
     /// Halves every history score, keeping their order while making room for
@@ -359,7 +458,19 @@ nonisolated final class ChessAISearcher {
         randomSeed: UInt64,
         cancellation: SearchCancellation? = nil
     ) -> AISearchResult? {
-        let params = difficulty.parameters
+        search(strength: difficulty.strength, randomSeed: randomSeed, cancellation: cancellation)
+    }
+
+    /// `timeLimit`, when given, replaces the strength's own allowance — a game
+    /// on the clock budgets the computer's time from what it has left (see
+    /// `AITimeBudget`). It only ever shortens the think in practice: the
+    /// budget is capped at the strength's own time.
+    func search(
+        strength params: AIStrength,
+        randomSeed: UInt64,
+        cancellation: SearchCancellation? = nil,
+        timeLimit: TimeInterval? = nil
+    ) -> AISearchResult? {
         var rng = Zobrist.SplitMix64(seed: randomSeed)
 
         var rootMoves = board.generateLegalMoves()
@@ -372,11 +483,12 @@ nonisolated final class ChessAISearcher {
         var generator = SeededGenerator(seed: rng.next())
         rootMoves.shuffle(using: &generator)
 
-        deadline = .now() + params.time
+        deadline = .now() + (timeLimit ?? params.time)
         nodeLimit = .max
         self.cancellation = cancellation
         nodes = 0
         aborted = false
+        cutShort = false
 
         var bestResult: AISearchResult?
         var lastScores: [(move: Move, score: Int)] = []
@@ -437,6 +549,20 @@ nonisolated final class ChessAISearcher {
                 // at the lower difficulties wants a full field to choose from,
                 // and half a field is worse than none.
                 bestResult = AISearchResult(move: bestMove, score: alpha, depth: depth, nodes: nodes)
+            } else if params.temperature == 0, let previous = bestResult, let bestMove,
+                      bestMove != previous.move {
+                // Out of time part way through, with an earlier iteration to
+                // fall back on — but this one has already overruled it. The
+                // previous best is searched first, so it was given its exact
+                // score at this depth, and then another move beat that score
+                // with an exact score of its own, for the same reason as
+                // above. Keeping the old move meant playing one the deeper
+                // search had just shown to be worse.
+                //
+                // Only at the levels that play the best move. The randomized
+                // pick below draws from `lastScores`, a complete iteration, and
+                // would replace this move anyway.
+                bestResult = AISearchResult(move: bestMove, score: alpha, depth: depth, nodes: nodes)
             }
             if aborted { break }
         }
@@ -484,7 +610,8 @@ nonisolated final class ChessAISearcher {
     /// really needs get an expensive full-window search.
     /// `nodeBudget` is what actually bounds the search, so two runs over the
     /// same game produce the same report. `timeLimit` is only a safety net for
-    /// a position that somehow searches far slower than expected.
+    /// a position that somehow searches far slower than expected, and a result
+    /// it does cut short is marked as such (`PositionAnalysis.isCutShort`).
     func analyze(
         maxDepth: Int,
         nodeBudget: Int,
@@ -500,10 +627,12 @@ nonisolated final class ChessAISearcher {
         self.cancellation = cancellation
         nodes = 0
         aborted = false
+        cutShort = false
 
         var result: PositionAnalysis?
+        let depthCap = max(1, maxDepth)
 
-        for depth in 1...max(1, maxDepth) {
+        for depth in 1...depthCap {
             var alpha = -Self.infinity
             var bestMove: Move?
             var completed = true
@@ -548,21 +677,28 @@ nonisolated final class ChessAISearcher {
 
             // Was the best move the only good one? A single null-window probe
             // per alternative answers that cheaply.
+            //
+            // A mate is asked only when it is the move that was played, the
+            // one move whose grade turns on the answer. Any other move is
+            // graded without it — unless it mates as fast, and then it is a
+            // close alternative itself — and needs what is left of the budget
+            // for `settleFocus` below.
             var hasCloseAlternative = true
-            if let threshold = Self.alternativeThreshold(bestScore: bestScore) {
-                hasCloseAlternative = false
-                for move in rootMoves where move != bestMove {
-                    let score = rootSearch(
-                        move, depth: depth,
-                        alpha: threshold - 1, beta: threshold
-                    )
-                    if aborted { break }
-                    if score >= threshold {
-                        hasCloseAlternative = true
-                        break
-                    }
+            var alternativeWinsOutright: Bool?
+            if !SearchScore.isMate(bestScore) || focusMove == bestMove {
+                (hasCloseAlternative, alternativeWinsOutright) = askAlternatives(
+                    to: bestMove, scoring: bestScore, among: rootMoves, depth: depth
+                )
+                if aborted {
+                    // A mate is kept even so. Mates were never asked about
+                    // their alternatives before, so one found was one kept,
+                    // and losing it to the probes would hand back the depth
+                    // before, which had not seen it. What they had not
+                    // settled is left as it used to be: nobody singled out.
+                    guard SearchScore.isMate(bestScore) else { break }
+                    hasCloseAlternative = true
+                    alternativeWinsOutright = nil
                 }
-                if aborted { break }
             }
 
             result = PositionAnalysis(
@@ -570,6 +706,7 @@ nonisolated final class ChessAISearcher {
                 bestScore: bestScore,
                 focusScore: focusScore,
                 hasCloseAlternative: hasCloseAlternative,
+                alternativeWinsOutright: alternativeWinsOutright,
                 legalMoveCount: rootMoves.count,
                 depth: depth,
                 nodes: nodes
@@ -581,11 +718,126 @@ nonisolated final class ChessAISearcher {
                 rootMoves.insert(bestMove, at: 0)
             }
 
-            // A forced mate settles the position; no need to search deeper.
-            if SearchScore.isMate(bestScore) { break }
+            // A forced mate settles the position, but not the move that was
+            // played. It was scored at the depth the mate turned up at — one
+            // ply for a mate in one — which is too shallow to see what it
+            // does: a slower mate came back as a few pawns up and was graded
+            // a miss, and a move that let the other side mate first came
+            // back as the material it kept. So the played move alone goes on
+            // being deepened until it too comes out as a mate, either way, or
+            // the budget runs out. The mate itself needs no more: it is the
+            // shortest there is at any depth. When it is the move that was
+            // played, the question of its alternatives goes on instead (see
+            // `settleAlternatives`).
+            if SearchScore.isMate(bestScore) {
+                if let focusMove, let focusScore, !SearchScore.isMate(focusScore) {
+                    settleFocus(focusMove, from: depth + 1, through: depthCap, into: &result)
+                } else if !aborted, focusMove == bestMove {
+                    settleAlternatives(
+                        to: bestMove, scoring: bestScore, among: rootMoves,
+                        from: depth + 1, through: depthCap, into: &result
+                    )
+                }
+                break
+            }
         }
 
+        // An iteration the clock or the caller broke off leaves the one before
+        // it standing, which a run that had the time would have gone past.
+        result?.isCutShort = cutShort
         return result
+    }
+
+    /// Searches `focusMove` alone, a ply deeper each time, until its score is
+    /// a mate or `lastDepth` or the budget is reached, writing each finished
+    /// score into `result`.
+    ///
+    /// Only a search that finished is written. One the budget or the clock
+    /// stops part way through has returned whatever the node it was standing
+    /// on said, which is no score at all, and a review that took it would
+    /// grade the move worse than the shallower search already had — so the
+    /// last complete depth stands, as it does for the main iterations.
+    private func settleFocus(
+        _ focusMove: Move, from firstDepth: Int, through lastDepth: Int,
+        into result: inout PositionAnalysis?
+    ) {
+        guard firstDepth <= lastDepth else { return }
+        for depth in firstDepth...lastDepth {
+            let score = rootSearch(focusMove, depth: depth, alpha: -Self.infinity, beta: Self.infinity)
+            if aborted { return }
+            result?.focusScore = score
+            result?.nodes = nodes
+            if SearchScore.isMate(score) { return }
+        }
+    }
+
+    /// After a mate that was the move played, asks again whether anything
+    /// else comes close to it, a ply deeper each time, for as long as the
+    /// answer still singles the move out and neither `lastDepth` nor the
+    /// budget is reached. Each finished answer is written into `result`.
+    ///
+    /// The mate ends the search at whatever depth it turned up at, and a
+    /// combination of checks turns up at two or three plies, which is too
+    /// shallow to judge a quiet move by: one that mates a move later, or
+    /// wins the queen, reads as nothing much, and the mate as the only move
+    /// there was. Once something does come close the move is singled out no
+    /// longer, and a deeper look has nothing left to take away. No other
+    /// move is graded on the answer, so no other move's mate is asked again,
+    /// and the positions that cost the full budget here are the ones whose
+    /// move is up for a great or a brilliant grade — the budget every other
+    /// position spends anyway.
+    private func settleAlternatives(
+        to bestMove: Move, scoring bestScore: Int, among rootMoves: [Move],
+        from firstDepth: Int, through lastDepth: Int, into result: inout PositionAnalysis?
+    ) {
+        guard firstDepth <= lastDepth else { return }
+        for depth in firstDepth...lastDepth {
+            guard result?.hasCloseAlternative == false || result?.alternativeWinsOutright == false
+            else { return }
+            let answer = askAlternatives(to: bestMove, scoring: bestScore, among: rootMoves, depth: depth)
+            if aborted { return }
+            result?.hasCloseAlternative = answer.close
+            result?.alternativeWinsOutright = answer.winsOutright
+            result?.nodes = nodes
+        }
+    }
+
+    /// Whether any move but `bestMove` comes close to it at `depth` (see
+    /// `alternativeThreshold`), and — for a sacrifice that wins outright —
+    /// whether any wins outright as well (see
+    /// `PositionAnalysis.alternativeWinsOutright`). Answers nothing the
+    /// caller may keep once `aborted` is set.
+    private func askAlternatives(
+        to bestMove: Move, scoring bestScore: Int, among rootMoves: [Move], depth: Int
+    ) -> (close: Bool, winsOutright: Bool?) {
+        guard let threshold = Self.alternativeThreshold(bestScore: bestScore) else { return (true, nil) }
+        let alternatives = rootMoves.filter { $0 != bestMove }
+        let close = firstAlternative(in: alternatives[...], reaching: threshold, depth: depth)
+        // A sacrifice that wins outright is a find only if nothing else did,
+        // which is a higher bar than coming close: a mate with the other
+        // moves a rook up is still the one that won the game. Every move
+        // ahead of `close` fell short of the lower bar already, so only the
+        // rest are asked; with none that came close, none won outright either.
+        guard !aborted, bestScore >= Self.wonOutrightScore,
+              GameAnalyzer.sacrifice(of: bestMove, in: board) >= GameAnalyzer.minimumSacrifice
+        else { return (close != nil, nil) }
+        let winsOutright = close.map {
+            firstAlternative(in: alternatives[$0...], reaching: Self.wonOutrightScore, depth: depth) != nil
+        } ?? false
+        return (close != nil, winsOutright)
+    }
+
+    /// Index of the first of `moves` that scores at least `threshold` at
+    /// `depth`, one null-window probe apiece; nil when none does, or when
+    /// the search was stopped on the way, which the caller tells apart by
+    /// `aborted`.
+    private func firstAlternative(in moves: ArraySlice<Move>, reaching threshold: Int, depth: Int) -> Int? {
+        for index in moves.indices {
+            let score = rootSearch(moves[index], depth: depth, alpha: threshold - 1, beta: threshold)
+            if aborted { return nil }
+            if score >= threshold { return index }
+        }
+        return nil
     }
 
     private func rootSearch(_ move: Move, depth: Int, alpha: Int, beta: Int) -> Int {
@@ -600,15 +852,26 @@ nonisolated final class ChessAISearcher {
     /// The score an alternative has to reach to count as "nearly as good as
     /// the best move" — a fixed drop in win expectancy rather than a fixed
     /// number of centipawns, so the test means the same thing in a quiet
-    /// position and in a wild one. Returns nil when the position is already
-    /// decided, where no move deserves singling out.
+    /// position and in a wild one. Returns nil when the position is lost,
+    /// where every move is bad and none deserves singling out.
+    ///
+    /// A won position is asked like any other, with a forced mate as the
+    /// certain win `WinChance` makes it. Both used to be let off, on the
+    /// grounds that a decided game has no move worth singling out — but the
+    /// move that decides it is often the one most worth it, and a mating
+    /// combination never could be: with everything else falling back to
+    /// equality, the review still called it merely best. Where several moves
+    /// win comfortably the first of them clears the bar, so nothing is
+    /// singled out there, and the probes stop at it.
     private static func alternativeThreshold(bestScore: Int) -> Int? {
-        guard !SearchScore.isMate(bestScore) else { return nil }
         let best = WinChance.percent(centipawns: bestScore) / 100
         let target = best - 0.18
-        guard target > 0.02, best < 0.96 else { return nil }
+        guard target > 0.02 else { return nil }
         return Int((log(target / (1 - target)) / 0.00368208).rounded())
     }
+
+    /// `GameAnalyzer.wonOutright` as a score: the lowest one above the line.
+    private static let wonOutrightScore = WinChance.lowestScore(above: GameAnalyzer.wonOutright)
 
     // MARK: Negamax
 
@@ -621,12 +884,18 @@ nonisolated final class ChessAISearcher {
 
         if reachedLimit() { return 0 }
 
-        // Draw detection: fifty-move rule and repetition (a single repetition
-        // within the search already scores as a draw to avoid shuffling).
-        // Mate outranks the clock, the same way it does in
-        // `Game.evaluateOutcome`: a checkmate delivered by the hundredth quiet
-        // move is still checkmate, so a node on the clock only scores as a
-        // draw once it is known to have a reply.
+        // A variant won by the move that led here — the king on the hill, the
+        // third check — is lost for the side on move, as surely as a mate.
+        // One comparison for every standard game.
+        if board.variant != .standard, board.variantWinner != nil {
+            return -(Self.mateScore - ply)
+        }
+
+        // Draw detection: fifty-move rule and repetition (`isRepetition` says
+        // which repetitions count). Mate outranks the clock, the same way it
+        // does in `Game.evaluateOutcome`: a checkmate delivered by the
+        // hundredth quiet move is still checkmate, so a node on the clock
+        // only scores as a draw once it is known to have a reply.
         if board.halfmoveClock >= 100, !isCheckmated() { return 0 }
         // Every entry point passes `ply: 1` or deeper, so there is no ply-0
         // node to exempt here; the guard that used to test for one only read
@@ -752,6 +1021,11 @@ nonisolated final class ChessAISearcher {
     /// and killer slots are indexed by.
     private func quiescence(alpha: Int, beta: Int, ply: Int, quiescencePly: Int) -> Int {
         if reachedLimit() { return 0 }
+        // The same variant win `negamax` looks for: a capture can give the
+        // third check, or let a king onto the hill.
+        if board.variant != .standard, board.variantWinner != nil {
+            return -(Self.mateScore - ply)
+        }
         // Asked before the check below, because being in check is exactly what
         // lets a node past `maxQuiescencePly` — see `maxQuiescenceHardPly`.
         if quiescencePly >= Self.maxQuiescenceHardPly { return evaluate() }
@@ -768,7 +1042,23 @@ nonisolated final class ChessAISearcher {
         var standPat = 0
         if !inCheck {
             standPat = evaluate()
-            if standPat >= beta { return beta }
+            // A side with no move at all is stalemated, however much it has
+            // to stand on: cut off on its material, a stalemate that saves
+            // the side behind scored as the position it would have lost. A
+            // root move searched with a narrow window — every one after the
+            // first — never saw the draw, which then came a ply too late.
+            if standPat >= beta { return isStalemate() ? 0 : beta }
+            // A variant can be won by a move that captures nothing — a king
+            // stepping onto the hill, a quiet third check — and the captures
+            // below are all this node would otherwise look at. One ply past
+            // the horizon that win was invisible: the search let the other
+            // king walk onto the hill to take a pawn, and called a king one
+            // step from the centre worth 220 rather than the game. In check
+            // every move is searched anyway, and the child's `variantWinner`
+            // test sees the win.
+            if board.variant != .standard, hasVariantWinningMove() {
+                return Self.mateScore - (ply + 1)
+            }
             if standPat > alpha { alpha = standPat }
             // Chased far enough. Standing pat is the answer, which is why this
             // is asked only out of check — see `maxQuiescencePly`.
@@ -782,8 +1072,12 @@ nonisolated final class ChessAISearcher {
         for move in moves {
             // Delta pruning: skip captures that cannot possibly raise alpha.
             // Not while in check, where the move list is about getting out,
-            // not about what it wins.
-            if !inCheck, let captured = move.captured,
+            // not about what it wins. Nor once alpha is a mate: what raises it
+            // then is a quicker mate, and no count of material says which
+            // capture gives one — Qxg2# was passed over for the pawn it took,
+            // behind a slower mate already found, and the review announced
+            // mate in three where there was mate in two.
+            if !inCheck, alpha < SearchScore.mateThreshold, let captured = move.captured,
                standPat + EvalTables.pieceValues[Int(captured.kind.rawValue)] + 200 < alpha,
                move.promotion == nil {
                 continue
@@ -805,11 +1099,110 @@ nonisolated final class ChessAISearcher {
             if score > alpha { alpha = score }
         }
 
-        // Only meaningful in check: with no legal move there, this is mate.
-        // Out of check an empty list just means the position is quiet, and
-        // `standPat` already stands as its score.
+        // In check, no legal move is mate.
         if inCheck, legalCount == 0 { return -(Self.mateScore - ply) }
+        // Out of check an empty list usually just means the position is
+        // quiet, and `standPat` already stands as its score — unless there is
+        // no legal move of any kind, which is stalemate. Left at that, a
+        // stalemate at the horizon scored as the material the other side had
+        // left, and the search walked into it as a win.
+        if !inCheck, legalCount == 0, isStalemate() { return 0 }
         return alpha
+    }
+
+    /// Whether the side to move, which is not in check, has no legal move.
+    ///
+    /// Quiescence asks this of every node with no capture to make, which is
+    /// most of them, so it is built to say no cheaply. Only a side down to
+    /// king and pawns is examined at all: stalemate with a piece left takes
+    /// that piece pinned or shut in as well, rare enough not to be worth a
+    /// question on every quiet node of a middlegame. Then a pawn that can
+    /// step forward, or a king step to a square nothing guards, settles it;
+    /// only a side with neither is given the full move generation. Asking
+    /// the full question everywhere instead slowed king-and-pawn endings to
+    /// less than half their speed.
+    private func isStalemate() -> Bool {
+        let mover = board.sideToMove
+        let king = board.kingSquare(of: mover)
+        let forward = mover == .white ? 8 : -8
+        // From the mover's own back rank, where a piece that ends the
+        // question usually stands within the first few squares.
+        let fromOwnSide = mover == .white
+            ? stride(from: 0, through: 63, by: 1) : stride(from: 63, through: 0, by: -1)
+        for index in fromOwnSide {
+            let packed = board.squares[index]
+            guard packed != 0, let piece = Piece(packed: packed), piece.color == mover else { continue }
+            switch piece.kind {
+            case .king:
+                continue
+            case .pawn:
+                // The square ahead is free, and nothing can pin the pawn
+                // against that step: a pin along its own file lets it move,
+                // and a pin along a rank or a diagonal needs it on one of
+                // those with its king. Pawns never stand on the last rank,
+                // so `ahead` is always on the board.
+                let ahead = index + forward
+                if board.squares[ahead] == 0, !Self.sharesRankOrDiagonal(index, king) { return false }
+            default:
+                return false
+            }
+        }
+
+        let file = king & 7, rank = king >> 3
+        for (df, dr) in Self.kingSteps {
+            let f = file + df, r = rank + dr
+            guard (0..<8).contains(f), (0..<8).contains(r) else { continue }
+            let target = r * 8 + f
+            if let occupant = board.piece(at: target), occupant.color == mover { continue }
+            // Out of check, no slider's line runs through the king's own
+            // square, so asking with the king still standing there is exact.
+            if !board.isSquareAttacked(target, by: mover.opponent) { return false }
+        }
+
+        // A pawn pinned along its file, a capture, en passant: the full list.
+        for move in board.generatePseudoLegalMoves() {
+            let undo = board.make(move)
+            let legal = !board.isSquareAttacked(board.kingSquare(of: mover), by: mover.opponent)
+            board.unmake(move, undo: undo)
+            if legal { return false }
+        }
+        return true
+    }
+
+    private static let kingSteps: [(Int, Int)] = [
+        (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)
+    ]
+
+    private static func sharesRankOrDiagonal(_ a: Int, _ b: Int) -> Bool {
+        let df = (a & 7) - (b & 7), dr = (a >> 3) - (b >> 3)
+        return dr == 0 || abs(df) == abs(dr)
+    }
+
+    /// Whether the side to move can win the variant with its next move: put
+    /// its king on the hill, or give its third check. Only the moves that can
+    /// do it are tried, and only once the side is close enough for any to —
+    /// a king next to the centre, two checks already given — so a quiet
+    /// node away from those pays a comparison or two.
+    private func hasVariantWinningMove() -> Bool {
+        let mover = board.sideToMove
+        switch board.variant {
+        case .standard:
+            return false
+        case .kingOfTheHill:
+            guard Self.hillDistance(board.kingSquare(of: mover)) == 1 else { return false }
+        case .threeCheck:
+            guard board.checksGiven[mover] >= 2 else { return false }
+        }
+        let onlyKingMoves = board.variant == .kingOfTheHill
+        for move in board.generatePseudoLegalMoves() {
+            if onlyKingMoves, move.piece.kind != .king || !Board.isHill(move.to.index) { continue }
+            let undo = board.make(move)
+            let wins = !board.isSquareAttacked(board.kingSquare(of: mover), by: mover.opponent)
+                && board.variantWinner == mover
+            board.unmake(move, undo: undo)
+            if wins { return true }
+        }
+        return false
     }
 
     // MARK: Move ordering
@@ -882,18 +1275,42 @@ nonisolated final class ChessAISearcher {
         if nodes >= nodeLimit || DispatchTime.now() > deadline
             || cancellation?.isCancelled == true {
             aborted = true
+            // The budget runs out at the same node on every run; the clock
+            // and the caller stop the search wherever it happens to be.
+            cutShort = nodes < nodeLimit
             return true
         }
         return false
     }
 
+    /// Whether the position on the board, the newest entry in `pathHashes`,
+    /// scores as a draw by repetition.
+    ///
+    /// Where the earlier occurrence lies decides it. One inside the line being
+    /// searched, after the root, is enough on its own: whatever brought the
+    /// line back once can bring it back again, and calling the second visit a
+    /// draw is what keeps the search from shuffling. One in the game is not,
+    /// because the game is drawn only on the *third* occurrence. Counting the
+    /// game's history as the second used to score every return to a position
+    /// seen once before as a draw — a queen up, the review graded a king step
+    /// back to an earlier square as throwing the win away, and the losing side
+    /// believed the same step saved it. So a position met before only in the
+    /// game, the root included, has to have been met there twice.
+    ///
+    /// A capture or a pawn move cannot be undone, so nothing older than the
+    /// last one is looked at; and the same side is on move only every other
+    /// ply. Stepping by two has a side effect worth knowing: a null move is
+    /// not appended to the path, so below one the parity is off by a ply and
+    /// those positions are never matched against the real ones above it.
     private func isRepetition() -> Bool {
-        let current = board.zobrist
-        // Compare against both game history and the current search path.
-        var count = 0
-        for hash in pathHashes where hash == current {
-            count += 1
-            if count >= 2 { return true }
+        let current = pathHashes.count - 1
+        let key = board.zobrist
+        let oldest = max(0, current - board.halfmoveClock)
+        var earlierInGame = 0
+        for index in stride(from: current - 2, through: oldest, by: -2) where pathHashes[index] == key {
+            if index > rootIndex { return true }
+            earlierInGame += 1
+            if earlierInGame >= 2 { return true }
         }
         return false
     }
@@ -1000,10 +1417,46 @@ nonisolated final class ChessAISearcher {
         let clampedPhase = min(phase, 24)
         var score = (mgScore * clampedPhase + egScore * (24 - clampedPhase)) / 24
 
+        // The variants reward what wins them. On the hill a king that is one
+        // step away is a threat the ordinary tables call a weakness, so its
+        // distance outweighs them; in three-check every check given is half
+        // way to the next.
+        switch board.variant {
+        case .standard:
+            break
+        case .kingOfTheHill:
+            score += hillBonus(whiteKingSquare) - hillBonus(blackKingSquare)
+        case .threeCheck:
+            score += Self.checkBonus[Int(min(2, board.checksGiven.white))]
+                - Self.checkBonus[Int(min(2, board.checksGiven.black))]
+        }
+
         // Tempo.
         score += board.sideToMove == .white ? 10 : -10
 
         return board.sideToMove == .white ? score : -score
+    }
+
+    /// Three-check: what one and two checks given are worth.
+    private static let checkBonus = [0, 160, 420]
+
+    /// King of the Hill: king steps from `king` to the nearest centre square.
+    private static func hillDistance(_ king: Int) -> Int {
+        let file = king & 7, rank = king >> 3
+        let fileDistance = file < 3 ? 3 - file : (file > 4 ? file - 4 : 0)
+        let rankDistance = rank < 3 ? 3 - rank : (rank > 4 ? rank - 4 : 0)
+        return max(fileDistance, rankDistance)
+    }
+
+    /// King of the Hill: what a king's closeness to the centre is worth.
+    private func hillBonus(_ king: Int) -> Int {
+        switch Self.hillDistance(king) {
+        case 0: return 1000
+        case 1: return 220
+        case 2: return 90
+        case 3: return 30
+        default: return 0
+        }
     }
 
     private func mopUpBonus(winnerKing: Int, loserKing: Int) -> Int {
@@ -1077,10 +1530,13 @@ nonisolated final class GameAIEngine: Sendable {
     }
 
     /// `bookSANs` is the game so far in the SAN the book is written in, which
-    /// is what `OpeningBook` matches against. Left empty the engine simply
-    /// searches, which is what the hint button wants: a hint is advice about
-    /// the position in front of the player, and quoting theory at them is not
-    /// the same thing as telling them what the engine would play.
+    /// is what `OpeningBook` matches against. The book only answers when those
+    /// moves, played from the standard start, lead to `board` — so an empty
+    /// list means the starting position and nothing else, and any other
+    /// position is searched. A hint never comes through here: it goes through
+    /// `findBestAIMove`, because a hint is advice about the position in front
+    /// of the player, and quoting theory at them is not the same thing as
+    /// telling them what the engine would play.
     func bestMove(
         board: Board,
         gameHashes: [UInt64],
@@ -1089,11 +1545,32 @@ nonisolated final class GameAIEngine: Sendable {
         randomSeed: UInt64 = UInt64.random(in: .min ... .max),
         cancellation: SearchCancellation? = nil
     ) -> AISearchResult? {
+        bestMove(
+            board: board, gameHashes: gameHashes, strength: difficulty.strength,
+            bookSANs: bookSANs, randomSeed: randomSeed, cancellation: cancellation
+        )
+    }
+
+    func bestMove(
+        board: Board,
+        gameHashes: [UInt64],
+        strength: AIStrength,
+        bookSANs: [String] = [],
+        randomSeed: UInt64 = UInt64.random(in: .min ... .max),
+        cancellation: SearchCancellation? = nil,
+        timeLimit: TimeInterval? = nil,
+        useBook: Bool = true
+    ) -> AISearchResult? {
         // Theory first, at the levels that would otherwise replay one game
         // every time — see `AIDifficulty.playsFromBook`. Nothing is searched
         // here, so the reply also arrives instantly; the caller's minimum
         // thinking pause is what keeps that from looking like a glitch.
-        if difficulty.playsFromBook,
+        //
+        // `useBook` is false for a game that did not start from the initial
+        // position. The book checks that the moves lead to `board` as well,
+        // which keeps it out of an odds game or a puzzle on its own; the flag
+        // is the caller saying so outright.
+        if useBook, strength.playsFromBook,
            let bookMove = OpeningBook.move(
                after: bookSANs, in: board, randomSeed: randomSeed
            ) {
@@ -1105,7 +1582,8 @@ nonisolated final class GameAIEngine: Sendable {
         return searcher.withLock { searcher in
             searcher.reset(board: board, gameHashes: gameHashes)
             return searcher.search(
-                difficulty: difficulty, randomSeed: randomSeed, cancellation: cancellation
+                strength: strength, randomSeed: randomSeed,
+                cancellation: cancellation, timeLimit: timeLimit
             )
         }
     }

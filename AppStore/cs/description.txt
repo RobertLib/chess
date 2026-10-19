@@ -1,41 +1,53 @@
-Šachy pro jednoho i pro dva hráče, s vlastním enginem, s vlastní příručkou a bez podmínek: žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet. Zahrajte si — a až partie skončí, nechte si ohodnotit každý svůj tah.
+Šachy pro jednoho i pro dva hráče, s vlastním enginem, s vlastní příručkou a bez podmínek: žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet. Hrajte s hodinami i bez nich, řešte tisíce úloh, trénujte zahájení — a až partie skončí, nechte si ohodnotit každý svůj tah.
 
-PĚT ÚROVNÍ A DVĚ NEJVYŠŠÍ ZNAJÍ TEORII
-• Začátečnická, lehká, střední, těžká a velmistrovská — za bílého i za černého
-• Engine je vlastní a počítá přímo ve vašem zařízení: prohledávání alfa-beta s transpoziční tabulkou, klidové prohledávání, prořezávání nulovým tahem a statické vyhodnocení výměn
-• Těžká a velmistrovská zahajují z knihy 90 pojmenovaných variant, vážených podle toho, kolik teorie za sebou který tah má, takže nehrají pořád jednu a tutéž partii
-• Tři úrovně pod nimi si zahájení obměňují samy — vybírají mírně náhodně mezi tahy, které prohledaly
+PROTI POČÍTAČI
+• Začátečnická, lehká, střední, těžká a velmistrovská úroveň — nebo adaptivní soupeř, který sílí spolu s vámi
+• Engine je vlastní a počítá přímo ve vašem zařízení; těžká a velmistrovská úroveň zahajují z knihy více než 80 pojmenovaných variant, takže nehrají pořád jednu a tutéž partii
+• Zatímco počítač přemýšlí, můžete si připravit předtah
 
 DVA HRÁČI, JEDNO ZAŘÍZENÍ
-• Podejte telefon přes stůl — žádný účet, žádná pozvánka, žádné připojení
-• Šachovnice se umí otáčet k tomu, kdo je na tahu
+• Podejte telefon přes stůl, nebo ho položte mezi sebe — figury každé strany jsou otočené k jejímu hráči
 • Remíza dohodou a tlačítko Vzdát pro partii, která je už rozhodnutá
 
+NA ČAS
+• Bullet, bleskovka, rapid a klasika, nebo vlastní minuty a přídavek
+• Hodiny se zastaví, když aplikaci opustíte, upozorní na nedostatek času, a když spadne praporek proti samotnému králi, je to podle pravidel remíza
+• V partii na čas si počítač sám hospodaří s časem
+• Šachové hodiny pro partii na skutečné šachovnici — s přídavkem, prodlevou nebo Bronsteinem a s časovou forou
+
+CHESS960, VARIANTY A FORY
+Fischerovy šachy z kterékoli z 960 pozic, Král na kopci a Tři šachy a klasické fory pěšce, jezdce, věže a dámy.
+
+ÚLOHY
+Asi čtyři tisíce taktických úloh z databáze Lichess, přímo v aplikaci: hodnocené úlohy s vaším vlastním hodnocením, 32 témat od matu jedním tahem po nevýhodu tahu, denní úloha se sérií a widgetem na ploše a závod s časem. A hlavně: chyby z vašich vlastních rozebraných partií se vrací jako úlohy k opravě.
+
+TRÉNINK
+• Trenér zahájení: počítač hraje svou stranu teoretické varianty, vy tu svou
+• Analytická šachovnice s průběžným hodnocením enginu a jeho nejlepším tahem na šachovnici
+• Editor pozice a vložení libovolného PGN nebo FEN
+
 ROZBOR PARTIE, ZA KTERÝM NIC NENÍ SCHOVANÉ
-Když partie skončí, engine ji přehraje a ohodnotí každý jednotlivý tah — brilantní, skvělý, nejlepší, vynikající, dobrý, teoretický, nepřesnost, chyba, promarněná šance nebo hrubka. Každý hráč dostane svou přesnost, graf hodnocení ukáže, kdo kdy stál lépe, tah, který by engine zahrál radši, se vykreslí na šachovnici a zahájení dostane jméno. Žádný denní limit, nic se neodemyká — a funguje to i v režimu Letadlo.
+Každý tah ohodnocený od brilantního po hrubku, přesnost pro každého hráče, graf hodnocení, čas strávený nad každým tahem, tah, který by engine zahrál raději, vykreslený na šachovnici, a pojmenované zahájení. Žádný denní limit, nic se neodemyká.
+
+MOJE PARTIE
+Posledních 300 dohraných partií zůstává v zařízení: statistiky podle úrovně, barvy a tempa, orientační odhad síly, 31 úspěchů, export PGN přes nabídku sdílení a import z aplikace Soubory.
 
 JAK HRÁT, POKUD JSTE ÚPLNĚ NA ZAČÁTKU
-Devět kapitol a 38 stránek: šachovnice, jak se která figura hýbe, rošáda, braní mimochodem a proměna pěšce, šach a mat, pět způsobů, jak partie skončí remízou, získávání materiálu, jak dobře zahrát zahájení a střední hru, jak se čte zápis tahů a jak se hraje v téhle aplikaci. K tomu 27 diagramů, z toho 15 hratelných — tečky na nich jsou opravdové možné tahy, na které se aplikace zeptala enginu, a klepnutím se tah zahraje.
+Devět kapitol a 38 stránek, od toho, jak se která figura hýbe, až po dobrou střední hru, s 27 diagramy — 15 z nich je hratelných.
 
 BĚHEM PARTIE
-• Nápověda se zeptá enginu, jaký tah by zahrál on
-• Zpět vezme váš tah nazpět — a s ním i odpověď počítače
-• Klepněte na figuru a tečky ukážou každé pole, kam smí jít; funguje i tažení
-• Souřadnice a tečky možných tahů se dají vypnout, jak budete silnější
-• Pět vzhledů šachovnice: dřevo, turnajová, oceán, půlnoc a mramor
-• Zvuky, které se skládají až při spuštění, místo aby se přibalovaly jako soubory, a vibrace — obojí se dá vypnout
+• Nápověda a tah zpět v partiích bez hodin
+• Klepnutí i tažení; tečky možných tahů a souřadnice se dají vypnout
+• Pět vzhledů šachovnice, syntetizované zvuky a vibrace
 • Zavřete aplikaci uprostřed partie a vrátíte se přesně tam, kde jste skončili
-• Poslední dohraná partie čeká v menu, takže si ji můžete prohlédnout znovu
 
 PRO KAŽDÉHO
-Každé pole je tlačítko, které řekne svou souřadnici a co na něm stojí, jestli se figura na něm může hnout a kam by tah dopadl, a označí krále v šachu i poslední zahraný tah — celá partie se tak dá odehrát sluchem. Texty se řídí nastavenou velikostí písma až po ty pro zpřístupnění a při největší z nich se žádná obrazovka neutíná ani nepřetéká. Omezení pohybu je respektováno: figury urazí kratší cestu, místo aby neurazily žádnou, a ozdoby se zastaví.
+Každé pole je tlačítko, které řekne svou souřadnici a co na něm stojí, takže celá partie se dá odehrát sluchem. Texty se řídí nastavenou velikostí písma až po ty pro zpřístupnění a aplikace respektuje nastavení Omezit pohyb.
 
 FÉROVÁ HRA
-• Žádné reklamy
-• Žádné nákupy v aplikaci
+• Žádné reklamy, žádné nákupy v aplikaci
 • Žádný účet, žádné přihlašování, žádný sběr dat
 • Funguje kompletně offline — aplikace neobsahuje vůbec žádný síťový kód
-• Čeština i angličtina, podle jazyka systému
-• iPhone i iPad
+• Čeština i angličtina, iPhone i iPad
 
 Jen šachy. Nic víc.

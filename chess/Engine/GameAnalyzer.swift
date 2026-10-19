@@ -52,6 +52,19 @@ nonisolated enum WinChance {
         return 50 + 50 * (2 / (1 + exp(-0.00368208 * clamped)) - 1)
     }
 
+    /// The lowest score whose win expectancy is above `winPercent` — the
+    /// inverse of `percent(centipawns:)`, for asking a search whether a move
+    /// clears a line drawn in win expectancy. The log-odds land within a
+    /// centipawn; the step after them settles which side of the line that
+    /// centipawn falls on, so the search and the grading draw it in the same
+    /// place.
+    static func lowestScore(above winPercent: Double) -> Int {
+        let p = min(99.9, max(0.1, winPercent)) / 100
+        var score = Int((log(p / (1 - p)) / 0.00368208).rounded(.down))
+        while percent(centipawns: score) <= winPercent, score < 2000 { score += 1 }
+        return score
+    }
+
     /// Accuracy in percent for a move that gave up `pointsLost` of win
     /// expectancy. Small slips barely register; a lost game costs everything.
     static func accuracy(pointsLost: Double) -> Double {
@@ -81,7 +94,9 @@ nonisolated struct MoveAnalysis: Sendable, Identifiable {
 
     let quality: MoveQuality
     let searchDepth: Int
-    /// Material the move hands over in the exchange on its target square.
+    /// Material the move hands over in the exchange on its target square,
+    /// beyond what the piece stood to lose anyway — see
+    /// `GameAnalyzer.sacrifice(of:in:)`.
     let sacrifice: Int
 
     var id: Int { ply }
@@ -99,7 +114,21 @@ nonisolated struct MoveAnalysis: Sendable, Identifiable {
     var centipawnLoss: Int { min(1000, max(0, bestScore - playedScore)) }
 
     /// Evaluation after the move, always from White's point of view.
-    var evalWhite: Int { color == .white ? playedScore : -playedScore }
+    ///
+    /// `playedScore` scores the move in the position it was played in, so a
+    /// mate in it counts the move itself. This labels the position the move
+    /// left, one ply on, where the same mate is one ply nearer: after 1.Ra7
+    /// in a two-rook ladder `playedScore` reads mate in 2, and the position
+    /// on the board is mate in 1 — which is what the review used to show as
+    /// "M2". A mate already delivered comes out as `SearchScore.mate` itself.
+    ///
+    /// Only what is shown moves. The grades, the accuracy and the comments
+    /// all work from `playedScore` as it is, where counting the move belongs.
+    var evalWhite: Int {
+        var after = playedScore
+        if SearchScore.isMate(after) { after += after > 0 ? 1 : -1 }
+        return color == .white ? after : -after
+    }
     /// Evaluation before the move (best play), from White's point of view.
     var evalBeforeWhite: Int { color == .white ? bestScore : -bestScore }
 }
@@ -214,7 +243,7 @@ nonisolated enum GameAnalyzer {
     /// Every position of the game, from the start to the final one, together
     /// with the repetition history that applies at that point.
     static func positions(of game: Game) -> [Job] {
-        var replay = Game(fen: game.initialFEN)
+        var replay = game.atStart
         var jobs: [Job] = []
         for played in game.history {
             jobs.append(Job(
@@ -261,11 +290,19 @@ nonisolated enum GameAnalyzer {
         results: [PositionAnalysis?]
     ) -> GameAnalysis {
         // Only a game that started from the standard position has an opening
-        // to name: the book matches move sequences, so a game set up from a
-        // FEN whose first moves happen to read like theory would be credited
-        // with an opening it never played and have those moves left unjudged.
-        let book = game.initialFEN == Board.startFEN
-            ? OpeningBook.match(sans: game.history.map(\.san))
+        // to name. The book is matched by position, so a game set up from a
+        // FEN only meets it by reaching a position of theory — but one set up
+        // there is a study of that position rather than an opening anybody
+        // chose, and its first moves are not the leading theory moves
+        // `bookPlies` counts. A Chess960 game never compares equal to the
+        // start FEN — it writes its castling as rook files, "HAha", even from
+        // the standard array — but the flag is asked as well, so that stays
+        // true if the spelling ever changes.
+        //
+        // The position after each move is the board the next job searches,
+        // so the keys come from there rather than from replaying the game.
+        let book = game.initialFEN == Board.startFEN && !game.isChess960 && game.variant == .standard
+            ? OpeningBook.match(positions: jobs.dropFirst().prefix(game.history.count).map(\.board.zobrist))
             : OpeningBook.Match(name: nil, bookPlies: 0)
         var moves: [MoveAnalysis] = []
         moves.reserveCapacity(game.history.count)
@@ -289,19 +326,27 @@ nonisolated enum GameAnalyzer {
             let refutationSAN = refutation.flatMap { move in
                 nextIndex < jobs.count ? jobs[nextIndex].board.san(for: move) : nil
             }
-            let sacrifice = max(0, -board.staticExchangeEvaluation(played.move))
+            let sacrifice = Self.sacrifice(of: played.move, in: board)
             // Taking back on the square the opponent just captured on is
             // forced far more often than it is inspired.
             let previous = ply > 0 ? game.history[ply - 1].move : nil
             let isRecapture = played.move.isCapture
                 && previous?.isCapture == true
                 && previous?.to == played.move.to
+            // The search asks this of its own choice. A move that only drew
+            // level with that choice has the choice itself to set against
+            // it, so there it comes down to whether the position was won
+            // outright at all.
+            let alternativeWinsOutright = played.move == bestMove
+                ? analysis.alternativeWinsOutright
+                : WinChance.percent(centipawns: analysis.bestScore) > wonOutright
 
             let quality = classify(
                 bestScore: bestScore,
                 playedScore: playedScore,
                 isBest: played.move == bestMove || playedScore >= analysis.bestScore,
                 hasCloseAlternative: analysis.hasCloseAlternative,
+                alternativeWinsOutright: alternativeWinsOutright,
                 sacrifice: sacrifice,
                 legalMoveCount: analysis.legalMoveCount,
                 isRecapture: isRecapture,
@@ -391,15 +436,59 @@ nonisolated enum GameAnalyzer {
         )
     }
 
+    // MARK: Sacrifice
+
+    /// Material `move` gives up in centipawns, counting only what the piece
+    /// would not have lost anyway.
+    ///
+    /// The exchange on the target square says what the move risks, which is
+    /// not the same thing when the piece was going whatever it did. A queen
+    /// forked with check, a knight with nowhere safe to go: taking something on
+    /// the way out is the best of a bad job, not an offer — but measured from
+    /// the target square alone it read as a sacrifice, and the review called
+    /// Qxd3, the only way out of a pawn fork that keeps anything, brilliant.
+    ///
+    /// So the loss is measured from the least the piece could have got away
+    /// with: left where it stood, or sent to the cheapest of the squares it can
+    /// reach. A piece with a safe square to go to was not lost, and a move
+    /// that gives it up anyway gives up all of it.
+    static func sacrifice(of move: Move, in board: Board) -> Int {
+        let risked = max(0, -board.staticExchangeEvaluation(move))
+        guard risked > 0 else { return 0 }
+        let standing = board.materialAtRisk(on: move.from)
+        guard standing > 0 else { return risked }
+        // The move itself is one of the piece's moves, so this never comes
+        // out above `risked`.
+        let cheapest = board.generateLegalMoves()
+            .filter { $0.from == move.from }
+            .map { max(0, -board.staticExchangeEvaluation($0)) }
+            .min() ?? risked
+        return risked - min(standing, cheapest)
+    }
+
     // MARK: Classification
+
+    /// Win expectancy, in percent, above which a position is won outright. A
+    /// sacrifice is a find while the player had nothing of the kind without
+    /// it, and only a showier way to win once they had — see `classify`.
+    static let wonOutright: Double = 97
+
+    /// The least material, in centipawns, a move has to give up to be graded
+    /// as a sacrifice.
+    static let minimumSacrifice = 200
 
     /// Grades one move. All scores are centipawns from the mover's point of
     /// view; `bestScore` is what the engine's own choice was worth.
+    ///
+    /// `alternativeWinsOutright` is whether some other move won outright as
+    /// well — `PositionAnalysis.alternativeWinsOutright`, seen from the move
+    /// played. Nil, for a question nobody asked, counts as yes.
     static func classify(
         bestScore: Int,
         playedScore: Int,
         isBest: Bool,
         hasCloseAlternative: Bool,
+        alternativeWinsOutright: Bool? = nil,
         sacrifice: Int,
         legalMoveCount: Int,
         isRecapture: Bool,
@@ -411,14 +500,28 @@ nonisolated enum GameAnalyzer {
         let lost = max(0, winBefore - winAfter)
 
         if isBest {
-            // A sound sacrifice: material goes, the position holds up.
-            if sacrifice >= 200, winAfter >= 45, winBefore <= 97 {
+            // Forced recaptures and check evasions are not singled out either
+            // way: there the alternatives are bad by default, not by insight.
+            // The brilliancy used to skip this test, and a check that forked
+            // the queen made the one capture that kept anything a sacrifice
+            // that worked — every king move lost the queen for nothing.
+            let hadAChoice = !isRecapture && !wasInCheck && legalMoveCount >= 5
+            // A sound sacrifice: material goes, the position holds up — and
+            // it was needed, because a player already winning outright
+            // without it has only found a showier way to win. That used to
+            // be read off the sacrifice's own score, which is the score of the
+            // line it starts: a sacrifice that forced mate measured as a game
+            // won already, and no mating combination was ever brilliant. What
+            // decides it is what else there was. Below the line nothing else
+            // can have been above it, the engine's choice being the best there
+            // was; above it the search says.
+            let wonAnyway = winBefore > wonOutright && alternativeWinsOutright != false
+            if hadAChoice, sacrifice >= minimumSacrifice, winAfter >= 45, !wonAnyway {
                 return .brilliant
             }
             // The only move that keeps the position — everything else drops
-            // off a cliff. Forced recaptures and check evasions do not count:
-            // there the alternatives are bad by default, not by insight.
-            if !hasCloseAlternative, !isRecapture, !wasInCheck, legalMoveCount >= 5 {
+            // off a cliff.
+            if hadAChoice, !hasCloseAlternative {
                 return .great
             }
             return isBook ? .book : .best
@@ -429,8 +532,29 @@ nonisolated enum GameAnalyzer {
         // Walking past a short forced mate is worth pointing out even when the
         // move played keeps a winning position.
         let mateOnOffer = SearchScore.mateInMoves(bestScore) ?? 0
-        let playedMates = (SearchScore.mateInMoves(playedScore) ?? 0) > 0
-        let missedMate = mateOnOffer > 0 && mateOnOffer <= 4 && !playedMates
+        let playedMate = SearchScore.mateInMoves(playedScore) ?? 0
+        let missedMate = mateOnOffer > 0 && mateOnOffer <= 4 && playedMate <= 0
+
+        // Walking into a forced mate from a position that had none. Win
+        // expectancy flattens out below -7, so from -9 being mated measured
+        // as a loss of a few points and read as a good move. Lichess grades
+        // it by how lost the position already was, and so does this.
+        if mateOnOffer == 0, playedMate < 0 {
+            if bestScore < -999 { return .inaccuracy }
+            return bestScore < -700 ? .mistake : .blunder
+        }
+
+        // The other half of the same rule: letting a forced mate go. A short
+        // one is the missed mate above. A longer one used to pass as the
+        // slower road home whenever the position stayed won, however much of
+        // the win went with it; now what is left decides, as on Lichess —
+        // except below +7, where Lichess says blunder and this review already
+        // has a word for a won position that slipped without being thrown
+        // away: a miss. Losing ground outright is left to the thresholds below.
+        if mateOnOffer > 0, playedMate <= 0, !missedMate, winAfter >= 50 {
+            if playedScore > 999 { return .inaccuracy }
+            return playedScore > 700 ? .mistake : .miss
+        }
 
         // A position that was overwhelmingly won and still is deserves no black
         // mark for taking the slower road home.

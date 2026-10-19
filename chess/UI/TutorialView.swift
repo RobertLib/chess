@@ -79,7 +79,7 @@ struct TutorialView: View {
 
                 Text("The boards in the lessons are live: tap a piece's dots and the move really happens.")
                     .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.tertiaryText)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .multilineTextAlignment(.center)
                     .padding(.top, 6)
@@ -125,7 +125,7 @@ private struct ChapterRow: View {
                 }
                 Text(chapter.summary)
                     .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -137,7 +137,7 @@ private struct ChapterRow: View {
             if !typeSize.isAccessibilitySize {
                 Text(verbatim: "\(chapter.pages.count)")
                     .font(.system(.caption2, design: .rounded, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.35))
+                    .foregroundStyle(.tertiaryText)
                     .accessibilityHidden(true)
                 Image(systemName: "chevron.right")
                     .scaledFont(13, relativeTo: .footnote, weight: .bold)
@@ -299,7 +299,10 @@ struct TutorialChapterView: View {
     private func step(_ delta: Int) {
         let next = index + delta
         guard chapter.pages.indices.contains(next) else { return }
-        withAnimation(.easeInOut(duration: 0.28)) { index = next }
+        // Animated, the page slides in from the side — a sweep across the
+        // whole screen, which is what Reduce Motion asks to be spared. With it
+        // on, the next page is simply there; the dots below still say which.
+        withAnimation(Motion.decorative(.easeInOut(duration: 0.28))) { index = next }
         Haptics.pieceSelected()
     }
 }
@@ -432,7 +435,7 @@ private struct MoveGradeLegend: View {
                             .foregroundStyle(.white.opacity(0.9))
                         Text(blurb(for: quality))
                             .font(.system(.caption2, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(.secondaryText)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer(minLength: 0)

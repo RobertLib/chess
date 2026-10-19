@@ -508,7 +508,7 @@ nonisolated enum TutorialGuide {
                     """),
                 bullets: [
                     LocalizedStringResource("There is no rule that you must take a piece, and no rule that pieces must be defended."),
-                    LocalizedStringResource("A game with a clock can also be lost on time, but there is no clock in this app.")
+                    LocalizedStringResource("A game on the clock can also be lost on time: run out and you lose — unless your opponent has nothing left to mate with, which makes it a draw.")
                 ]
             ),
             TutorialPage(
@@ -668,7 +668,7 @@ nonisolated enum TutorialGuide {
                 bullets: [
                     LocalizedStringResource("Knights before bishops is a useful habit."),
                     LocalizedStringResource("Do not move the same piece again and again in the opening."),
-                    LocalizedStringResource("Leave the queen at home for a while: she is easy to chase, and every check she has to run from costs you a move."),
+                    LocalizedStringResource("Leave the queen at home for a while: she is easy to chase, and every attack she has to run from costs you a move."),
                     LocalizedStringResource("Move each pawn only as far as your pieces need.")
                 ],
                 diagram: TutorialDiagram(
@@ -815,6 +815,7 @@ nonisolated enum TutorialGuide {
                     LocalizedStringResource("Undo takes back your move — and the computer's reply with it."),
                     LocalizedStringResource("Hint asks the engine for the move it would play, in games against the computer; with two players that button offers a draw instead."),
                     LocalizedStringResource("Resign ends a hopeless game."),
+                    LocalizedStringResource("On the clock a move is a move: Undo becomes Pause, and there are no hints."),
                     LocalizedStringResource("Top right, the gear opens the settings and the arrows flip the board; the chevron at the top left returns to the menu, keeping the game so you can continue it later.")
                 ]
             ),
@@ -829,7 +830,7 @@ nonisolated enum TutorialGuide {
                 bullets: [
                     LocalizedStringResource("Swipe the board, or tap a move in the strip, to walk through the game."),
                     LocalizedStringResource("A green arrow shows the move the engine would have preferred."),
-                    LocalizedStringResource("The last finished game stays on the menu, so you can review it again later.")
+                    LocalizedStringResource("Every finished game is kept under My Games, ready to be reviewed again — and the mistakes you made come back under Puzzles to be fixed.")
                 ],
                 extra: .moveGrades
             ),
@@ -843,7 +844,7 @@ nonisolated enum TutorialGuide {
                     """),
                 bullets: [
                     LocalizedStringResource("Flip board (two players) turns the board towards whoever is on the move."),
-                    LocalizedStringResource("Five difficulty levels wait under Play vs Computer — the lowest ones play like a beginner on purpose.")
+                    LocalizedStringResource("Five difficulty levels wait under Play vs Computer — the lowest ones play like a beginner on purpose — and an adaptive opponent that adjusts to your results.")
                 ]
             )
         ]

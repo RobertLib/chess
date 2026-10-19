@@ -148,25 +148,112 @@ enum BoardSpeech {
     }
 
     /// Spoken when a lesson move is played, since the diagram cannot be seen.
-    static func lessonAnnouncement(san: String) -> String {
+    static func lessonAnnouncement(_ move: Move, san: String) -> String {
         String(
-            localized: "announce.lessonMove",
-            defaultValue: "Played \(MoveNotation.display(san))",
-            comment: "Spoken after a move is played on a lesson diagram"
+            localized: "announce.lessonMoveSpoken",
+            defaultValue: "Played \(spokenMove(move, san: san))",
+            comment: "Spoken after a move is played on a lesson diagram, e.g. 'Played knight f 3'"
         )
     }
 
     /// Spoken after a move so a VoiceOver user hears what happened without
     /// having to sweep the board again.
     static func announcement(for played: PlayedMove, outcome: GameOutcome, mode: GameMode) -> String {
-        let move = MoveNotation.display(played.san)
-        let mover = played.color.spokenName
-        let sentence = String(
-            localized: "announce.move",
-            defaultValue: "\(mover) played \(move)",
-            comment: "Spoken after a move is made, e.g. 'White played Nf3'"
-        )
+        let sentence = movedAnnouncement(played.move, san: played.san)
         guard outcome.isGameOver else { return sentence }
         return sentence + ". " + outcome.headline(mode: mode)
+    }
+
+    /// "White: knight f 3" — who moved and what they played.
+    ///
+    /// A colon rather than a verb: Czech would want the piece in the
+    /// instrumental after *zahrál* (*jezdcem*), which the spoken move, built
+    /// in the nominative, cannot give it.
+    static func movedAnnouncement(_ move: Move, san: String) -> String {
+        let mover = move.piece.color.spokenName
+        let spoken = spokenMove(move, san: san)
+        return String(
+            localized: "announce.moveSpoken",
+            defaultValue: "\(mover): \(spoken)",
+            comment: "Spoken after a move is made: the side, then the move, e.g. 'White: knight f 3'"
+        )
+    }
+
+    // MARK: Moves
+
+    /// A move as it is said rather than written: "knight f 3", "queen takes
+    /// d 8, check", "castles kingside". VoiceOver reads written notation a
+    /// letter at a time — "Q x d 8 plus" — which is no way to follow a game.
+    ///
+    /// `san` is only asked about the check or mate at its end; everything
+    /// else comes from the move itself.
+    static func spokenMove(_ move: Move, san: String) -> String {
+        var spoken: String
+        if move.isCastle {
+            spoken = move.isCastleKingside
+                ? String(localized: "speech.castle.kingside", defaultValue: "castles kingside",
+                         comment: "Spoken move: castling on the king's side")
+                : String(localized: "speech.castle.queenside", defaultValue: "castles queenside",
+                         comment: "Spoken move: castling on the queen's side")
+        } else {
+            let piece = move.piece.kind.spokenName
+            let square = move.to.spokenName
+            spoken = move.isCapture
+                ? String(localized: "speech.move.capture", defaultValue: "\(piece) takes \(square)",
+                         comment: "Spoken move that captures, e.g. 'bishop takes c 6'")
+                : String(localized: "speech.move.quiet", defaultValue: "\(piece) \(square)",
+                         comment: "Spoken move, e.g. 'knight f 3'")
+            if move.isEnPassant {
+                spoken = String(localized: "speech.move.enPassant", defaultValue: "\(spoken), en passant",
+                                comment: "Spoken move taken en passant, e.g. 'pawn takes d 6, en passant'")
+            }
+            if let promotion = move.promotion {
+                let promoted = promotion.objectName
+                spoken = String(localized: "speech.move.promotion", defaultValue: "\(spoken), promotes to \(promoted)",
+                                comment: "Spoken promotion, e.g. 'pawn e 8, promotes to queen'")
+            }
+        }
+        if san.hasSuffix("#") {
+            spoken = String(localized: "speech.move.mate", defaultValue: "\(spoken), checkmate",
+                            comment: "Spoken move that mates, e.g. 'queen h 7, checkmate'")
+        } else if san.hasSuffix("+") {
+            spoken = String(localized: "speech.move.check", defaultValue: "\(spoken), check",
+                            comment: "Spoken move that gives check, e.g. 'rook e 1, check'")
+        }
+        return spoken
+    }
+
+    /// The same for a move about to be made on `board`, whose notation has
+    /// not been written yet.
+    static func spokenMove(_ move: Move, on board: Board) -> String {
+        spokenMove(move, san: board.san(for: move))
+    }
+
+    // MARK: Move lists
+
+    /// "Move 12, White: knight takes e 5, check" — one entry of a move list
+    /// as it is said. Written, a list numbers White's move and lets Black's
+    /// follow on after it; a listener going from entry to entry has no line
+    /// to see that on, so every entry carries its number and its side.
+    ///
+    /// `mover` names the side where the screen has a better name for it than
+    /// the colour, as the report has with "You" and "Computer".
+    static func numberedMove(_ played: PlayedMove, mover: String? = nil) -> String {
+        let number = played.moveNumber
+        let side = mover ?? played.color.spokenName
+        let spoken = spokenMove(played.move, san: played.san)
+        return String(
+            localized: "speech.numberedMove",
+            defaultValue: "Move \(number), \(side): \(spoken)",
+            comment: "A move of a move list read out by VoiceOver: its number, the side, then the move, e.g. 'Move 12, White: knight takes e 5'"
+        )
+    }
+
+    /// Where a line that is stepped through rather than played now stands:
+    /// the move the position on the board came from, or the start of the
+    /// line when there is none.
+    static func position(after played: PlayedMove?) -> String {
+        guard let played else { return String(localized: "Starting position") }
+        return numberedMove(played)
     }
 }

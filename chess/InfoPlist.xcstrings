@@ -36,6 +36,24 @@
           }
         }
       }
+    },
+    "PGN Chess Game" : {
+      "comment" : "The kind of file a .pgn file is, as the Files app names it",
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šachová partie PGN"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PGN Chess Game"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

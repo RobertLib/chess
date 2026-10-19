@@ -15,6 +15,7 @@ struct GameReviewView: View {
     let onClose: () -> Void
 
     @State private var showReport = false
+    @State private var analysis: AnalysisBoardModel?
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
@@ -36,6 +37,13 @@ struct GameReviewView: View {
                 .boardTypeLimit()
             }
         }
+        .fullScreenCover(item: Binding(
+            get: { analysis.map(AnalysisFromReview.init) },
+            set: { if $0 == nil { analysis = nil } }
+        )) { request in
+            AnalysisView(model: request.model, onClose: { analysis = nil })
+                .environment(settings)
+        }
         .sheet(isPresented: $showReport) {
             GameReportSheet(model: model) { ply in
                 showReport = false
@@ -46,7 +54,7 @@ struct GameReviewView: View {
         .onAppear {
             model.startAnalysis()
 #if DEBUG
-            let arguments = ProcessInfo.processInfo.arguments
+            let arguments = LaunchArguments.once(for: "review")
             if let plyArgument = arguments.first(where: { $0.hasPrefix("--review-ply=") }),
                let ply = Int(plyArgument.dropFirst("--review-ply=".count)) {
                 model.go(to: ply)
@@ -63,6 +71,33 @@ struct GameReviewView: View {
         .task { await driveShotArguments() }
 #endif
         .onDisappear { model.teardown() }
+        // The board is stepped through rather than watched, and a VoiceOver
+        // reader cannot see where a step has landed.
+        .onChange(of: model.plyIndex) { previous, ply in
+            announceStep(from: previous, to: ply)
+        }
+    }
+
+    /// Says what a step has brought onto the board: Next and Replay read the
+    /// move made, the way the game reads every move, and a step back or a
+    /// jump reads the move the position came from. The grade follows, which
+    /// is what a review is for, and on the last move the result.
+    private func announceStep(from previous: Int, to ply: Int) {
+        let history = model.game.history
+        let played = ply > 0 && ply <= history.count ? history[ply - 1] : nil
+        var spoken: String
+        if ply == previous + 1, let played {
+            spoken = BoardSpeech.movedAnnouncement(played.move, san: played.san)
+        } else {
+            spoken = BoardSpeech.position(after: played)
+        }
+        if let quality = model.currentAnalysis?.quality {
+            spoken += ". " + quality.label
+        }
+        if ply > 0, ply == model.moveCount, model.game.outcome.isGameOver {
+            spoken += ". " + model.game.outcome.headline(mode: model.mode)
+        }
+        AccessibilityNotification.Announcement(spoken).post()
     }
 
 #if DEBUG
@@ -158,6 +193,7 @@ struct GameReviewView: View {
             topBar
             headerCard
             graph
+            timeBars
             reviewBoard.padding(.horizontal, 4)
             banner
             moveStrip
@@ -177,6 +213,7 @@ struct GameReviewView: View {
                 topBar
                 headerCard
                 graph
+                timeBars
                 banner
                 Spacer(minLength: 4)
                 moveStrip
@@ -210,12 +247,42 @@ struct GameReviewView: View {
 
             Spacer()
 
-            CircleButton(systemName: "arrow.trianglehead.2.clockwise.rotate.90",
-                         label: "Flip the board") {
-                withAnimation(Motion.meaningful(.spring(duration: 0.5, bounce: 0.2))) {
-                    model.manualFlip.toggle()
+            HStack(spacing: 6) {
+                // Into the analysis board at the position on show, to try
+                // what the engine suggested and see where it leads.
+                CircleButton(systemName: "magnifyingglass", label: "Analyze this position") {
+                    model.stopAutoplay()
+                    analysis = AnalysisBoardModel(game: model.game, startPly: model.plyIndex, orientation: model.orientation)
+                }
+                CircleButton(systemName: "arrow.trianglehead.2.clockwise.rotate.90",
+                             label: "Flip the board") {
+                    withAnimation(Motion.meaningful(.spring(duration: 0.5, bounce: 0.2))) {
+                        model.manualFlip.toggle()
+                    }
                 }
             }
+        }
+    }
+
+    private struct AnalysisFromReview: Identifiable {
+        let model: AnalysisBoardModel
+        var id: ObjectIdentifier { ObjectIdentifier(model) }
+    }
+
+    // MARK: Time
+
+    /// Time per move, for a game that recorded it.
+    @ViewBuilder
+    private var timeBars: some View {
+        if !model.moveTimes.isEmpty {
+            TimeBars(
+                times: model.moveTimes,
+                firstMover: model.game.history.first?.color ?? .white,
+                plyIndex: model.plyIndex,
+                accent: settings.theme.accent,
+                onScrub: { model.scrub(to: $0) }
+            )
+            .frame(height: 34)
         }
     }
 
@@ -236,7 +303,7 @@ struct GameReviewView: View {
                 Spacer()
                 Text(verbatim: "\(min(done, model.moveCount + 1))/\(model.moveCount + 1)")
                     .scaledFont(12, relativeTo: .caption, weight: .medium, design: .monospaced)
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(.secondaryText)
             }
             GeometryReader { proxy in
                 ZStack(alignment: .leading) {
@@ -286,7 +353,11 @@ struct GameReviewView: View {
                     }
                 }
                 .foregroundStyle(.white.opacity(0.9))
-                .scaledFrame(width: 50, height: 48, relativeTo: .subheadline)
+                // Only the icon is left at the accessibility sizes, and the
+                // width its caption needed went to the two cards instead:
+                // without it, a "100%" on a 390 pt phone was cut to "10…".
+                .scaledFrame(width: typeSize.isAccessibilitySize ? 32 : 50, height: 48,
+                             relativeTo: .subheadline)
                 .hudCard(cornerRadius: 12)
             }
             .buttonStyle(.plain)
@@ -310,6 +381,7 @@ struct GameReviewView: View {
             curve: model.analysis?.evalCurve ?? [],
             plyIndex: model.plyIndex,
             marks: model.analysis?.moves.filter { $0.quality.isMistake || $0.quality.isStandout } ?? [],
+            variant: model.game.variant,
             accent: settings.theme.accent,
             onScrub: { model.scrub(to: $0) }
         )
@@ -326,7 +398,8 @@ struct GameReviewView: View {
             isAnalyzing: model.isAnalyzing,
             plyIndex: model.plyIndex,
             outcome: model.plyIndex == model.moveCount ? model.game.outcome : .ongoing,
-            mode: model.mode
+            mode: model.mode,
+            variant: model.game.variant
         )
     }
 
@@ -334,10 +407,16 @@ struct GameReviewView: View {
         guard let curve = model.analysis?.evalCurve, curve.indices.contains(model.plyIndex) else {
             return nil
         }
-        // On the final position of a game that ended in mate the score would
-        // read "mate in 1" — the result line already says it better.
-        if model.plyIndex == model.moveCount, model.game.outcome.winner != nil { return nil }
-        return curve[model.plyIndex]
+        // A mate already delivered has no distance left to show. The position
+        // a game was won in on the board — mate, the hill, the third check —
+        // scores `SearchScore.mate` itself, which `mateInMoves` floors at one,
+        // so the label would read "M1"; the result line says it better. Asked
+        // of the score rather than of the result, because a game resigned or
+        // lost on the clock ends on an ordinary evaluation, and that one is
+        // worth showing.
+        let value = curve[model.plyIndex]
+        if abs(value) == SearchScore.mate { return nil }
+        return value
     }
 
     // MARK: Controls
@@ -449,7 +528,7 @@ struct AccuracyCard: View {
                 if let verdict = report?.verdict, !typeSize.isAccessibilitySize {
                     Text(verdict)
                         .scaledFont(9, relativeTo: .caption2, weight: .bold, design: .rounded)
-                        .foregroundStyle(.white.opacity(0.5))
+                        .foregroundStyle(.secondaryText)
                 }
             }
             // Long names and verdicts shrink rather than push the row wider.
@@ -476,6 +555,7 @@ struct EvalGraph: View {
     let curve: [Int]
     let plyIndex: Int
     let marks: [MoveAnalysis]
+    var variant: ChessVariant = .standard
     let accent: Color
     let onScrub: (Int) -> Void
 
@@ -557,7 +637,7 @@ struct EvalGraph: View {
                 if curve.count <= 1 {
                     Text("Evaluation appears as the engine works")
                         .scaledFont(10, relativeTo: .caption2, weight: .medium, design: .rounded)
-                        .foregroundStyle(.white.opacity(0.35))
+                        .foregroundStyle(.tertiaryText)
                 }
             }
             .contentShape(Rectangle())
@@ -599,7 +679,15 @@ struct EvalGraph: View {
             return String(localized: "Not analyzed yet",
                           comment: "VoiceOver value before the engine has answered")
         }
-        return EvalFormat.spoken(centipawns: curve[plyIndex])
+        // A game already won on the board scores `SearchScore.mate` itself,
+        // which would read "mates in 1" — see `evalForCurrentPly`.
+        let value = curve[plyIndex]
+        if abs(value) == SearchScore.mate {
+            return value > 0
+                ? String(localized: "White wins", comment: "VoiceOver: the game is over and White has won")
+                : String(localized: "Black wins", comment: "VoiceOver: the game is over and Black has won")
+        }
+        return EvalFormat.spoken(centipawns: value, variant: variant)
     }
 
     /// How far the plot is held in from both edges, so the ring marking the
@@ -654,6 +742,7 @@ struct ReviewBanner: View {
     let plyIndex: Int
     let outcome: GameOutcome
     let mode: GameMode
+    var variant: ChessVariant = .standard
 
     var body: some View {
         HStack(spacing: 10) {
@@ -674,7 +763,7 @@ struct ReviewBanner: View {
                     if let eval {
                         Text(EvalFormat.text(centipawns: eval))
                             .scaledFont(11, relativeTo: .caption2, weight: .bold, design: .monospaced)
-                            .foregroundStyle(.white.opacity(0.55))
+                            .foregroundStyle(.secondaryText)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1)
                             .background(Capsule().fill(Color.white.opacity(0.09)))
@@ -692,6 +781,18 @@ struct ReviewBanner: View {
         .padding(.vertical, 9)
         .frame(minHeight: 54, alignment: .leading)
         .hudCard(cornerRadius: 12)
+        // One element for the card: the move in words, then the evaluation
+        // as a sentence and the comment. A spoken label on the headline's own
+        // text was longer than the text drawn, and the accessibility audit
+        // measures a text by its label, so at the largest sizes it took the
+        // headline for cut off; the headline's row alone, made an element,
+        // was too low a target.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(spokenHeadline)
+        .accessibilityValue(
+            [eval.map { EvalFormat.spoken(centipawns: $0, variant: variant) }, detail(spoken: true)]
+                .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ". ")
+        )
         .animation(.easeOut(duration: 0.2), value: analysis?.ply)
     }
 
@@ -703,22 +804,42 @@ struct ReviewBanner: View {
         return "\(notation) · \(analysis.quality.label)"
     }
 
-    private var detail: String {
+    /// The headline as VoiceOver says it, with the move in words.
+    private var spokenHeadline: String {
+        guard let move else { return String(localized: "Starting position") }
+        let spoken = BoardSpeech.numberedMove(move)
+        guard let analysis else { return spoken }
+        return "\(spoken). \(analysis.quality.label)"
+    }
+
+    private var detail: String { detail(spoken: false) }
+
+    /// The line under the headline, or — `spoken` — the same with the moves
+    /// in its comment in words, for VoiceOver.
+    private func detail(spoken: Bool) -> String {
         if outcome.isGameOver, plyIndex > 0 {
             let ending = outcome.headline(mode: mode)
             // A mating move is always graded "Best move", and that grade's
             // comment reads "Checkmate — the strongest possible finish" — so
             // printing the result beside it said "checkmate" twice in one
             // breath. The grade is already on the line above; here the result
-            // stands on its own.
-            if case .checkmate = outcome { return ending }
-            // Two sentences, and the result line brings no full stop of its
-            // own: joined with a bare space it ran straight into the verdict
-            // ("You resigned The strongest move in the position.").
-            if let analysis { return "\(ending). \(analysis.comment)" }
+            // stands on its own. So with the hill reached, or the third check.
+            switch outcome {
+            case .checkmate, .kingOfTheHill, .threeChecks: return ending
+            default: break
+            }
+            // Two sentences, and most result lines bring no full stop of their
+            // own: joined with a bare space one ran straight into the verdict
+            // ("You resigned The strongest move in the position."). Those that
+            // end in an exclamation mark already have one, though, and a full
+            // stop after it read "You win on time!. …".
+            if let analysis {
+                let stop = ending.last.map { ".!?…".contains($0) } == true ? "" : "."
+                return "\(ending)\(stop) \(spoken ? analysis.spokenComment : analysis.comment)"
+            }
             return ending
         }
-        if let analysis { return analysis.comment }
+        if let analysis { return spoken ? analysis.spokenComment : analysis.comment }
         if move == nil { return String(localized: "Step through the game to see how each move was judged.") }
         return isAnalyzing
             ? String(localized: "Still being analyzed…")
@@ -745,10 +866,12 @@ struct ReviewMoveStrip: View {
                             onSelect(ply)
                         } label: {
                             HStack(spacing: 3) {
-                                if played.color == .white {
-                                    Text(verbatim: "\(played.moveNumber).")
+                                // A game set up with Black to move opens on
+                                // "1…", as the game's own strip writes it.
+                                if played.color == .white || ply == 0 {
+                                    Text(verbatim: played.color == .white ? "\(played.moveNumber)." : "\(played.moveNumber)…")
                                         .scaledFont(11, relativeTo: .caption2, weight: .medium, design: .rounded)
-                                        .foregroundStyle(.white.opacity(0.4))
+                                        .foregroundStyle(.tertiaryText)
                                 }
                                 Text(verbatim: MoveNotation.display(played.san))
                                     .scaledFont(13, relativeTo: .footnote, weight: isCurrent ? .bold : .medium, design: .monospaced)
@@ -771,6 +894,12 @@ struct ReviewMoveStrip: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        // The move in words and the grade as its value: read
+                        // as it is drawn, the chip came out as notation
+                        // spelt a letter at a time.
+                        .accessibilityLabel(BoardSpeech.numberedMove(played))
+                        .accessibilityValue(analysis?.move(at: ply)?.quality.label ?? "")
+                        .accessibilityAddTraits(isCurrent ? .isSelected : [])
                         .id(ply)
                     }
                 }
@@ -795,5 +924,72 @@ struct ReviewMoveStrip: View {
             }
         }
         .opacity(history.isEmpty ? 0.4 : 1)
+    }
+}
+
+// MARK: - Time per move
+
+/// How long each move took: White's moves rise above the line, Black's hang
+/// below it, the way the big servers draw a game's clock. The move on the
+/// board is lit, and its time is written beside the bars.
+struct TimeBars: View {
+    let times: [TimeInterval]
+    /// Who played the first of `times` — Black, in a game set up with Black
+    /// to move, and then every bar after it belongs to the other side.
+    let firstMover: PieceColor
+    let plyIndex: Int
+    let accent: Color
+    let onScrub: (Int) -> Void
+
+    var body: some View {
+        let longest = max(1, times.max() ?? 1)
+        HStack(spacing: 8) {
+            GeometryReader { proxy in
+                let width = proxy.size.width / CGFloat(max(1, times.count))
+                let middle = proxy.size.height / 2
+                ZStack(alignment: .topLeading) {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.15))
+                        .frame(height: 1)
+                        .offset(y: middle)
+                    ForEach(Array(times.enumerated()), id: \.offset) { ply, time in
+                        let height = max(1, CGFloat(sqrt(time / longest)) * (middle - 1))
+                        let isCurrent = ply + 1 == plyIndex
+                        let isWhite = ply.isMultiple(of: 2) == (firstMover == .white)
+                        Rectangle()
+                            .fill(isCurrent ? accent : (isWhite ? Color.white.opacity(0.75) : Color.white.opacity(0.35)))
+                            .frame(width: max(1, width - 1), height: height)
+                            .offset(x: CGFloat(ply) * width,
+                                    y: isWhite ? middle - height : middle + 1)
+                    }
+                }
+                .contentShape(Rectangle())
+                .gesture(DragGesture(minimumDistance: 0).onChanged { value in
+                    let ply = Int(value.location.x / max(1, width))
+                    onScrub(min(times.count, max(0, ply + 1)))
+                })
+            }
+            Text(verbatim: plyIndex > 0 && plyIndex <= times.count ? Self.short(times[plyIndex - 1]) : "—")
+                .scaledFont(12, relativeTo: .caption, weight: .bold, design: .monospaced)
+                .foregroundStyle(.white.opacity(0.8))
+                .frame(minWidth: 44, alignment: .trailing)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
+        .hudCard(cornerRadius: 10)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Time per move"))
+        .accessibilityValue(plyIndex > 0 && plyIndex <= times.count
+                            ? ClockFormat.spoken(times[plyIndex - 1]) : "")
+    }
+
+    /// "12s", "1:05" — and "12 s" in Czech. The seconds go through the
+    /// system's duration format, which knows how each language writes a unit
+    /// after a number; the format string this used wrote it the English way
+    /// in every language.
+    static func short(_ seconds: TimeInterval) -> String {
+        guard seconds < 60 else { return ClockFormat.text(seconds) }
+        let whole = Int(max(0, seconds).rounded(.up))
+        return Duration.seconds(whole).formatted(.units(allowed: [.seconds], width: .narrow))
     }
 }

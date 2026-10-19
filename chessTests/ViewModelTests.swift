@@ -360,6 +360,8 @@ struct GameAnalysisCacheTests {
     /// a review on the developer's simulator — and so one test's cache is not
     /// visible to the next.
     private func withScratchStoreAsync(_ body: () async throws -> Void) async rethrows {
+        await ScratchStoreLock.acquire()
+        defer { ScratchStoreLock.release() }
         let suiteName = "chessTests.GameReviewModelTests"
         guard let scratch = UserDefaults(suiteName: suiteName) else {
             Issue.record("could not open the scratch defaults suite")
@@ -368,9 +370,11 @@ struct GameAnalysisCacheTests {
         scratch.removePersistentDomain(forName: suiteName)
         let store = LocalStore.defaults
         LocalStore.defaults = scratch
+        let files = LocalStore.files
         defer {
             LocalStore.defaults = store
             scratch.removePersistentDomain(forName: suiteName)
+            files.discard()
         }
         try await body()
     }
@@ -718,6 +722,7 @@ struct GameViewModelTests {
         scratch.set(false, forKey: "hapticsEnabled")
         let store = LocalStore.defaults
         LocalStore.defaults = scratch
+        let files = LocalStore.files
         let sounds = SoundManager.shared.isEnabled
         let haptics = Haptics.isEnabled
         SoundManager.shared.isEnabled = false
@@ -727,6 +732,7 @@ struct GameViewModelTests {
             Haptics.isEnabled = haptics
             LocalStore.defaults = store
             scratch.removePersistentDomain(forName: suiteName)
+            files.discard()
         }
         body()
     }
@@ -909,7 +915,7 @@ struct GameViewModelTests {
             #expect(model.legalTargets.isEmpty)
             #expect(!model.canAgreeToDraw, "an agreed game cannot be agreed again")
             // And it is reviewable: the moves played are still there to grade.
-            #expect(FinishedGame.load()?.outcome == .drawAgreed)
+            #expect(GameArchive.shared.latest?.outcome == .drawAgreed)
             #expect(SavedGame.load() == nil, "a finished game is not on offer to continue")
         }
     }

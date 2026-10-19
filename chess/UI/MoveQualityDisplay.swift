@@ -107,21 +107,63 @@ extension MoveAnalysis {
     }
 
     /// A sentence or two on what this move did.
-    var comment: String {
-        let best = MoveNotation.display(bestSAN)
+    ///
+    /// A brilliancy or an only move can be the mate itself, or the start of
+    /// one, since a sacrifice that forces mate is graded as one: said as the
+    /// mate it is, rather than as an initiative that pays for the piece, or a
+    /// position held together.
+    var comment: String { comment(spoken: false) }
+
+    /// The same with its moves in words, for VoiceOver. Notation read aloud
+    /// goes a letter at a time — "D x d 8 plus was far better" — and the
+    /// engine's move is the one thing the review is there to tell.
+    var spokenComment: String { comment(spoken: true) }
+
+    /// In King of the Hill and Three-check the search scores the king on the
+    /// hill, or the third check, as it scores a mate (see `ChessAI`), and a
+    /// walk to the hill was "a forced mate in 1". In a variant a forced end is
+    /// a forced win, which a mate is as well.
+    private func comment(spoken: Bool) -> String {
+        let best = spoken ? BoardSpeech.spokenMove(bestMove, san: bestSAN) : MoveNotation.display(bestSAN)
+        let threat = threatSentence(spoken: spoken)
+        let mate = SearchScore.mateInMoves(playedScore).flatMap { $0 > 0 ? $0 : nil }
+        let isVariant = board.variant != .standard
+        let finishes = [.brilliant, .great, .best].contains(quality)
+        if played.san.hasSuffix("#"), finishes {
+            return String(localized: "Checkmate — the strongest possible finish.")
+        }
+        if isVariant, finishes, boardAfter.variantWinner != nil {
+            return board.variant == .kingOfTheHill
+                ? String(localized: "The king reaches the hill — the strongest possible finish.",
+                         comment: "Review: the move that wins a King of the Hill game")
+                : String(localized: "The third check — the strongest possible finish.",
+                         comment: "Review: the move that wins a Three-check game")
+        }
         switch quality {
         case .book:
             return String(localized: "Known opening theory.")
         case .brilliant:
+            if let mate {
+                return isVariant
+                    ? String(localized: "A sacrifice that works — the \(played.move.piece.kind.objectName) is offered, and it forces a win in \(mate).",
+                             comment: "Review, King of the Hill or Three-check; the number is the move the win comes on")
+                    : String(localized: "A sacrifice that works — the \(played.move.piece.kind.objectName) is offered, and it forces mate in \(mate).")
+            }
             return String(localized: "A sacrifice that works — the \(played.move.piece.kind.objectName) is offered and the initiative more than pays for it.")
         case .great:
+            if let mate {
+                return isVariant
+                    ? String(localized: "The only move that wins — it forces a win in \(mate).",
+                             comment: "Review, King of the Hill or Three-check; the number is the move the win comes on")
+                    : String(localized: "The only move that wins — it forces mate in \(mate).")
+            }
             return String(localized: "Just about the only move that holds the position together.")
         case .best:
-            if played.san.hasSuffix("#") {
-                return String(localized: "Checkmate — the strongest possible finish.")
-            }
-            if let mate = SearchScore.mateInMoves(playedScore), mate > 0 {
-                return String(localized: "The strongest move — it forces mate in \(mate).")
+            if let mate {
+                return isVariant
+                    ? String(localized: "The strongest move — it forces a win in \(mate).",
+                             comment: "Review, King of the Hill or Three-check; the number is the move the win comes on")
+                    : String(localized: "The strongest move — it forces mate in \(mate).")
             }
             return String(localized: "The strongest move in the position.")
         case .excellent:
@@ -129,24 +171,29 @@ extension MoveAnalysis {
         case .good:
             return String(localized: "A sound move. \(best) was a little stronger.")
         case .inaccuracy:
-            return String(localized: "Inaccurate — \(best) held on to more.\(threatSentence)")
+            return String(localized: "Inaccurate — \(best) held on to more.\(threat)")
         case .mistake:
-            return String(localized: "A mistake. \(best) was clearly better.\(threatSentence)")
+            return String(localized: "A mistake. \(best) was clearly better.\(threat)")
         case .miss:
             if let mate = mateAvailable, !forcesMate {
-                return String(localized: "There was mate in \(mate) with \(best).")
+                return isVariant
+                    ? String(localized: "There was a forced win in \(mate) with \(best).",
+                             comment: "Review, King of the Hill or Three-check; the number is the move the win comes on")
+                    : String(localized: "There was mate in \(mate) with \(best).")
             }
-            return String(localized: "A won position slipped: \(best) was the way through.\(threatSentence)")
+            return String(localized: "A won position slipped: \(best) was the way through.\(threat)")
         case .blunder:
-            return String(localized: "A blunder. \(best) was far better.\(threatSentence)")
+            return String(localized: "A blunder. \(best) was far better.\(threat)")
         }
     }
 
     /// Names the punishment when the opponent's answer wins material.
-    private var threatSentence: String {
-        guard let refutationSAN, refutationGain >= 150 else { return "" }
-        let answer = MoveNotation.display(refutationSAN)
-        if let captured = refutation?.captured {
+    private func threatSentence(spoken: Bool) -> String {
+        guard let refutation, let refutationSAN, refutationGain >= 150 else { return "" }
+        let answer = spoken
+            ? BoardSpeech.spokenMove(refutation, san: refutationSAN)
+            : MoveNotation.display(refutationSAN)
+        if let captured = refutation.captured {
             return String(localized: " \(answer) now wins the \(captured.kind.objectName).")
         }
         return String(localized: " \(answer) is the strong answer.")
@@ -218,8 +265,18 @@ enum EvalFormat {
     /// The same evaluation as a sentence, for VoiceOver. "+1.4" read aloud is
     /// "plus one point four" and never says whose advantage it is, so the
     /// spoken form names the side instead of leaning on the sign.
-    static func spoken(centipawns: Int) -> String {
+    ///
+    /// In a variant a mate score is a forced win, which may come on the hill
+    /// or with a third check rather than by mate (see `MoveAnalysis.comment`).
+    static func spoken(centipawns: Int, variant: ChessVariant = .standard) -> String {
         if let mate = SearchScore.mateInMoves(centipawns) {
+            if variant != .standard {
+                return mate > 0
+                    ? String(localized: "White wins in \(mate)",
+                             comment: "VoiceOver, King of the Hill or Three-check: a forced win for White; the number is the move it comes on")
+                    : String(localized: "Black wins in \(-mate)",
+                             comment: "VoiceOver, King of the Hill or Three-check: a forced win for Black; the number is the move it comes on")
+            }
             return mate > 0
                 ? String(localized: "White mates in \(mate)", comment: "VoiceOver: a forced mate for White")
                 : String(localized: "Black mates in \(-mate)", comment: "VoiceOver: a forced mate for Black")

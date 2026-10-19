@@ -12,6 +12,11 @@ DerivedData/
 *.ipa
 *.dSYM.zip
 *.dSYM
+*.xcresult
+
+# Python — bytecode from the Tools/ scripts
+__pycache__/
+*.pyc
 
 # Xcode — per-user state (schemes live in xcshareddata instead)
 xcuserdata/
@@ -31,3 +36,13 @@ playground.xcworkspace
 # looks different.
 AppStore/screenshots/
 AppStore/preview/
+
+# Puzzle build inputs — Tools/build_puzzles.py streams the Lichess sample into
+# dl/ (~250 MB) and builds its Swift validator in work/. Only the resulting
+# chess/Puzzles/puzzles.csv belongs in the repository.
+/dl/
+/work/
+
+# Claude Code — scratch worktrees and per-user settings
+.claude/worktrees/
+.claude/settings.local.json

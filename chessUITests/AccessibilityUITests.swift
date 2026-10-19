@@ -218,6 +218,98 @@ final class AccessibilityUITests: XCTestCase {
         XCTAssertTrue(square("e 4, empty").exists, "e4 should still read as empty")
     }
 
+    /// A tap that lands near the edge of a piece's square and lifts over the
+    /// next one — short of the quarter-square that picks the piece up — is a
+    /// tap on the piece. The release used to be handed to the model as a tap
+    /// on the square it came up over, and with the pawn just selected by the
+    /// touch and e3 one of its moves, that pushed the pawn to e3.
+    func testATapThatLiftsOverTheNextSquareStaysOnThePiece() {
+        let app = launchIntoGame()
+        XCTAssertTrue(app.otherElements["Chessboard"].waitForExistence(timeout: 10))
+
+        func square(_ label: String) -> XCUIElement {
+            app.descendants(matching: .any)
+                .matching(NSPredicate(format: "label BEGINSWITH %@", label))
+                .firstMatch
+        }
+
+        // White plays up the screen, so e3 is the square above e2. Down 8 % of
+        // the way into e2, up 8 % short of the bottom of e3: a sixth of a
+        // square of travel, well inside the threshold, across the boundary.
+        let pawn = square("e 2, white pawn")
+        let above = square("e 3, empty")
+        XCTAssertTrue(pawn.exists && above.exists)
+        let start = pawn.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.08))
+        let end = above.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.92))
+        start.press(forDuration: 0.1, thenDragTo: end)
+
+        XCTAssertTrue(square("e 2, white pawn").waitForExistence(timeout: 3),
+                      "a tap on the pawn should have left it on e2")
+        XCTAssertTrue(square("e 2, white pawn").isSelected, "the tap should have selected the pawn")
+        XCTAssertTrue(square("e 3, empty").exists, "e3 should still read as empty")
+    }
+
+    /// A Chess960 king castles by taking its own rook, so the rook's square is
+    /// both a target and a piece the player may pick up. Touching down on it
+    /// used to select the rook straight away, and with the king on f1 and the
+    /// rook on g1 — where g1 is also where the king lands — no tap could
+    /// castle at all. Start position 3, BQNNRKRB, is that one, and castling
+    /// short is legal in it before a move is made.
+    func testTappingTheRookCastlesInChess960() {
+        let app = XCUIApplication()
+        app.launchArguments += [
+            "--auto-game-2p", "--start=960:3",
+            "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["Chessboard"].waitForExistence(timeout: 10))
+
+        func square(_ label: String) -> XCUIElement {
+            app.descendants(matching: .any)
+                .matching(NSPredicate(format: "label BEGINSWITH %@", label))
+                .firstMatch
+        }
+
+        square("f 1, white king").tap()
+        XCTAssertTrue(square("f 1, white king").isSelected, "the king should be selected")
+        square("g 1, white rook").tap()
+
+        XCTAssertTrue(square("g 1, white king").waitForExistence(timeout: 5),
+                      "tapping the rook should castle, not select the rook")
+        XCTAssertTrue(square("f 1, white rook").exists, "the rook should have crossed to f1")
+    }
+
+    /// The other half: the same rook dragged rather than tapped is still the
+    /// rook's to move, even with the king selected and offering the castle.
+    func testDraggingTheRookAwayFromASelectedKingMovesTheRook() {
+        let app = XCUIApplication()
+        app.launchArguments += [
+            "--auto-game-2p", "--start=960:3", "--script=g2g4,a7a6", "--script-interval=0.3",
+            "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+        ]
+        app.launch()
+        XCTAssertTrue(app.otherElements["Chessboard"].waitForExistence(timeout: 10))
+
+        func square(_ label: String) -> XCUIElement {
+            app.descendants(matching: .any)
+                .matching(NSPredicate(format: "label BEGINSWITH %@", label))
+                .firstMatch
+        }
+
+        // g2-g4 opens the g-file for the rook, and Black's reply hands the
+        // move back.
+        XCTAssertTrue(square("a 6, black pawn").waitForExistence(timeout: 10),
+                      "the scripted moves were never played")
+
+        square("f 1, white king").tap()
+        XCTAssertTrue(square("f 1, white king").isSelected, "the king should be selected")
+        square("g 1, white rook").press(forDuration: 0.15, thenDragTo: square("g 3, empty"))
+
+        XCTAssertTrue(square("g 3, white rook").waitForExistence(timeout: 5),
+                      "dragging the rook should move the rook")
+        XCTAssertTrue(square("f 1, white king").exists, "the king should not have castled")
+    }
+
     // MARK: Audits
 
     func testGameScreenPassesAccessibilityAudit() throws {
@@ -582,6 +674,26 @@ final class ReviewAccessibilityUITests: XCTestCase {
         app.buttons["Start"].tap()
         expectation(for: NSPredicate(format: "value != %@", atEnd), evaluatedWith: graph)
         waitForExpectations(timeout: 15)
+    }
+
+    /// The strip of graded moves and the card under the board read the move
+    /// in words, as the game says it, not as notation spelt a letter at a
+    /// time.
+    func testReviewReadsMovesInWords() {
+        let app = launchIntoReview()
+        XCTAssertTrue(app.otherElements["Position"].waitForExistence(timeout: 15))
+        for label in ["Move 1, White: pawn e 4", "Move 7, White: castles kingside",
+                      "Move 7, Black: pawn takes c 3"] {
+            XCTAssertTrue(app.buttons[label].waitForExistence(timeout: 5),
+                          "expected a move of the strip to be read as \"\(label)\"")
+        }
+        // The review opens on the final position, and the card names its move.
+        XCTAssertTrue(
+            // An element of its own, not a button like the strip's moves.
+            app.otherElements.matching(NSPredicate(format: "label BEGINSWITH %@", "Move 7, Black: pawn takes c 3"))
+                .firstMatch.exists,
+            "the card under the board should read the move on show in words"
+        )
     }
 
     func testReviewScreenPassesAccessibilityAudit() throws {

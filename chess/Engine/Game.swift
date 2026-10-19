@@ -27,22 +27,58 @@ nonisolated struct Game: Hashable, Codable, Sendable {
     /// including the current one (for threefold repetition).
     private(set) var repetitionHashes: [UInt64]
 
+    /// The FEN the game started from, as the board writes it — which for a
+    /// Chess960 game means Shredder castling letters, so that the replay
+    /// `undoLastMoves` and the saved games run from it is a 960 game too.
     let initialFEN: String
 
-    init(fen: String = Board.startFEN) {
-        let board = Board(fen: fen) ?? .initial
+    /// Whether threefold repetition and the fifty-move rule end the game by
+    /// themselves, as they do in every game played in the app (see
+    /// `evaluateOutcome`). A game read from PGN has it off: its players may
+    /// have played on past a repetition nobody claimed, and the moves after
+    /// it are part of the game. Such a game ends by itself only on FIDE's
+    /// automatic draws — the fifth repetition and seventy-five moves — and
+    /// `claimDraw` settles the claimable ones its result says were claimed.
+    let settlesClaimableDraws: Bool
+
+    /// Reads standard and Chess960 FENs alike; `Board(fen:)` tells them apart.
+    /// A FEN has no way to say King of the Hill or three-check, so `variant`
+    /// does, and the position is read under its rules (see
+    /// `Board(fen:variant:)`). A FEN that does not read, or names a position
+    /// those rules cannot reach, starts the standard game instead.
+    init(fen: String = Board.startFEN, variant: ChessVariant = .standard, settlesClaimableDraws: Bool = true) {
+        let board = Board(fen: fen, variant: variant) ?? Board(fen: Board.startFEN, variant: variant)!
         self.board = board
         self.history = []
         self.outcome = .ongoing
         self.repetitionHashes = [board.zobrist]
         self.initialFEN = board.fen
-        self.outcome = Self.evaluateOutcome(board: board, repetitionHashes: repetitionHashes)
+        self.settlesClaimableDraws = settlesClaimableDraws
+        self.outcome = Self.evaluateOutcome(
+            board: board, repetitionHashes: repetitionHashes, settlesClaimableDraws: settlesClaimableDraws
+        )
+    }
+
+    /// The same game back at its first position, under the same rules — what
+    /// every replay of its moves has to start from, or a game read from PGN
+    /// would stop at the first repetition its players did not claim.
+    var atStart: Game {
+        Game(fen: initialFEN, variant: variant, settlesClaimableDraws: settlesClaimableDraws)
     }
 
     // MARK: Queries
 
     var sideToMove: PieceColor { board.sideToMove }
     var isInCheck: Bool { board.isInCheck }
+
+    /// Whether this is a Chess960 game. Read off the board, which keeps the
+    /// flag for the whole game. A 960 game that starts with no castling rights
+    /// at all writes its FEN as standard chess does and replays as standard
+    /// chess — which plays identically, since castling is all that differs.
+    var isChess960: Bool { board.isChess960 }
+
+    /// The variant's rules, kept by the board for the whole game.
+    var variant: ChessVariant { board.variant }
 
     var legalMoves: [Move] {
         outcome.isGameOver ? [] : board.generateLegalMoves()
@@ -96,7 +132,9 @@ nonisolated struct Game: Hashable, Codable, Sendable {
             moveNumber: moveNumber, color: color
         ))
 
-        outcome = Self.evaluateOutcome(board: board, repetitionHashes: repetitionHashes)
+        outcome = Self.evaluateOutcome(
+            board: board, repetitionHashes: repetitionHashes, settlesClaimableDraws: settlesClaimableDraws
+        )
     }
 
     /// Takes back the last move by replaying the game from the start.
@@ -116,7 +154,7 @@ nonisolated struct Game: Hashable, Codable, Sendable {
     mutating func undoLastMoves(_ count: Int) {
         guard count > 0, !history.isEmpty else { return }
         let moves = history.prefix(max(0, history.count - count)).map(\.move)
-        var replayed = Game(fen: initialFEN)
+        var replayed = atStart
         for move in moves { replayed.play(move) }
         self = replayed
     }
@@ -131,6 +169,44 @@ nonisolated struct Game: Hashable, Codable, Sendable {
         outcome = .drawAgreed
     }
 
+    /// Ends the game in the draw a player could claim now: the position on
+    /// the board for the third time, or fifty moves without a capture or a
+    /// pawn move. Returns false, leaving the game alone, when there is none.
+    @discardableResult
+    mutating func claimDraw() -> Bool {
+        guard !outcome.isGameOver else { return false }
+        if repetitionHashes.count(where: { $0 == board.zobrist }) >= 3 {
+            outcome = .drawThreefoldRepetition
+        } else if board.halfmoveClock >= 100 {
+            outcome = .drawFiftyMoveRule
+        } else {
+            return false
+        }
+        return true
+    }
+
+    /// The side on move has run out of time. Only the side on move can: the
+    /// other side's clock is not running. It loses — unless its opponent has
+    /// nothing left to mate with, which makes the flag fall a draw.
+    mutating func timeOut() {
+        guard !outcome.isGameOver else { return }
+        let flagged = sideToMove
+        outcome = board.hasMatingMaterial(flagged.opponent)
+            ? .timeForfeit(winner: flagged.opponent)
+            : .drawTimeoutInsufficientMaterial
+    }
+
+    /// A flag that has already been ruled on: a game read from PGN whose
+    /// result says the side on move lost on time, or one the archive replays
+    /// after filing it as that loss. The verdict stands even where `timeOut`
+    /// would have drawn it — the server that played the game judged the
+    /// material by a rule of its own, and the archive should say what
+    /// happened rather than what this app would have decided.
+    mutating func recordTimeForfeit() {
+        guard !outcome.isGameOver else { return }
+        outcome = .timeForfeit(winner: sideToMove.opponent)
+    }
+
     // MARK: Outcome
 
     /// How the game stands after a move.
@@ -138,11 +214,19 @@ nonisolated struct Game: Hashable, Codable, Sendable {
     /// Threefold repetition and the fifty-move rule end the game here of their
     /// own accord. Under FIDE they are a player's to *claim* — only fivefold
     /// and seventy-five moves draw automatically — but claiming needs a button,
-    /// a rule to explain and an answer for what the computer would do with it.
-    /// This is an offline game without a clock, so it settles them itself, the
-    /// way the "How to Play" guide promises it will. A deliberate simplification,
-    /// not an oversight.
-    private static func evaluateOutcome(board: Board, repetitionHashes: [UInt64]) -> GameOutcome {
+    /// a rule to explain and an answer for what the computer would do with it,
+    /// so the app settles them itself, the way the "How to Play" guide promises
+    /// it will. A deliberate simplification, not an oversight. A game read
+    /// from PGN keeps FIDE's own rule instead (see `settlesClaimableDraws`).
+    ///
+    /// A variant's own win comes first: the king on the hill, the third check.
+    /// The move that achieved it may also have mated, and either way it won.
+    private static func evaluateOutcome(
+        board: Board, repetitionHashes: [UInt64], settlesClaimableDraws: Bool
+    ) -> GameOutcome {
+        if let winner = board.variantWinner {
+            return board.variant == .kingOfTheHill ? .kingOfTheHill(winner: winner) : .threeChecks(winner: winner)
+        }
         let hasLegalMoves = !board.generateLegalMoves().isEmpty
         if !hasLegalMoves {
             if board.isInCheck {
@@ -153,10 +237,10 @@ nonisolated struct Game: Hashable, Codable, Sendable {
         if board.hasInsufficientMaterial {
             return .drawInsufficientMaterial
         }
-        if board.halfmoveClock >= 100 {
+        if board.halfmoveClock >= (settlesClaimableDraws ? 100 : 150) {
             return .drawFiftyMoveRule
         }
-        if repetitionHashes.count(where: { $0 == board.zobrist }) >= 3 {
+        if repetitionHashes.count(where: { $0 == board.zobrist }) >= (settlesClaimableDraws ? 3 : 5) {
             return .drawThreefoldRepetition
         }
         return .ongoing

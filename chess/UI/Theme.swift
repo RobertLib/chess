@@ -125,6 +125,30 @@ enum Design {
     static let minimumTouchTarget: CGFloat = 44
 }
 
+// MARK: - Text a step down from white
+
+/// The white of what sits under a title: a subtitle, a caption, a note, a
+/// move number. The faint whites it replaces — down to a third of white —
+/// read at under 3 : 1 on the lighter end of the backgrounds and on the
+/// cards, short of the 4.5 : 1 small text needs; these read at 4.5 : 1 or
+/// better on every theme's card. With Increase Contrast on they come up
+/// nearly to white, the way the system's own secondary labels do.
+nonisolated struct DimWhite: ShapeStyle {
+    let opacity: Double
+    let increasedOpacity: Double
+
+    func resolve(in environment: EnvironmentValues) -> Color {
+        .white.opacity(environment.colorSchemeContrast == .increased ? increasedOpacity : opacity)
+    }
+}
+
+extension ShapeStyle where Self == DimWhite {
+    /// A subtitle, a caption, the line that explains a control.
+    static var secondaryText: DimWhite { DimWhite(opacity: 0.7, increasedOpacity: 0.9) }
+    /// Fine print: a source line, a move number, a figure's unit.
+    static var tertiaryText: DimWhite { DimWhite(opacity: 0.62, increasedOpacity: 0.85) }
+}
+
 extension View {
     /// Frosted card look used for HUD panels.
     func hudCard(cornerRadius: CGFloat = 14) -> some View {

@@ -49,6 +49,24 @@ enum Haptics {
         notification.notificationOccurred(.error)
     }
 
+    /// A clock running short: a warning, felt once.
+    static func lowTime() {
+        guard isEnabled else { return }
+        notification.notificationOccurred(.warning)
+    }
+
+    /// A puzzle solved, a line remembered.
+    static func success() {
+        guard isEnabled else { return }
+        notification.notificationOccurred(.success)
+    }
+
+    /// The tap of a chess-clock button: firm and short.
+    static func clockTap() {
+        guard isEnabled else { return }
+        rigid.impactOccurred(intensity: 1.0)
+    }
+
     static func gameEnded(win: Bool) {
         guard isEnabled else { return }
         notification.notificationOccurred(win ? .success : .error)

@@ -15,15 +15,29 @@ Information is No.
 Fully offline. The chess engine is the app's own and runs on the device; there
 are no packages, no third-party SDKs and no network requests of any kind. The
 pieces are drawn from vector paths in code and the sounds are synthesized at
-launch, so the app ships with no audio assets. Settings and a game in progress
-are stored in UserDefaults on the device (declared in chess/PrivacyInfo.xcprivacy,
-reason CA92.1).
+launch, so the app ships with no audio assets. The puzzles are a file inside the
+bundle, read by the app and by its home-screen widget alike. Settings, a game in
+progress, the archive of finished games, statistics, achievements and puzzle
+progress are stored on the device only: the settings and the game in progress
+in UserDefaults (declared in chess/PrivacyInfo.xcprivacy, reason CA92.1), the
+archive of finished games, the review cache and puzzle progress as JSON files in
+the app's Application Support directory. The game clock, the chess clock and
+Race the Clock measure elapsed time with the system uptime (declared in the same
+file, reason 35F9.1); only differences between two readings are used, and they
+never leave the device. PGN files are only ever exported
+through the system share sheet and imported through the system file picker, at
+the player's request.
 
 Third-party content: the Staunton piece shapes are derived from the SVG chess
 pieces drawn by Wikimedia Commons user Cburnett, used under the BSD licence. The
-attribution is shown to players in the app under Settings → Credits, and the
-licence is reproduced in full in THIRD-PARTY-NOTICES.md in the repository.
-Everything else — the engine, the review, the guide, the sounds — is original.
+attribution, with the licence in full, is shown to players in the app under
+Settings → Credits. The engine's piece-square tables are the Simplified
+Evaluation Function by Tomasz Michniewski, from the Chess Programming Wiki
+(CC BY-SA 3.0), credited in the same place. The tactics puzzles are a selection
+from the Lichess puzzle database, which Lichess releases under CC0 (public
+domain); they are credited under Settings → Credits and on the puzzle screen
+anyway. Everything else — the search, the review, the guide, the clock, the
+training tools, the sounds — is original.
 
 How to play: from the menu choose Play vs Computer (five levels, and White,
 Black or Random), Two Players on one device, or How to Play for the guide. On the
@@ -33,8 +47,9 @@ Hint against the computer or Draw between two players, then Resign. The gear at
 the top right holds five board themes, sounds, haptics, the legal-move dots and
 the board coordinates; the arrows beside it flip the board. Leaving a game with
 the chevron at the top left saves it, and it comes back under Continue in the
-menu. When a game ends, Game Review opens from the result card, and the last
-finished game stays in the menu so it can be reviewed again later.
+menu. When a game ends, Game Review opens from the result card, and every
+finished game is kept in My Games, where tapping it and choosing Game Review
+reviews it again.
 
 The guide is nine chapters and 38 pages with 27 board diagrams, 15 of which are
 playable: the dots on those are real legal moves asked from the engine, and
@@ -47,5 +62,13 @@ supported up to the accessibility sizes and Reduce Motion is honored.
 Localisation: English and Czech, switched by the device language. There is no
 in-app language setting. Move notation follows the reader's language — Nf3 reads
 Jf3 in Czech — while the notation stored on the device stays English.
+
+Beyond the games themselves, the menu leads to: Puzzles (rated puzzles, themes,
+a daily puzzle, Race the Clock, and positions from the player's own reviewed games),
+Training (an opening trainer, an analysis board, a position editor and pasting in
+a PGN or FEN), Chess Clock (a clock for a game on a real board) and My Games
+(the archive, statistics, achievements and PGN import and export). A game can be
+played on a clock — bullet to classical — from a Chess960 or odds position, and
+under King of the Hill or Three-check rules; both setup screens offer it. The widget shows the daily puzzle and opens it.
 
 The app supports iPhone (portrait) and iPad (portrait and landscape).
